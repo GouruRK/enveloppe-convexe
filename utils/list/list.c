@@ -109,20 +109,12 @@ void concatPolygon(Polygon* poly1, Polygon* poly2) {
         *poly2 = NULL;
         return;
     }
-    Vertex* head = *poly2;
-    Vertex* temp;
-    *poly2 = (*poly2)->next;
-    while (head != *poly2) {
-        temp = *poly2;
-        *poly2 = (*poly2)->next;
-        temp->next = temp;
-        temp->prev = temp;
-        addVertexHead(poly1, temp);
-        
-    }
-    head->next = head;
-    head->prev = head;
-    addVertexHead(poly1, head);
+    Vertex* temp = *poly1;
+    
+    (*poly1)->prev->next = *poly2;
+    (*poly2)->prev->next = *poly1;
+    (*poly1)->prev = (*poly2)->prev;
+    (*poly2)->prev = temp->prev->next;
     *poly2 = NULL;
 }
 
