@@ -16,6 +16,8 @@ void fillVertex(Vertex* vertex, Point* p);
 Polygon createPolygon(void);
 void addVertexTail(Polygon* poly, Vertex* vertex);
 void addVertexHead(Polygon* poly, Vertex* vertex);
+Vertex* extractVertexTail(Polygon* poly);
+Vertex* extractVertexHead(Polygon* poly);
 void concatPolygon(Polygon* poly1, Polygon* poly2);
 int length(Polygon poly);
 void freePolygon(Polygon* poly);

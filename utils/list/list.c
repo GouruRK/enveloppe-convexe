@@ -95,6 +95,36 @@ void addVertexHead(Polygon* poly, Vertex* vertex) {
 }
 
 /**
+ * @brief Enleve le dernier Vertex du Polygon, et retourne l'adresse de
+ *        l'élément retiré
+ * 
+ * @param poly 
+ * @return Vertex* 
+ */
+Vertex* extractVertexTail(Polygon* poly) {
+    if (!(*poly)) {
+        return NULL;
+    }
+    Vertex* vertex = (*poly)->prev;
+    if (vertex == *poly) {
+        *poly = NULL;
+    } else {
+        vertex->prev->next = *poly;
+        vertex->next = vertex;
+        (*poly)->prev = vertex->prev;
+        vertex->prev = vertex;
+    }
+    return vertex;
+}
+
+Vertex* extractVertexHead(Polygon* poly) {
+    // Comme pour l'insertion, on déplace la tête sur le dernier élément
+    // et ainsi, l'ancienne tête devient la queue
+    *poly = (*poly)->prev;
+    return extractVertexTail(poly);
+}
+
+/**
  * @brief Effectue la concaténation de deux Polygon.
  * 
  * @param poly1 Polygon qui contiendra les vertex de `poly1` et de `poly2`
@@ -162,37 +192,25 @@ void freePolygon(Polygon* poly) {
 
 int main(void) {
     Polygon poly1 = createPolygon();
-    Polygon poly2 = createPolygon();
     Vertex* v1 = createVertex();
     Vertex* v2 = createVertex();
     Vertex* v3 = createVertex();
-    Vertex* v4 = createVertex();
-    Vertex* v5 = createVertex();
     Point* p1 = createPoint();    
     Point* p2 = createPoint();
     Point* p3 = createPoint();
-    Point* p4 = createPoint();
-    Point* p5 = createPoint();
     fillPoint(p1, 0, 0);
     fillPoint(p2, 1, 1);
     fillPoint(p3, 2, 2);
-    fillPoint(p4, 3, 3);
-    fillPoint(p3, 4, 4);
     fillVertex(v1, p1);
     fillVertex(v2, p2);
     fillVertex(v3, p3);
-    fillVertex(v4, p4);
-    fillVertex(v5, p5);
     addVertexHead(&poly1, v1);
     addVertexHead(&poly1, v2);
     addVertexHead(&poly1, v3);
-    addVertexHead(&poly2, v4);
-    addVertexHead(&poly2, v5);
     printf("poly1: %d\n", length(poly1));
-    printf("poly2: %d\n", length(poly2));
-    concatPolygon(&poly2, &poly1);
-    printf("concat: %d\n", length(poly2));
+    Vertex* res = extractVertexHead(&poly1);
     printf("res: %d\n", length(poly1));
-    freePolygon(&poly2);
+    printf("(%d; %d)\n", res->p->x, res->p->y);
+    freePolygon(&poly1);
     return 0;
 }
