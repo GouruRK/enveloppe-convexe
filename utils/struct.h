@@ -1,14 +1,10 @@
-// #include "main.h"
-#include <stdlib.h>
-#include <stdio.h>
-
-typedef struct pnt {
+typedef struct pnt { 
     int x;
     int y;
 } Point;
 
 typedef struct _vrtx_ { 
-    Point* p; 
+    Point* p;
     struct _vrtx_ *prev;
     struct _vrtx_ *next;
 } Vertex, *Polygon;
