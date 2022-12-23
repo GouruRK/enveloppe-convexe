@@ -4,12 +4,54 @@
 gcc -c list.c -Wall -std=c17
 */
 
-static inline int isPointEqual(Point* A, Point* B) {
+/**
+ * @brief Permet de savoir si le point `A` est égal au point `B`
+ *        coordonnées du point B, `0` sinon     
+ * 
+ * @param A 
+ * @param B 
+ * @return int Renvoie `1` si les coordonnées des points sont égales,
+ *         `0` sinon
+ */
+static inline int isPointEqual(const Point* A, const Point* B) {
     return A->x == B->x && A->y == B->y;
 }
 
-static inline void printPoint(Point* p) {
+/**
+ * @brief Permet d'afficher un point
+ * 
+ * @param p
+ */
+static inline void printPoint(const Point* p) {
     printf("(%d; %d)", p->x, p->y);
+}
+
+/**
+ * @brief Permet de savoir si l'abscisse du point `A` est inférieure 
+ *        a l'abscisse du point `B`
+ * 
+ * @param A 
+ * @param B 
+ * @return int Renvoie `1` si l'abscisse du point `A` est inférieure a 
+ *         l'abscisse du point B, `0` sinon. Si les deux abscisses sont
+ *         égales, on regarde les ordonnées
+ */
+static inline int minX(const Point* A, const Point* B) {
+    return A->x == B->x ? A->y < B->y : A->x < B->x;
+}
+
+/**
+ * @brief Permet de savoir si l'abscisse du point `A` est supérieure 
+ *        a l'abscisse du point `B`
+ * 
+ * @param A 
+ * @param B 
+ * @return int Renvoie `1` si l'abscisse du point `A` est supérieure a 
+ *         l'abscisse du point B, `0` sinon. Si les deux abscisses sont 
+ *         égales, on regarde les ordonnées
+ */
+static inline int maxX(const Point* A, const Point* B) {
+    return A->x == B->x ? A->y > B->y : A->x > B->x;
 }
 
 /**
@@ -161,6 +203,32 @@ Vertex* extractPoint(Polygon* poly, Point* p) {
 }
 
 /**
+ * @brief Renvoie un élément satisfaisant les conditions d'une fonction
+ *        Utile pour la recherche de minimum et de maximum
+ * 
+ * @param poly 
+ * @param compare 
+ * @return Vertex* 
+ */
+Vertex* searchVertexByFunction(Polygon* poly,
+                              int (*compare)(const Point*, const Point*))
+                              {
+    if (!(*poly)) {
+        return NULL;
+    }
+    Vertex* head = *poly;
+    Vertex* elem = head;
+    *poly = (*poly)->next;
+    while (head != *poly) {
+        if (compare((*poly)->p, elem->p)) {
+            elem = *poly;
+        }
+        *poly = (*poly)->next;
+    }
+    return elem;
+}
+
+/**
  * @brief Effectue la concaténation de deux Polygon.
  * 
  * @param poly1 Polygon qui contiendra les vertex de `poly1` et de `poly2`
@@ -210,7 +278,7 @@ int length(Polygon poly) {
  * @param poly 
  * @param printPointFunction La fonction pour afficher les points
  */
-void printPoly(Polygon poly, void (*printPointFunction)(Point*)) {
+void printPoly(Polygon poly, void (*printPointFunction)(const Point*)) {
     printf("<-> HEAD <-> ");
     Vertex* head = poly;
     printPointFunction(head->p);
@@ -246,8 +314,8 @@ void freePolygon(Polygon* poly) {
     free(head);
 }
 
-/*
-int main(void) {
+
+/*int main(void) {
     Polygon poly = createPolygon();
     Vertex* v1 = createVertex();
     Vertex* v2 = createVertex();
@@ -265,7 +333,9 @@ int main(void) {
     addVertexHead(&poly, v2);
     addVertexHead(&poly, v3);
     printPoly(poly, printPoint);
+    Vertex* max = searchVertexByFunction(&poly, minX);
+    printPoint(max->p);
+    printf("\n");
     freePolygon(&poly);
     return 0;
-}
-*/
+}*/
