@@ -1,5 +1,17 @@
 #include "../utils.h"
 
+/*
+gcc -c list.c -Wall -std=c17
+*/
+
+static inline int isPointEqual(Point* A, Point* B) {
+    return A->x == B->x && A->y == B->y;
+}
+
+static inline void printPoint(Point* p) {
+    printf("(%d; %d)", p->x, p->y);
+}
+
 /**
  * @brief Crée un pointeur Point vide
  *        exit si erreur dans l'allocation
@@ -37,6 +49,8 @@ Vertex* createVertex(void) {
     if (!v) {
         exit(1);
     }
+    v->prev = v;
+    v->next = v;
     return v;
 }
 
@@ -48,8 +62,6 @@ Vertex* createVertex(void) {
  */
 void fillVertex(Vertex* vertex, Point* p) {
     vertex->p = p;
-    vertex->prev = vertex;
-    vertex->next = vertex;
 }
 
 /**
@@ -120,8 +132,32 @@ Vertex* extractVertexTail(Polygon* poly) {
 Vertex* extractVertexHead(Polygon* poly) {
     // Comme pour l'insertion, on déplace la tête sur le dernier élément
     // et ainsi, l'ancienne tête devient la queue
-    *poly = (*poly)->prev;
+    *poly = (*poly)->next;
     return extractVertexTail(poly);
+}
+
+/**
+ * @brief Enleve de la liste un Vertex contenant le point `p` et le retourne
+ * 
+ * @param poly 
+ * @param p 
+ * @return Vertex* 
+ */
+Vertex* extractPoint(Polygon* poly, Point* p) {
+    if (!(*poly)) {
+        return NULL;
+    }
+    Vertex* head = *poly;
+    if (isPointEqual(head->p, p)) {
+        return extractVertexHead(poly);
+    }
+    *poly = (*poly)->next;
+    while (head != *poly) {
+        if (isPointEqual((*poly)->p, p)) {
+            return extractVertexHead(poly);
+        }
+    }
+    return NULL;
 }
 
 /**
@@ -169,6 +205,26 @@ int length(Polygon poly) {
 }
 
 /**
+ * @brief Affiche une réprésentation de liste doublement chainnée
+ * 
+ * @param poly 
+ * @param printPointFunction La fonction pour afficher les points
+ */
+void printPoly(Polygon poly, void (*printPointFunction)(Point*)) {
+    printf("<-> HEAD <-> ");
+    Vertex* head = poly;
+    printPointFunction(head->p);
+    printf(" <-> ");
+    poly = poly->next;
+    while (head != poly) {
+        printPointFunction(poly->p);
+        printf(" <-> ");
+        poly = poly->next;
+    }
+    printf("TAIL <->\n");
+}
+
+/**
  * @brief Libère le contenu d'un Polygon
  * 
  * @param poly 
@@ -190,8 +246,9 @@ void freePolygon(Polygon* poly) {
     free(head);
 }
 
+/*
 int main(void) {
-    Polygon poly1 = createPolygon();
+    Polygon poly = createPolygon();
     Vertex* v1 = createVertex();
     Vertex* v2 = createVertex();
     Vertex* v3 = createVertex();
@@ -204,13 +261,11 @@ int main(void) {
     fillVertex(v1, p1);
     fillVertex(v2, p2);
     fillVertex(v3, p3);
-    addVertexHead(&poly1, v1);
-    addVertexHead(&poly1, v2);
-    addVertexHead(&poly1, v3);
-    printf("poly1: %d\n", length(poly1));
-    Vertex* res = extractVertexHead(&poly1);
-    printf("res: %d\n", length(poly1));
-    printf("(%d; %d)\n", res->p->x, res->p->y);
-    freePolygon(&poly1);
+    addVertexHead(&poly, v1);
+    addVertexHead(&poly, v2);
+    addVertexHead(&poly, v3);
+    printPoly(poly, printPoint);
+    freePolygon(&poly);
     return 0;
 }
+*/
