@@ -1,11 +1,14 @@
-// #include "main.h"
-
 #include <MLV/MLV_all.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define BORDER 8
+
+static const char red[] = "\x1b[31m";
+static const char green[] = "\x1b[32m";
+static const char cyan[] = "\x1b[36m";
+static const char reset[] = "\x1b[0m";
 
 typedef struct button {
     char* text;
@@ -42,6 +45,9 @@ int button_onclick(Button but, int x, int y) {
 Button button_create(int x, int y, char* text) {
     Button but;
     but.text = (char*)malloc(strlen(text) * sizeof(char));
+    if (but.text == NULL) {
+        printf("%s Problème d'allocation mémoire %s\n", red, reset);
+    }
     but.x = x, but.y = y;
     strcpy(but.text, text);
     MLV_get_size_of_text(but.text, &but.width, &but.height);
@@ -62,6 +68,7 @@ void button_draw_WOborder(Button but, MLV_Color color_text) {
 void window_param_preclose() {
     MLV_clear_window(MLV_COLOR_BLACK);
     MLV_draw_text(150, 50, "cc", MLV_COLOR_GREEN);
+    printf("%s Fin d'execusion %s\n", green, reset);
     MLV_actualise_window();
     MLV_wait_seconds(2);
 }
