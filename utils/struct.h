@@ -1,18 +1,16 @@
-#include "main.h"
-
-typedef struct pnt {
+typedef struct pnt { 
     int x;
     int y;
 } Point;
 
 typedef struct _vrtx_ { 
-    Point* s; 
+    Point* p;
     struct _vrtx_ *prev;
     struct _vrtx_ *next;
-} Vertex, *Polygon
+} Vertex, *Polygon;
 
 typedef struct {
-    Polygon pol;
+    Polygon poly;
     int curlen;
     int maxlen;
 } ConvexHull;
