@@ -28,4 +28,12 @@ int length(Polygon poly);
 void printPoly(Polygon poly, void (*printPointFunction)(const Point*));
 void freePolygon(Polygon* poly);
 
+
+// Fichier math.c
+static inline int isRight(Point* A, Point* B, Point* p);
+int dist(Point* A, Point* B);
+int crossProduct(Point* p, Point* q, Point* r);
+void rightPoints(Polygon* poly, Point* A, Point* B, Polygon* res);
+Point* furtherestPoint(Polygon* poly, Point* A, Point* B);
+
 #endif
