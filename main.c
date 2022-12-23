@@ -16,6 +16,13 @@ typedef struct button {
 } Button;
 
 void exit_function(void* data);
+void init_window_param();
+void window_param_preclose();
+
+Button button_create(int x, int y, char* text);
+void button_draw_Wborder(Button but, MLV_Color color_text, MLV_Color color_border);
+void button_draw_WOborder(Button but, MLV_Color color_text);
+int button_onclick(Button but, int x, int y);
 
 void exit_function(void* data) {
     int* arret = (int*)data;
@@ -32,27 +39,50 @@ int button_onclick(Button but, int x, int y) {
     return 1;
 }
 
+Button button_create(int x, int y, char* text) {
+    Button but;
+    but.text = (char*)malloc(strlen(text) * sizeof(char));
+    but.x = x, but.y = y;
+    strcpy(but.text, text);
+    MLV_get_size_of_text(but.text, &but.width, &but.height);
+    return but;
+}
+
+void button_draw_Wborder(Button but, MLV_Color color_text, MLV_Color color_border) {
+    MLV_draw_rectangle(but.x, but.y, but.width + BORDER, but.height + BORDER, color_border);
+    MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text, color_text);
+    MLV_update_window();
+}
+
+void button_draw_WOborder(Button but, MLV_Color color_text) {
+    MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text, color_text);
+    MLV_update_window();
+}
+
+void window_param_preclose() {
+    MLV_clear_window(MLV_COLOR_BLACK);
+    MLV_draw_text(150, 50, "cc", MLV_COLOR_GREEN);
+    MLV_actualise_window();
+    MLV_wait_seconds(2);
+}
+
 void init_window_param() {
-    int stop = 0, pressed = 0;
+    int stop = 0, pressed = 0, x = 0, y = 0;
+
     MLV_execute_at_exit(exit_function, &stop);
     MLV_create_window("Setting convex hull", "Setting", 300, 300);
 
     Button but;
-    char* word = "Je m'appelle Michel";
-    but.text = (char*)malloc(strlen(word) * sizeof(char));
-    strcpy(but.text, word);
-    MLV_get_size_of_text(but.text, &but.width, &but.height);
-    but.x = 100, but.y = 100;
+    but = button_create(100, 100, "Je m'appelle Michel");
 
     while (!stop) {
         MLV_clear_window(MLV_COLOR_BLACK);
         MLV_draw_text(150, 50, "%d", MLV_COLOR_GREEN, MLV_get_time());
-        MLV_draw_rectangle(but.x, but.y, but.width + BORDER, but.height + BORDER, MLV_COLOR_RED);
-        MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text, MLV_COLOR_GREEN);
+        button_draw_Wborder(but, MLV_COLOR_GREEN, MLV_COLOR_RED);
         MLV_update_window();
+
         if ((MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED) && pressed == 0) {
             pressed = 1;
-            int x = 0, y = 0;
             MLV_get_mouse_position(&x, &y);
             printf("%d\n", button_onclick(but, x, y));
         }
@@ -60,9 +90,7 @@ void init_window_param() {
             pressed = 0;
         }
     }
-    MLV_draw_text(150, 50, "cc", MLV_COLOR_GREEN);
-    MLV_actualise_window();
-    MLV_wait_seconds(2);
+    window_param_preclose();
     MLV_free_window();
 }
 
