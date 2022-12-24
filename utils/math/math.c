@@ -88,6 +88,37 @@ Point* furtherestPoint(Polygon* poly, Point* A, Point* B) {
     return maxPoint;
 }
 
+void quickHull(Polygon* poly, Polygon* res) {
+    Point* p = searchVertexByFunction(poly, minX)->p;
+    Point* q = searchVertexByFunction(poly, maxX)->p;
+    Polygon E1 = createPolygon();
+    Polygon E2 = createPolygon();
+    quickHullAux(poly, &E1, p, q);
+    quickHullAux(poly, &E2, q, p);
+    concatPolygon(&E1, &E2); // MANQUE -> retirer le point d'intersection
+    concatPolygon(res, &E1);
+}
+
+void quickHullAux(Polygon* poly, Polygon* res, Point* p, Point* q) {
+    Polygon onRight = createPolygon();
+    rightPoints(poly, p, q, &onRight);
+    if (!onRight) {
+        Vertex* v1, v2;
+        fillVertex(v1, p);
+        fillVertex(v2, q);
+        addVertexTail(res, v1);
+        addVertexTail(res, v2);
+        return;
+    }
+    Point* r = furtherestPoint(&onRight, p, q);
+    Polygon E1 = createPolygon();
+    Polygon E2 = createPolygon();
+    quickHullAux(&onRight, &E1, p, r);
+    quickHullAux(&onRight, &E2, r, q);
+    concatPolygon(&E1, &E2); // MANQUE -> retirer le point d'intersection
+    concatPolygon(res, &E1);
+}
+
 int main(void) {
     Point* A = createPoint();
     Point* B = createPoint();
