@@ -13,7 +13,7 @@ gcc -c list.c -Wall -std=c17
  * @return int Renvoie `1` si les coordonnées des points sont égales,
  *         `0` sinon
  */
-static inline int isPointEqual(const Point* A, const Point* B) {
+int isPointEqual(const Point* A, const Point* B) {
     return A->x == B->x && A->y == B->y;
 }
 
@@ -22,7 +22,7 @@ static inline int isPointEqual(const Point* A, const Point* B) {
  * 
  * @param p
  */
-static inline void printPoint(const Point* p) {
+void printPoint(const Point* p) {
     printf("(%d; %d)", p->x, p->y);
 }
 
@@ -36,7 +36,7 @@ static inline void printPoint(const Point* p) {
  *         l'abscisse du point B, `0` sinon. Si les deux abscisses sont
  *         égales, on regarde les ordonnées
  */
-static inline int minX(const Point* A, const Point* B) {
+int minX(const Point* A, const Point* B) {
     return A->x == B->x ? A->y < B->y : A->x < B->x;
 }
 
@@ -50,7 +50,7 @@ static inline int minX(const Point* A, const Point* B) {
  *         l'abscisse du point B, `0` sinon. Si les deux abscisses sont 
  *         égales, on regarde les ordonnées
  */
-static inline int maxX(const Point* A, const Point* B) {
+int maxX(const Point* A, const Point* B) {
     return A->x == B->x ? A->y > B->y : A->x > B->x;
 }
 
@@ -81,7 +81,7 @@ void fillPoint(Point* p, int x, int y) {
 }
 
 /**
- * @brief Crée un pointeur Vertex vide
+ * @brief Crée un pointeur Vertex vide qui pointe sur lui même
  *        exit si erreur dans l'allocation
  * 
  * @return Vertex* 
@@ -333,8 +333,8 @@ void freePolygon(Polygon* poly) {
     addVertexHead(&poly, v2);
     addVertexHead(&poly, v3);
     printPoly(poly, printPoint);
-    Vertex* max = searchVertexByFunction(&poly, minX);
-    printPoint(max->p);
+    Vertex* v = searchVertexByFunction(&poly, maxX);
+    printPoint(v->p);
     printf("\n");
     freePolygon(&poly);
     return 0;

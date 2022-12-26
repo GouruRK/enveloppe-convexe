@@ -8,10 +8,10 @@
 #include <stdio.h>
 
 // Fichier: list.c
-static inline int isPointEqual(const Point* A, const Point* B);
-static inline void printPoint(const Point* p);
-static inline int minX(const Point* A, const Point* B);
-static inline int maxX(const Point* A, const Point* B);
+int isPointEqual(const Point* A, const Point* B);
+void printPoint(const Point* p);
+int minX(const Point* A, const Point* B);
+int maxX(const Point* A, const Point* B);
 Point* createPoint(void);
 void fillPoint(Point* p, int x, int y);
 Vertex* createVertex(void);
@@ -35,5 +35,7 @@ int dist(Point* A, Point* B);
 int crossProduct(Point* p, Point* q, Point* r);
 void rightPoints(Polygon* poly, Point* A, Point* B, Polygon* res);
 Point* furtherestPoint(Polygon* poly, Point* A, Point* B);
+void quickHull(Polygon* poly, Polygon* res);
+void quickHullAux(Polygon* poly, Polygon* res, Point* p, Point* q);
 
 #endif

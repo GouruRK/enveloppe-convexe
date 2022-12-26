@@ -1,7 +1,8 @@
 #include "../utils.h"
 
 /*
-gcc math.c ../list/list.o -Wall -std=c17 -o math
+gcc -c ../list/list.c -Wall -std=c17
+gcc math.c list.o -Wall -std=c17 -o math
 */
 
 static inline int isRight(Point* A, Point* B, Point* p) {
@@ -95,7 +96,10 @@ void quickHull(Polygon* poly, Polygon* res) {
     Polygon E2 = createPolygon();
     quickHullAux(poly, &E1, p, q);
     quickHullAux(poly, &E2, q, p);
-    concatPolygon(&E1, &E2); // MANQUE -> retirer le point d'intersection
+    // On retire le point d'intersection entre E1 et E2
+    extractVertexHead(&E2);
+    // On concatène le résultat
+    concatPolygon(&E1, &E2);
     concatPolygon(res, &E1);
 }
 
@@ -103,7 +107,8 @@ void quickHullAux(Polygon* poly, Polygon* res, Point* p, Point* q) {
     Polygon onRight = createPolygon();
     rightPoints(poly, p, q, &onRight);
     if (!onRight) {
-        Vertex* v1, v2;
+        Vertex* v1 = createVertex(); 
+        Vertex* v2 = createVertex();
         fillVertex(v1, p);
         fillVertex(v2, q);
         addVertexTail(res, v1);
@@ -115,15 +120,18 @@ void quickHullAux(Polygon* poly, Polygon* res, Point* p, Point* q) {
     Polygon E2 = createPolygon();
     quickHullAux(&onRight, &E1, p, r);
     quickHullAux(&onRight, &E2, r, q);
-    concatPolygon(&E1, &E2); // MANQUE -> retirer le point d'intersection
+    // On retire le point d'intersection entre E1 et E2
+    extractVertexHead(&E2);
+    // On concatène le résultat
+    concatPolygon(&E1, &E2);
     concatPolygon(res, &E1);
 }
 
-int main(void) {
+/*int main(void) {
     Point* A = createPoint();
     Point* B = createPoint();
     fillPoint(A, 0, 0);
     fillPoint(B, 1, 1);
     printf("%d\n", dist(A, B));
     return 0;
-}
+}*/
