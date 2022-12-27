@@ -32,6 +32,18 @@ void exit_function(void* data) {
     *arret = 1;
 }
 
+Button button_create(int x, int y, char* text) {
+    Button but;
+    but.text = (char*)malloc(strlen(text) * sizeof(char));
+    if (but.text == NULL) {
+        printf("%s Problème d'allocation mémoire %s\n", red, reset);
+    }
+    but.x = x, but.y = y;
+    strcpy(but.text, text);
+    MLV_get_size_of_text(but.text, &but.width, &but.height);
+    return but;
+}
+
 int button_onclick(Button but, int x, int y) {
     // 1 si clické sinon 0
     int but_max_x = but.x + but.width + BORDER;
@@ -54,18 +66,6 @@ int button_onclick_tab(Button tab[], int size, int x, int y) {
     return -1;
 }
 
-Button button_create(int x, int y, char* text) {
-    Button but;
-    but.text = (char*)malloc(strlen(text) * sizeof(char));
-    if (but.text == NULL) {
-        printf("%s Problème d'allocation mémoire %s\n", red, reset);
-    }
-    but.x = x, but.y = y;
-    strcpy(but.text, text);
-    MLV_get_size_of_text(but.text, &but.width, &but.height);
-    return but;
-}
-
 void button_draw_Wborder(Button but, MLV_Color color_text, MLV_Color color_border) {
     MLV_draw_rectangle(but.x, but.y, but.width + BORDER, but.height + BORDER, color_border);
     MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text, color_text);
@@ -73,6 +73,13 @@ void button_draw_Wborder(Button but, MLV_Color color_text, MLV_Color color_borde
 
 void button_draw_WOborder(Button but, MLV_Color color_text) {
     MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text, color_text);
+}
+
+void button_draw_tab(Button tab[], int val[], int size, MLV_Color color[]) {
+    for (int i = 0; i < size; i++) {
+        // fprintf(stderr, "x:%d y:%d w:%d h:%d val%d\n", tab[i].x, tab[i].y, tab[i].width, tab[i].height, val[i]);
+        button_draw_Wborder(tab[i], color[val[i]], color[val[i]]);
+    }
 }
 
 void switch_(int val[], int size, int index) {
@@ -95,31 +102,46 @@ void window_param_preclose() {
 
 void init_window_param() {
     int stop = 0, pressed = 0, x = 0, y = 0;
-    Button tabbut[3];
-    int tabval[3];
+    Button tab_button_distrib[3];
+    int tab_value_distrib[3] = {};
+    Button tab_button_shapes[4];
+    int tab_value_shapes[4] = {};
+    MLV_Color tab_color[2] = {MLV_COLOR_RED,
+                              MLV_COLOR_GREEN};
 
     MLV_execute_at_exit(exit_function, &stop);
-    MLV_create_window("Setting convex hull", "Setting", 300, 300);
+    MLV_create_window("Setting convex hull", "Setting", 400, 300);
 
-    tabbut[0] = button_create(100, 100, "Je m'appelle Michel");
-    tabbut[1] = button_create(100, 150, "Je m'appelle Michel");
-    tabbut[2] = button_create(100, 200, "Je m'appelle Michel");
+    MLV_draw_text(40, 75, "Mode de distribution :", MLV_COLOR_GREEN);
+    tab_button_distrib[0] = button_create(50, 100, "Clic à la souris");
+    tab_button_distrib[1] = button_create(50, 150, "Aléatoire controlé");
+    tab_button_distrib[2] = button_create(50, 200, "Forme prédéfini");
+
+    MLV_draw_text(240, 75, " Formes prédéfinies :", MLV_COLOR_GREEN);
+    tab_button_shapes[0] = button_create(250, 100, "Cercle");
+    tab_button_shapes[1] = button_create(250, 150, "Carré");
+    tab_button_shapes[2] = button_create(250, 200, "Rectangle");
+    tab_button_shapes[3] = button_create(250, 250, "Ellipse");
 
     while (!stop) {
         MLV_clear_window(MLV_COLOR_BLACK);
-        MLV_draw_text(150, 50, "%d", MLV_COLOR_GREEN, MLV_get_time());
-        button_draw_Wborder(tabbut[0], MLV_COLOR_GREEN, MLV_COLOR_RED);
-        button_draw_WOborder(tabbut[1], MLV_COLOR_GREEN);
-        button_draw_WOborder(tabbut[2], MLV_COLOR_GREEN);
+        MLV_draw_text(150, 20, "%d", MLV_COLOR_GREEN, MLV_get_time());
+        button_draw_tab(tab_button_distrib, tab_value_distrib, 3, tab_color);
+        button_draw_tab(tab_button_shapes, tab_value_shapes, 4, tab_color);
         MLV_actualise_window();
         MLV_update_window();
 
         if ((MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED) && pressed == 0) {
             pressed = 1;
             MLV_get_mouse_position(&x, &y);
-            int val = button_onclick_tab(tabbut, 3, x, y);
-            switch_(tabval, 3, val);
-            printf("%d %d %d\n", tabval[0], tabval[1], tabval[2]);
+            int val = button_onclick_tab(tab_button_distrib, 3, x, y);
+            int val2 = button_onclick_tab(tab_button_shapes, 4, x, y);
+            if (val != -1) {
+                switch_(tab_value_distrib, 3, val);
+            }
+            if (val2 != -1) {
+                switch_(tab_value_shapes, 4, val2);
+            }
         }
         if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_RELEASED) {
             pressed = 0;
