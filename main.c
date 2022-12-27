@@ -102,45 +102,54 @@ void window_param_preclose() {
 
 void init_window_param() {
     int stop = 0, pressed = 0, x = 0, y = 0;
-    Button tab_button_distrib[3];
-    int tab_value_distrib[3] = {};
-    Button tab_button_shapes[4];
-    int tab_value_shapes[4] = {};
+    int const length_distrib = 3, length_shapes = 5, length_display = 2;
+    Button tab_button_distrib[length_distrib], tab_button_shapes[length_shapes], tab_button_display[length_display];
+    int tab_value_distrib[length_distrib] = {}, tab_value_shapes[length_shapes] = {}, tab_value_display[length_display] = {};
     MLV_Color tab_color[2] = {MLV_COLOR_RED,
                               MLV_COLOR_GREEN};
 
     MLV_execute_at_exit(exit_function, &stop);
-    MLV_create_window("Setting convex hull", "Setting", 400, 300);
+    MLV_create_window("Setting convex hull", "Setting", 600, 300);
 
     MLV_draw_text(40, 75, "Mode de distribution :", MLV_COLOR_GREEN);
-    tab_button_distrib[0] = button_create(50, 100, "Clic à la souris");
+    tab_button_distrib[0] = button_create(50, 100, "Placer à la souris");
     tab_button_distrib[1] = button_create(50, 150, "Aléatoire controlé");
     tab_button_distrib[2] = button_create(50, 200, "Forme prédéfini");
 
     MLV_draw_text(240, 75, " Formes prédéfinies :", MLV_COLOR_GREEN);
-    tab_button_shapes[0] = button_create(250, 100, "Cercle");
-    tab_button_shapes[1] = button_create(250, 150, "Carré");
-    tab_button_shapes[2] = button_create(250, 200, "Rectangle");
-    tab_button_shapes[3] = button_create(250, 250, "Ellipse");
+    tab_button_shapes[0] = button_create(450, 100, "Cercle");
+    tab_button_shapes[1] = button_create(450, 150, "Carré");
+    tab_button_shapes[2] = button_create(450, 200, "Rectangle");
+    tab_button_shapes[3] = button_create(450, 250, "Ellipse");
+    tab_button_shapes[4] = button_create(250, 250, "Rayon croissant");
+
+    MLV_draw_text(240, 75, " Mode d'afficahge :", MLV_COLOR_GREEN);
+    tab_button_display[0] = button_create(250, 100, "Point par Point");
+    tab_button_display[1] = button_create(250, 150, "Automatique");
 
     while (!stop) {
         MLV_clear_window(MLV_COLOR_BLACK);
         MLV_draw_text(150, 20, "%d", MLV_COLOR_GREEN, MLV_get_time());
-        button_draw_tab(tab_button_distrib, tab_value_distrib, 3, tab_color);
-        button_draw_tab(tab_button_shapes, tab_value_shapes, 4, tab_color);
+        button_draw_tab(tab_button_distrib, tab_value_distrib, length_distrib, tab_color);
+        button_draw_tab(tab_button_display, tab_value_display, length_display, tab_color);
+        if (tab_value_distrib[2] == 1) {
+            button_draw_tab(tab_button_shapes, tab_value_shapes, length_shapes, tab_color);
+        }
         MLV_actualise_window();
         MLV_update_window();
 
         if ((MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED) && pressed == 0) {
             pressed = 1;
             MLV_get_mouse_position(&x, &y);
-            int val = button_onclick_tab(tab_button_distrib, 3, x, y);
-            int val2 = button_onclick_tab(tab_button_shapes, 4, x, y);
+            int val = button_onclick_tab(tab_button_distrib, length_distrib, x, y);
+            int val2 = button_onclick_tab(tab_button_display, length_display, x, y);
+            int val3 = button_onclick_tab(tab_button_shapes, length_shapes, x, y);
             if (val != -1) {
-                switch_(tab_value_distrib, 3, val);
-            }
-            if (val2 != -1) {
-                switch_(tab_value_shapes, 4, val2);
+                switch_(tab_value_distrib, length_distrib, val);
+            } else if (val2 != -1) {
+                switch_(tab_value_display, length_display, val2);
+            } else if (val3 != -1 && tab_value_distrib[2] == 1) {
+                switch_(tab_value_shapes, length_shapes, val3);
             }
         }
         if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_RELEASED) {
