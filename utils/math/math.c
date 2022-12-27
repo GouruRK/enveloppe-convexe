@@ -5,7 +5,7 @@ gcc -c ../list/list.c -Wall -std=c17
 gcc math.c list.o -Wall -std=c17 -o math
 */
 
-static inline int isRight(Point* A, Point* B, Point* p) {
+int isRight(Point* A, Point* B, Point* p) {
     return crossProduct(A, B, p) > 0;
 }
 
@@ -46,19 +46,16 @@ int crossProduct(Point* p, Point* q, Point* r) {
  * @param B 
  * @return int 
  */
-void rightPoints(Polygon* poly, Point* A, Point* B, Polygon* res) {
+void rightPoints(ConvexHull* convex, Point* A, Point* B, ConvexHull* res) {
     Vertex* head = NULL;
-    Vertex* vertex;
-    while (head != *poly) {
+    while (head != convex->poly) {
         if (!head) {
-            head = *poly;
+            head = convex->poly;
         }
-        if (isRight(A, B, (*poly)->p)) {
-            vertex = createVertex();
-            fillVertex(vertex, (*poly)->p);
-            addVertexHead(res, vertex);
+        if (isRight(A, B, convex->poly->p)) {
+            addPoint(res, convex->poly->p, addVertexHead);
         }
-        *poly = (*poly)->next;
+        convex->poly = convex->poly->next;
     }
 }
 
@@ -70,61 +67,57 @@ void rightPoints(Polygon* poly, Point* A, Point* B, Polygon* res) {
  * @param B 
  * @return Point* 
  */
-Point* furtherestPoint(Polygon* poly, Point* A, Point* B) {
+Point* furtherestPoint(ConvexHull* convex, Point* A, Point* B) {
     int maxDist = 0;
     Point* maxPoint = NULL;
     Vertex* head = NULL;
     int dist;
-    while (head != *poly) {
+    while (head != convex->poly) {
         if (!head) {
-            head = *poly;
+            head = convex->poly;
         }
-        dist = crossProduct(A, B, (*poly)->p);
+        dist = crossProduct(A, B, convex->poly->p);
         if (dist > maxDist) {
             maxDist = dist;
-            maxPoint = (*poly)->p;
+            maxPoint = convex->poly->p;
         }
-        *poly = (*poly)->next;
+        convex->poly = convex->poly->next;
     }
     return maxPoint;
 }
 
-void quickHull(Polygon* poly, Polygon* res) {
-    Point* p = searchVertexByFunction(poly, minX)->p;
-    Point* q = searchVertexByFunction(poly, maxX)->p;
-    Polygon E1 = createPolygon();
-    Polygon E2 = createPolygon();
-    quickHullAux(poly, &E1, p, q);
-    quickHullAux(poly, &E2, q, p);
+void quickHull(ConvexHull* convex, ConvexHull* res) {
+    Point* p = searchVertexByFunction(convex, minX)->p;
+    Point* q = searchVertexByFunction(convex, maxX)->p;
+    ConvexHull E1 = createConvex(-1);
+    ConvexHull E2 = createConvex(-1);
+    quickHullAux(convex, &E1, p, q);
+    quickHullAux(convex, &E2, q, p);
     // On retire le point d'intersection entre E1 et E2
     extractVertexHead(&E2);
     // On concatène le résultat
-    concatPolygon(&E1, &E2);
-    concatPolygon(res, &E1);
+    concatConvex(&E1, &E2);
+    concatConvex(res, &E1);
 }
 
-void quickHullAux(Polygon* poly, Polygon* res, Point* p, Point* q) {
-    Polygon onRight = createPolygon();
-    rightPoints(poly, p, q, &onRight);
-    if (!onRight) {
-        Vertex* v1 = createVertex(); 
-        Vertex* v2 = createVertex();
-        fillVertex(v1, p);
-        fillVertex(v2, q);
-        addVertexTail(res, v1);
-        addVertexTail(res, v2);
+void quickHullAux(ConvexHull* convex, ConvexHull* res, Point* p, Point* q) {
+    ConvexHull onRight = createConvex(-1);
+    rightPoints(convex, p, q, &onRight);
+    if (!onRight.poly) {
+        addPoint(res, p, addVertexTail);
+        addPoint(res, q, addVertexTail);
         return;
     }
     Point* r = furtherestPoint(&onRight, p, q);
-    Polygon E1 = createPolygon();
-    Polygon E2 = createPolygon();
+    ConvexHull E1 = createConvex(-1);
+    ConvexHull E2 = createConvex(-1);
     quickHullAux(&onRight, &E1, p, r);
     quickHullAux(&onRight, &E2, r, q);
     // On retire le point d'intersection entre E1 et E2
     extractVertexHead(&E2);
     // On concatène le résultat
-    concatPolygon(&E1, &E2);
-    concatPolygon(res, &E1);
+    concatConvex(&E1, &E2);
+    concatConvex(res, &E1);
 }
 
 /*int main(void) {

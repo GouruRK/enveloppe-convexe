@@ -116,12 +116,31 @@ Polygon createPolygon(void) {
 }
 
 /**
- * @brief Ajoute un vertex a la fin de la liste
+ * @brief Crée une enveloppe convexe vide
+ * 
+ * @param maxlen 
+ * @return ConvexHull 
+ */
+ConvexHull createConvex(int maxlen) {
+    ConvexHull convex;
+    convex.poly = createPolygon();
+    convex.curlen = 0;
+    convex.maxlen = maxlen;
+    return convex;
+}
+
+/**
+ * @brief Ajoute un vertex a la fin de l'enveloppe
  * 
  * @param poly 
  * @param vertex 
  */
-void addVertexTail(Polygon* poly, Vertex* vertex) {
+void addVertexTail(ConvexHull* convex, Vertex* vertex) {
+    if (convex->curlen == convex->maxlen) {
+        return;
+    }
+    convex->curlen++;
+    Polygon* poly = &(convex->poly);
     if (!(*poly)) {
         *poly = vertex;
         return;
@@ -133,32 +152,64 @@ void addVertexTail(Polygon* poly, Vertex* vertex) {
 }
 
 
+
 /**
- * @brief Ajoute un vertex au début de la liste
+ * @brief Ajoute un vertex au début de l'enveloppe
  *  
- * 
  * @param poly 
  * @param vertex 
  */
-void addVertexHead(Polygon* poly, Vertex* vertex) {
+void addVertexHead(ConvexHull* convex, Vertex* vertex) {
     // On remarque que ajouter un vertex au début ou a la fin de la liste
     // revient a faire les mêmes opérations, puis déplacer la tête
     // puisque la liste est circulaire
-    addVertexTail(poly, vertex);
-    *poly = vertex;
+    addVertexTail(convex, vertex);
+    convex->poly = vertex;
 }
 
 /**
- * @brief Enleve le dernier Vertex du Polygon, et retourne l'adresse de
+ * @brief Permet d'ajouter un point dans l'enveloppe convexe en fonction
+ *        de la fonction `addFunction`
+ * 
+ * @param convex 
+ * @param p 
+ * @param addFunction 
+ */
+void addPoint(ConvexHull* convex, Point* p,
+              void (*addFunction)(ConvexHull*, Vertex*)) {
+    Vertex* vertex = createVertex();
+    fillVertex(vertex, p);
+    addFunction(convex, vertex);
+}
+
+/**
+ * @brief Permet d'ajouter un point dans l'enveloppe convexe en fonction
+ *        de la fonction `addFunction` a partir de ses coordonnées
+ * 
+ * @param convex 
+ * @param p 
+ * @param addFunction 
+ */
+void addPointCoordinates(ConvexHull* convex, int x, int y,
+                         void (*addFunction)(ConvexHull*, Vertex*)) {
+    Point* p = createPoint();
+    fillPoint(p, x, y);
+    addPoint(convex, p, addFunction);
+}
+
+/**
+ * @brief Enleve le dernier Vertex de l'enveloppe, et retourne l'adresse de
  *        l'élément retiré
  * 
  * @param poly 
  * @return Vertex* 
  */
-Vertex* extractVertexTail(Polygon* poly) {
-    if (!(*poly)) {
+Vertex* extractVertexTail(ConvexHull* convex) {
+    if (!(convex->curlen)) {
         return NULL;
     }
+    convex->curlen--;
+    Polygon* poly = &(convex->poly);
     Vertex* vertex = (*poly)->prev;
     if (vertex == *poly) {
         *poly = NULL;
@@ -171,33 +222,36 @@ Vertex* extractVertexTail(Polygon* poly) {
     return vertex;
 }
 
-Vertex* extractVertexHead(Polygon* poly) {
-    // Comme pour l'insertion, on déplace la tête sur le dernier élément
+Vertex* extractVertexHead(ConvexHull* convex) {
+    // Comme pour l'insertion, on déplace la tête sur l'élément suivant
     // et ainsi, l'ancienne tête devient la queue
-    *poly = (*poly)->next;
-    return extractVertexTail(poly);
+    convex->poly = convex->poly->next;
+    // *poly = (*poly)->next;
+    return extractVertexTail(convex);
 }
 
 /**
- * @brief Enleve de la liste un Vertex contenant le point `p` et le retourne
+ * @brief Enleve de l'enveloppe un Vertex contenant le point `p` et 
+ *        le retourne
  * 
  * @param poly 
  * @param p 
  * @return Vertex* 
  */
-Vertex* extractPoint(Polygon* poly, Point* p) {
-    if (!(*poly)) {
+Vertex* extractPoint(ConvexHull* convex, Point* p) {
+    if (!convex->curlen) {
         return NULL;
     }
-    Vertex* head = *poly;
-    if (isPointEqual(head->p, p)) {
-        return extractVertexHead(poly);
+    if (isPointEqual(convex->poly->p, p)) {
+        return extractVertexHead(convex);
     }
-    *poly = (*poly)->next;
-    while (head != *poly) {
-        if (isPointEqual((*poly)->p, p)) {
-            return extractVertexHead(poly);
+    Vertex* head = convex->poly;
+    convex->poly = convex->poly->next;
+    while (head != convex->poly) {
+        if (isPointEqual(convex->poly->p, p)) {
+            return extractVertexHead(convex);
         }
+        convex->poly = convex->poly->next;
     }
     return NULL;
 }
@@ -210,12 +264,13 @@ Vertex* extractPoint(Polygon* poly, Point* p) {
  * @param compare 
  * @return Vertex* 
  */
-Vertex* searchVertexByFunction(Polygon* poly,
+Vertex* searchVertexByFunction(ConvexHull* convex,
                               int (*compare)(const Point*, const Point*))
                               {
-    if (!(*poly)) {
+    if (!(convex->curlen)) {
         return NULL;
     }
+    Polygon* poly = &(convex->poly);
     Vertex* head = *poly;
     Vertex* elem = head;
     *poly = (*poly)->next;
@@ -234,42 +289,32 @@ Vertex* searchVertexByFunction(Polygon* poly,
  * @param poly1 Polygon qui contiendra les vertex de `poly1` et de `poly2`
  * @param poly2 Une fois la concaténation effectuée, `poly2` sera vide
  */
-void concatPolygon(Polygon* poly1, Polygon* poly2) {
-    if (!(*poly2)) {
+void concatConvex(ConvexHull* convex1, ConvexHull* convex2) {
+    if (!(convex2->curlen)) {
         return;
     }
-    if (!(*poly1)) {
-        *poly1 = *poly2;
-        *poly2 = NULL;
+    if (!(convex1->curlen)) {
+        convex1->poly = convex2->poly;
+        convex1->curlen += convex2->curlen;
+        convex1->maxlen += convex2->maxlen;
+        convex2->poly = NULL;
+        convex2->curlen = 0;
         return;
     }
+    convex1->curlen += convex2->curlen;
+    convex1->maxlen += convex2->maxlen;
+
+    Polygon* poly1 = &(convex1->poly);
+    Polygon* poly2 = &(convex2->poly);
+
     Vertex* temp = *poly1;
     
     (*poly1)->prev->next = *poly2;
     (*poly2)->prev->next = *poly1;
     (*poly1)->prev = (*poly2)->prev;
     (*poly2)->prev = temp->prev->next;
-    *poly2 = NULL;
-}
-
-/**
- * @brief Permet de connaître la longueur d'un Polygon
- * 
- * @param poly 
- * @return int 
- */
-int length(Polygon poly) {
-    if (!poly) {
-        return 0;
-    }
-    Vertex* head = poly;
-    poly = poly->next;
-    int len = 1;
-    while (head != poly) {
-        len++;
-        poly = poly->next;
-    }
-    return len;
+    convex2->poly = NULL;
+    convex2->curlen = 0;
 }
 
 /**
@@ -313,29 +358,34 @@ void freePolygon(Polygon* poly) {
     free(head->p);
     free(head);
 }
+/**
+ * @brief Libère le contenu d'une enveloppe convexe
+ * 
+ * @param poly 
+ */
+void freeConvex(ConvexHull* convex) {
+    freePolygon(&(convex->poly));
+    convex->curlen = 0;
+}
 
 
 /*int main(void) {
-    Polygon poly = createPolygon();
-    Vertex* v1 = createVertex();
-    Vertex* v2 = createVertex();
-    Vertex* v3 = createVertex();
-    Point* p1 = createPoint();    
-    Point* p2 = createPoint();
-    Point* p3 = createPoint();
-    fillPoint(p1, 0, 0);
-    fillPoint(p2, 1, 1);
-    fillPoint(p3, 2, 2);
-    fillVertex(v1, p1);
-    fillVertex(v2, p2);
-    fillVertex(v3, p3);
-    addVertexHead(&poly, v1);
-    addVertexHead(&poly, v2);
-    addVertexHead(&poly, v3);
-    printPoly(poly, printPoint);
-    Vertex* v = searchVertexByFunction(&poly, maxX);
-    printPoint(v->p);
-    printf("\n");
-    freePolygon(&poly);
-    return 0;
+    ConvexHull convex1 = createConvex(10);
+    ConvexHull convex2 = createConvex(10);
+
+    addPointCoordinates(&convex1, 0, 0, addVertexHead);
+    addPointCoordinates(&convex1, 1, 1, addVertexHead);
+    addPointCoordinates(&convex1, 2, 2, addVertexHead);
+    addPointCoordinates(&convex2, 3, 3, addVertexHead);
+    addPointCoordinates(&convex2, 4, 4, addVertexHead);
+
+    printf("Convex 1 : %d/%d\n", convex1.curlen, convex1.maxlen);
+    printf("Convex 2 : %d/%d\n", convex2.curlen, convex2.maxlen);
+
+    concatConvex(&convex1, &convex2);
+
+    printf("Convex 1 : %d/%d\n", convex1.curlen, convex1.maxlen);
+    printf("Convex 2 : %d/%d\n", convex2.curlen, convex2.maxlen);
+
+    freeConvex(&convex1);
 }*/

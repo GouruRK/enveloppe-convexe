@@ -12,54 +12,50 @@ void drawPoint(Point* p) {
     MLV_draw_filled_circle(p->x, p->y, RAYON, MLV_COLOR_BLUE);
 }
 
-void drawPoints(Polygon poly) {
+void drawPoints(ConvexHull* convex) {
     Vertex* head = NULL;
-    while (head != poly) {
+    while (head != convex->poly) {
         if (!head) {
-            head = poly;
+            head = convex->poly;
         }
-        drawPoint(poly->p);
-        poly = poly->next;
+        drawPoint(convex->poly->p);
+        convex->poly = convex->poly->next;
     }
 }
 
-void drawPoly(Polygon poly) {
-    Vertex* head = poly;
+void drawConvex(ConvexHull* convex) {
+    Vertex* head = convex->poly;
     Vertex* prev = head;
-    poly = poly->next;
-    while (head != poly) {
-        MLV_draw_line(prev->p->x, prev->p->y, poly->p->x, poly->p->y, MLV_COLOR_BLACK);
-        prev = poly;
-        poly = poly->next;
+    convex->poly = convex->poly->next;
+    while (head != convex->poly) {
+        MLV_draw_line(prev->p->x, prev->p->y, convex->poly->p->x, convex->poly->p->y, MLV_COLOR_BLACK);
+        prev = convex->poly;
+        convex->poly = convex->poly->next;
     }
-}
-
-void addPoint(Polygon* poly, int x, int y) {
-    Vertex* v = createVertex();
-    Point* p = createPoint();
-    fillPoint(p, x, y);
-    fillVertex(v, p);
-    addVertexHead(poly, v);
 }
 
 int main(void) {
     int points = 0;
     int nbPoints = 10;
-    Polygon poly = createPolygon();
+    ConvexHull convex = createConvex(10);
     MLV_create_window("Enveloppe Convexe", "", 500, 500);
+    MLV_clear_window(MLV_COLOR_WHITE);
+    MLV_update_window();
+    int x, y;
     while (points != nbPoints) {
-        int x, y;
         MLV_wait_mouse(&x, &y);
-        addPoint(&poly, x, y);
+        addPointCoordinates(&convex, x, y, addVertexHead);
         MLV_clear_window(MLV_COLOR_WHITE);
-        drawPoints(poly);
+        drawPoints(&convex);
         points ++;
         if (points >= 3) {
-            Polygon res = createPolygon();
-            quickHull(&poly, &res);
-            drawPoly(res);
+            ConvexHull res = createConvex(-1);
+            quickHull(&convex, &res);
+            drawConvex(&res);
         }
         MLV_update_window();
     }
+    MLV_wait_mouse(&x, &y);
+    MLV_free_window();
     return 0;
 }
