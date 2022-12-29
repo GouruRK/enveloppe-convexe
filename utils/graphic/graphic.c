@@ -93,7 +93,7 @@ void switch_(int val[], int size, int index) {
     }
 }
 
-void window_param_preclose() {
+void window_param_preclose(void) {
     MLV_clear_window(MLV_COLOR_BLACK);
     MLV_draw_text(150, 50, "cc", MLV_COLOR_GREEN);
     printf("%s Fin d'execusion %s\n", green, reset);
@@ -101,7 +101,7 @@ void window_param_preclose() {
     MLV_wait_seconds(2);
 }
 
-void init_window_param() {
+void init_window_param(void) {
     int stop = 0, pressed = 0, x = 0, y = 0;
     Button tab_button_distrib[LENGTH_DISTRIB], tab_button_shapes[LENGTH_SHAPES], tab_button_display[LENGTH_DISPLAY];
     int tab_value_distrib[LENGTH_DISTRIB] = {}, tab_value_shapes[LENGTH_SHAPES] = {}, tab_value_display[LENGTH_DISPLAY] = {};

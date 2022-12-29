@@ -31,7 +31,7 @@ void printPoly(Polygon poly, void (*printPointFunction)(const Point*));
 void freePolygon(Polygon* poly);
 void freeConvex(ConvexHull* convex);
 
-// Fichier math.c
+// Fichier : math.c
 int isRight(Point* A, Point* B, Point* p);
 int dist(Point* A, Point* B);
 int crossProduct(Point* p, Point* q, Point* r);
@@ -39,5 +39,17 @@ void rightPoints(ConvexHull* convex, Point* A, Point* B, ConvexHull* res);
 Point* furtherestPoint(ConvexHull* convex, Point* A, Point* B);
 void quickHull(ConvexHull* convex, ConvexHull* res);
 void quickHullAux(ConvexHull* convex, ConvexHull* res, Point* p, Point* q);
+
+// Fichier : graphic.c
+void exit_function(void* data);
+Button button_create(int x, int y, char* text);
+int button_onclick(Button but, int x, int y);
+int button_onclick_tab(Button tab[], int size, int x, int y);
+void button_draw_Wborder(Button but, MLV_Color color_text, MLV_Color color_border);
+void button_draw_WOborder(Button but, MLV_Color color_text);
+void button_draw_tab(Button tab[], int val[], int size, MLV_Color color[]);
+void switch_(int val[], int size, int index);
+void window_param_preclose(void);
+void init_window_param(void);
 
 #endif
