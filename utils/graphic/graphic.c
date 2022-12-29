@@ -1,5 +1,4 @@
 #include "../utils.h"
-#include <MLV/MLV_all.h>
 
 #define BORDER 8
 #define LENGTH_DISTRIB 3
@@ -10,14 +9,6 @@ static const char red[] = "\x1b[31m";
 static const char green[] = "\x1b[32m";
 static const char cyan[] = "\x1b[36m";
 static const char reset[] = "\x1b[0m";
-
-typedef struct button {
-    char* text;
-    int x;
-    int y;
-    int height;
-    int width;
-} Button;
 
 void exit_function(void* data);
 void init_window_param();

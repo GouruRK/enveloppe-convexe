@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <MLV/MLV_all.h>
 
 // Fichier: list.c
 int isPointEqual(const Point* A, const Point* B);
@@ -17,28 +18,23 @@ void fillPoint(Point* p, int x, int y);
 Vertex* createVertex(void);
 void fillVertex(Vertex* vertex, Point* p);
 Polygon createPolygon(void);
-ConvexHull createConvex(int maxlen);
-void addVertexTail(ConvexHull* convex, Vertex* vertex);
-void addVertexHead(ConvexHull* convex, Vertex* vertex);
-void addPoint(ConvexHull* convex, Point* p, void (*addFunction)(ConvexHull*, Vertex*));
-void addPointCoordinates(ConvexHull* convex, int x, int y, void (*addFunction)(ConvexHull*, Vertex*));
-Vertex* extractVertexTail(ConvexHull* convex);
-Vertex* extractVertexHead(ConvexHull* convex);
-Vertex* extractPoint(ConvexHull* convex, Point* p);
-Vertex* searchVertexByFunction(ConvexHull* convex, int (*compare)(const Point*, const Point*));
-void concatConvex(ConvexHull* convex1, ConvexHull* convex2);
+void addVertexTail(Polygon* poly, Vertex* vertex);
+void addVertexHead(Polygon* poly, Vertex* vertex);
+void addPoint(Polygon* poly, Point* p, void (*addFunction)(Polygon*, Vertex*));
+void addPointCoordinates(Polygon* poly, int x, int y, void (*addFunction)(Polygon*, Vertex*));
+Vertex* extractVertexTail(Polygon* poly);
+Vertex* extractVertexHead(Polygon* poly);
+Vertex* extractPoint(Polygon* poly, Point* p);
+Vertex* searchVertexByFunction(Polygon* poly, int (*compare)(const Point*, const Point*));
+void concatPolygon(Polygon* poly1, Polygon* poly2);
+int length(Polygon poly);
 void printPoly(Polygon poly, void (*printPointFunction)(const Point*));
 void freePolygon(Polygon* poly);
-void freeConvex(ConvexHull* convex);
 
 // Fichier : math.c
-int isRight(Point* A, Point* B, Point* p);
-int dist(Point* A, Point* B);
 int crossProduct(Point* p, Point* q, Point* r);
-void rightPoints(ConvexHull* convex, Point* A, Point* B, ConvexHull* res);
-Point* furtherestPoint(ConvexHull* convex, Point* A, Point* B);
-void quickHull(ConvexHull* convex, ConvexHull* res);
-void quickHullAux(ConvexHull* convex, ConvexHull* res, Point* p, Point* q);
+int isDirect(Point* A, Point* B, Point* p);
+int isInside(Polygon* poly, Point* p);
 
 // Fichier : graphic.c
 void exit_function(void* data);

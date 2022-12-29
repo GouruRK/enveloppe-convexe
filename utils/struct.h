@@ -14,3 +14,11 @@ typedef struct {
     int curlen;
     int maxlen;
 } ConvexHull;
+
+typedef struct button {
+    char* text;
+    int x;
+    int y;
+    int height;
+    int width;
+} Button;
