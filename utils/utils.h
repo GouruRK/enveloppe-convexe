@@ -2,10 +2,11 @@
 
 #define INIT
 
-#include "struct.h"
-
-#include <stdlib.h>
+#include <MLV/MLV_all.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#include "struct.h"
 
 // Fichier: list.c
 int isPointEqual(const Point* A, const Point* B);
