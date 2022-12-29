@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "../utils.h"
 
 /*
@@ -128,3 +129,6 @@ void quickHullAux(ConvexHull* convex, ConvexHull* res, Point* p, Point* q) {
     printf("%d\n", dist(A, B));
     return 0;
 }*/
+=======
+#include "../utils.h"
+>>>>>>> graphic
