@@ -4,6 +4,9 @@
 #include <string.h>
 
 #define BORDER 8
+#define LENGTH_DISTRIB 3
+#define LENGTH_SHAPES 5
+#define LENGTH_DISPLAY 2
 
 static const char red[] = "\x1b[31m";
 static const char green[] = "\x1b[32m";
@@ -102,9 +105,8 @@ void window_param_preclose() {
 
 void init_window_param() {
     int stop = 0, pressed = 0, x = 0, y = 0;
-    int const length_distrib = 3, length_shapes = 5, length_display = 2;
-    Button tab_button_distrib[length_distrib], tab_button_shapes[length_shapes], tab_button_display[length_display];
-    int tab_value_distrib[length_distrib] = {}, tab_value_shapes[length_shapes] = {}, tab_value_display[length_display] = {};
+    Button tab_button_distrib[LENGTH_DISTRIB], tab_button_shapes[LENGTH_SHAPES], tab_button_display[LENGTH_DISPLAY];
+    int tab_value_distrib[LENGTH_DISTRIB] = {}, tab_value_shapes[LENGTH_SHAPES] = {}, tab_value_display[LENGTH_DISPLAY] = {};
     MLV_Color tab_color[2] = {MLV_COLOR_RED,
                               MLV_COLOR_GREEN};
 
@@ -130,10 +132,10 @@ void init_window_param() {
     while (!stop) {
         MLV_clear_window(MLV_COLOR_BLACK);
         MLV_draw_text(150, 20, "%d", MLV_COLOR_GREEN, MLV_get_time());
-        button_draw_tab(tab_button_distrib, tab_value_distrib, length_distrib, tab_color);
-        button_draw_tab(tab_button_display, tab_value_display, length_display, tab_color);
+        button_draw_tab(tab_button_distrib, tab_value_distrib, LENGTH_DISTRIB, tab_color);
+        button_draw_tab(tab_button_display, tab_value_display, LENGTH_DISPLAY, tab_color);
         if (tab_value_distrib[2] == 1) {
-            button_draw_tab(tab_button_shapes, tab_value_shapes, length_shapes, tab_color);
+            button_draw_tab(tab_button_shapes, tab_value_shapes, LENGTH_SHAPES, tab_color);
         }
         MLV_actualise_window();
         MLV_update_window();
@@ -141,15 +143,15 @@ void init_window_param() {
         if ((MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_PRESSED) && pressed == 0) {
             pressed = 1;
             MLV_get_mouse_position(&x, &y);
-            int val = button_onclick_tab(tab_button_distrib, length_distrib, x, y);
-            int val2 = button_onclick_tab(tab_button_display, length_display, x, y);
-            int val3 = button_onclick_tab(tab_button_shapes, length_shapes, x, y);
+            int val = button_onclick_tab(tab_button_distrib, LENGTH_DISTRIB, x, y);
+            int val2 = button_onclick_tab(tab_button_display, LENGTH_DISPLAY, x, y);
+            int val3 = button_onclick_tab(tab_button_shapes, LENGTH_SHAPES, x, y);
             if (val != -1) {
-                switch_(tab_value_distrib, length_distrib, val);
+                switch_(tab_value_distrib, LENGTH_DISTRIB, val);
             } else if (val2 != -1) {
-                switch_(tab_value_display, length_display, val2);
+                switch_(tab_value_display, LENGTH_DISPLAY, val2);
             } else if (val3 != -1 && tab_value_distrib[2] == 1) {
-                switch_(tab_value_shapes, length_shapes, val3);
+                switch_(tab_value_shapes, LENGTH_SHAPES, val3);
             }
         }
         if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_RELEASED) {
