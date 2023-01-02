@@ -7,6 +7,10 @@
 #define RADIUS 5
 #define PI 3.14159265
 
+#define COLOR_INSIDE MLV_COLOR_ORANGE
+#define COLOR_OUTSIDE MLV_COLOR_BLUE
+#define COLOR_LINE MLV_COLOR_BLACK
+
 /*
 clang -c graphic.c -Wall -std=c17 -lMLV
 clang -c ../list/list.c -Wall -std=c17
@@ -14,8 +18,32 @@ clang -c ../math/math.c list.o -Wall -std=c17
 clang enveloppe.c graphic.o -Wall -std=c17 -o env -lMLV
 */
 
-void drawPoint(Point* p, MLV_Color color) {
+void draw_Point(Point* p, MLV_Color color) {
     MLV_draw_filled_circle(p->x, p->y, RADIUS, color);
+}
+
+void draw_Points(Polygon poly, MLV_Color color) {
+    Vertex* head = NULL;
+    while (head != poly) {
+        // 1er cas
+        if (!head) {
+            head = poly;
+        }
+        draw_Point(poly->p, color);
+        poly = poly->next;
+    }
+}
+
+void draw_Poly(Polygon poly, MLV_Color color) {
+    Vertex* head = poly;
+    Vertex* prev = head;
+    poly = poly->next;
+    while (head != poly) {
+        MLV_draw_line(prev->p->x, prev->p->y, poly->p->x, poly->p->y, color);
+        prev = poly;
+        poly = poly->next;
+    }
+    MLV_draw_line(prev->p->x, prev->p->y, poly->p->x, poly->p->y, color);
 }
 
 void newPoint(Polygon* poly, Polygon* insidePoints, Point* p) {
@@ -132,17 +160,17 @@ void init_Convex_click(ConvexHull* convex) {
         MLV_wait_mouse(&x, &y);
         if (points == 0) {
             fillPoint(p0, x, y);
-            drawPoint(p0, MLV_COLOR_BLUE);
+            draw_Point(p0, COLOR_OUTSIDE);
         } else {
             fillPoint(p1, x, y);
-            drawPoint(p1, MLV_COLOR_BLUE);
+            draw_Point(p1, COLOR_OUTSIDE);
+            MLV_draw_line(p0->x, p0->y, p1->x, p1->y, COLOR_LINE);
         }
         MLV_update_window();
         points++;
     }
     addPoint(&(convex->poly), p0, addVertexTail);
     addPoint(&(convex->poly), p1, addVertexTail);
-    drawPoly(convex->poly, MLV_COLOR_BLACK);
     MLV_update_window();
 }
 
@@ -154,11 +182,12 @@ void Convex_click(ConvexHull* convex) {
         MLV_wait_mouse(&x, &y);
         Point* p = createPoint();
         fillPoint(p, x, y);
-        newPoint((*convex).poly, &insidePoints, p);
+        newPoint(&(*convex).poly, &insidePoints, p);
         MLV_clear_window(MLV_COLOR_WHITE);
+        draw_Poly((*convex).poly, COLOR_LINE);
+        draw_Points((*convex).poly, COLOR_OUTSIDE);
+        draw_Points(insidePoints, COLOR_INSIDE);
         MLV_update_window();
-        drawPoints((*convex).poly, MLV_COLOR_BLUE);
-        drawPoints(insidePoints, MLV_COLOR_ORANGE);
     }
 }
 int main(void) {
