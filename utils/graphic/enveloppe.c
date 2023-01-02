@@ -4,7 +4,7 @@
 
 #include "../utils.h"
 
-#define RADUIS 5
+#define RADIUS 5
 #define PI 3.14159265
 
 /*
@@ -13,6 +13,65 @@ clang -c ../list/list.c -Wall -std=c17
 clang -c ../math/math.c list.o -Wall -std=c17
 clang enveloppe.c graphic.o -Wall -std=c17 -o env -lMLV
 */
+
+void drawPoint(Point* p, MLV_Color color) {
+    MLV_draw_filled_circle(p->x, p->y, RADIUS, color);
+}
+
+void newPoint(Polygon* poly, Polygon* insidePoints, Point* p) {
+    // On regarde si le point est a l'intérieur de l'enveloppe
+    Vertex* head = NULL;
+    Vertex* point;
+    int direct;
+    while (head != *poly) {
+        if (!head) {
+            head = *poly;
+        }
+        direct = isDirect(p, (*poly)->p, (*poly)->next->p);
+        *poly = (*poly)->next;
+        if (direct) {
+            continue;
+        } else {
+            // on insère p entre [Si, Si+1]
+            // on insère a (*poly)->next pcq sinon on insère avant Si
+            // *poly = (*poly)->next;
+            addPoint(poly, p, addVertexHead);
+            // point devient l'endroit où on a insérer le point
+            point = *poly;
+            break;
+        }
+    }
+    if (direct) {
+        addPoint(insidePoints, p, addVertexHead);
+        return;
+    }
+    // On fixe le début de poly au nouveau point
+    *poly = point;
+
+    // nettoyage avant
+    while (1) {
+        direct = isDirect((*poly)->p, (*poly)->next->p, (*poly)->next->next->p);
+        if (!direct) {
+            Vertex* v = extractVertexHead(&(*poly)->next);
+            addVertexHead(insidePoints, v);
+        } else {
+            break;
+        }
+    }
+    // nettoyage arriere
+    while (1) {
+        direct = isDirect((*poly)->p, (*poly)->prev->prev->p, (*poly)->prev->p);
+        if (!direct) {
+            Vertex* keep = *poly;
+            *poly = (*poly)->prev;
+            Vertex* v = extractVertexHead(poly);
+            addVertexHead(insidePoints, v);
+            *poly = keep;
+        } else {
+            break;
+        }
+    }
+}
 
 int r_sign() {
     if ((rand() % 2) == 0) {
@@ -65,12 +124,53 @@ void draw_square_random_rising(int radius_max, int nb_points, int window_widht, 
     }
 }
 
+void init_Convex_click(ConvexHull* convex) {
+    convex->poly = createPolygon();
+    int points = 0, x, y;
+    Point *p0 = createPoint(), *p1 = createPoint();
+    while (points < 2) {
+        MLV_wait_mouse(&x, &y);
+        if (points == 0) {
+            fillPoint(p0, x, y);
+            drawPoint(p0, MLV_COLOR_BLUE);
+        } else {
+            fillPoint(p1, x, y);
+            drawPoint(p1, MLV_COLOR_BLUE);
+        }
+        MLV_update_window();
+        points++;
+    }
+    addPoint(&(convex->poly), p0, addVertexTail);
+    addPoint(&(convex->poly), p1, addVertexTail);
+    drawPoly(convex->poly, MLV_COLOR_BLACK);
+    MLV_update_window();
+}
+
+void Convex_click(ConvexHull* convex) {
+    init_Convex_click(convex);
+    Polygon insidePoints = createPolygon();
+    while (1) {
+        int x, y;
+        MLV_wait_mouse(&x, &y);
+        Point* p = createPoint();
+        fillPoint(p, x, y);
+        newPoint((*convex).poly, &insidePoints, p);
+        MLV_clear_window(MLV_COLOR_WHITE);
+        MLV_update_window();
+        drawPoints((*convex).poly, MLV_COLOR_BLUE);
+        drawPoints(insidePoints, MLV_COLOR_ORANGE);
+    }
+}
 int main(void) {
+    ConvexHull convex;
     MLV_create_window("Setting convex hull", "Setting", 1000, 1000);
+    MLV_clear_window(MLV_COLOR_WHITE);
+    MLV_update_window();
+    Convex_click(&convex);
     // draw_circle_random_rising(100, 400, 300, 600);
     // draw_circle_random(100, 400, 300, 600);
     // draw_square_random(100, 200, 300, 600);
-    draw_square_random_rising(350, 1000, 1000, 1000);
+    // draw_square_random_rising(350, 1000, 1000, 1000);
     MLV_wait_seconds(2);
     MLV_free_window();
     return 0;

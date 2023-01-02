@@ -40,7 +40,6 @@ void initConvex(ConvexHull* convex) {
     int points = 0;
     Point* p0 = createPoint();
     Point* p1 = createPoint();
-    Point* p2 = createPoint();
     while (points < 2) {
         int x, y;
         MLV_update_window();
@@ -49,19 +48,14 @@ void initConvex(ConvexHull* convex) {
         MLV_update_window();
         if (points == 0) {
             fillPoint(p0, x, y);
+            points++;
             drawPoint(p0, MLV_COLOR_BLUE);
         } else if (points == 1) {
-            fillPoint(p1, x, y),
+            fillPoint(p1, x, y);
             drawPoint(p0, MLV_COLOR_BLUE);
             drawPoint(p1, MLV_COLOR_BLUE);
-        } else if (points == 2) {
-            fillPoint(p2, x, y),
-            drawPoint(p0, MLV_COLOR_BLUE);
-            drawPoint(p1, MLV_COLOR_BLUE);
-            drawPoint(p2, MLV_COLOR_BLUE);
+            points++;
         }
-        points++;
-        MLV_update_window();
     }
     addPoint(&(convex->poly), p0, addVertexTail);
     addPoint(&(convex->poly), p1, addVertexTail);
@@ -79,7 +73,7 @@ void initConvex(ConvexHull* convex) {
 }
 
 void drawTriangle(Point* A, Point* B, Point* C) {
-    MLV_Color color = isDirect(A, B, C) ? MLV_COLOR_GREEN: MLV_COLOR_RED;
+    MLV_Color color = isDirect(A, B, C) ? MLV_COLOR_GREEN : MLV_COLOR_RED;
     MLV_draw_line(A->x, A->y, B->x, B->y, color);
     MLV_draw_line(A->x, A->y, C->x, C->y, color);
     MLV_draw_line(B->x, B->y, C->x, C->y, color);
