@@ -29,6 +29,7 @@ Button button_create(int x, int y, char* text) {
     but.text = (char*)malloc(strlen(text) * sizeof(char));
     if (but.text == NULL) {
         printf("%s Problème d'allocation mémoire %s\n", red, reset);
+        exit(1);
     }
     but.x = x, but.y = y;
     strcpy(but.text, text);
