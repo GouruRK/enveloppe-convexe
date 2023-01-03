@@ -6,9 +6,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 #include "struct.h"
 
-// Fichier: list.c
+// define
+
+#define COLOR_INSIDE MLV_COLOR_ORANGE
+#define COLOR_OUTSIDE MLV_COLOR_BLUE
+#define COLOR_LINE MLV_COLOR_BLACK
+
+// Fichier: ./list/list.c
 int isPointEqual(const Point* A, const Point* B);
 void printPoint(const Point* p);
 int minX(const Point* A, const Point* B);
@@ -31,7 +38,7 @@ int length(Polygon poly);
 void printPoly(Polygon poly, void (*printPointFunction)(const Point*));
 void freePolygon(Polygon* poly);
 
-// Fichier : math.c
+// Fichier : ./math/math.c
 int crossProduct(Point* p, Point* q, Point* r);
 int isDirect(Point* A, Point* B, Point* p);
 int isInside(Polygon* poly, Point* p);
@@ -47,5 +54,14 @@ void button_draw_tab(Button tab[], int val[], int size, MLV_Color color[]);
 void switch_(int val[], int size, int index);
 void window_param_preclose(void);
 void init_window_param(void);
+
+// Fichier : ./graphic/draw.c
+ConvexHull createConvex(int maxlen);
+void drawPoint(Point* p, int radius, MLV_Color color);
+void drawPoints(Polygon poly, int radius, MLV_Color color);
+void drawPoly(ConvexHull convex, MLV_Color color, void (*drawFunction)(const int*, const int*, int, MLV_Color));
+void drawTriangle(Point* A, Point* B, Point* C);
+void drawAll(ConvexHull* convex, ConvexHull* insidePoints, int radius, void (*drawFunction)(const int*, const int*, int, MLV_Color));
+
 
 #endif
