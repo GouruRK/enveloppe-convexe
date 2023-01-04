@@ -77,44 +77,42 @@ void newPoint(ConvexHull* convex, ConvexHull* insidePoints, Point* p) {
 }
 
 int r_sign() {
-    return !(rand() % 2) ? -1: 1; 
+    return !(rand() % 2) ? -1 : 1;
 }
 
 void draw_circle_random_rising(ConvexHull* convex, int radius_max,
                                int nb_points, int window_widht,
-                               int window_height) {
+                               int window_height, int wait_click, int waiting_time) {
     ConvexHull insidePoints = createConvex(nb_points);
     double nb_random, radius = radius_max / (float)nb_points;
-    Point *p0 = createPoint(), *p1 = createPoint();
-    float x, y;
     for (int i = 0; i < nb_points; i++) {
+        Point* p = createPoint();
         nb_random = rand();
-        x = window_widht / 2 + radius * i * cos(nb_random);
-        y = window_height / 2 + radius * i * sin(nb_random);
+        fillPoint(p, window_widht / 2 + radius * i * cos(nb_random),
+                  window_height / 2 + radius * i * sin(nb_random));
+
         if (i == 2) {
-            if (p0->x == p1->x && p0->y == p1->y) {
-                p1->x++;
+            if (convex->poly->p->x == convex->poly->next->p->x && convex->poly->p->y == convex->poly->next->p->x) {
+                convex->poly->next->p->x++;
             }
-            addPoint(&(convex->poly), p0, addVertexTail);
-            addPoint(&(convex->poly), p1, addVertexTail);
             convex->curlen = 2;
         }
         if (i < 2) {
-            if (i == 0) {
-                fillPoint(p0, (int)x, (int)y);
-                drawPoint(p0, RADIUS, COLOR_OUTSIDE);
-            } else {
-                fillPoint(p1, (int)x, (int)y);
-                drawPoint(p1, RADIUS, COLOR_OUTSIDE);
+            drawPoint(p, RADIUS, COLOR_OUTSIDE);
+            if (i == 1) {
+                MLV_draw_line(p->x, p->y, convex->poly->p->x, convex->poly->p->y, COLOR_LINE);
             }
+            addPoint(&(convex->poly), p, addVertexTail);
+            MLV_update_window();
         } else {
-            MLV_clear_window(MLV_COLOR_WHITE);
-            Point* p = createPoint();
-            fillPoint(p, (int)x, (int)y);
             newPoint(convex, &insidePoints, p);
             drawAll(convex, &insidePoints, RADIUS, MLV_draw_polygon);
         }
         MLV_update_window();
+
+        if (wait_click) {
+            MLV_wait_keyboard_or_mouse_or_milliseconds(NULL, NULL, NULL, NULL, NULL, waiting_time);
+        }
     }
 }
 
@@ -122,7 +120,7 @@ void draw_circle_random(int radius_max, int nb_points,
                         int window_widht, int window_height) {
     double nb_random;
     int radius;
-    
+
     for (int i = 0; i < nb_points; i++) {
         nb_random = rand();
         radius = rand() % radius_max;
@@ -208,7 +206,7 @@ int main(void) {
     MLV_clear_window(MLV_COLOR_WHITE);
     // MLV_update_window();
     // draw_convex_click(&convex);
-    draw_circle_random_rising(&convex, 400, 400, 1000, 1000);
+    draw_circle_random_rising(&convex, 400, 100, 1000, 1000, 1, 100000);
     // draw_circle_random(100, 400, 300, 600);
     // draw_square_random(100, 200, 300, 600);
     // draw_square_random_rising(350, 1000, 1000, 1000);
