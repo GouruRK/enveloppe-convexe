@@ -44,7 +44,9 @@ L'utilisateur dispose alors d'un exécutable `main`.
 
 ## Documentation
 
-Vous pouvez accéder a la documentation Doxygen en cliquant [ici]().
+Vous pouvez accéder a la documentation Doxygen en cliquant [ici](./html/index.html).
+
+*Si le fichier ne s'ouvre pas, utilisez la commande* `doxygen doxygenfile` *depuis le dossier du projet `enveloppe-convexe`pour créer la documentation.*
 
 ___
 Quentin Laborde - Kies Rémy
