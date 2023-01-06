@@ -268,14 +268,62 @@ void draw_convex_click(ConvexHull* convex) {
     }
 }
 
+void draw_inception_click(ConvexHull* convex) {
+    int x, y;
+    Point *p0 = createPoint(), *p1 = createPoint(), *p2 = createPoint();
+    MLV_wait_mouse(&x, &y);
+    for (int i = 0; i < 3; i++) {
+        if (i == 0) {
+            fillPoint(p0, x, y);
+            drawPoint(p0, RADIUS, COLOR_OUTSIDE);
+        }
+        if (i == 1) {
+            fillPoint(p1, x, y);
+            drawPoint(p0, RADIUS, COLOR_OUTSIDE);
+        }
+        if (i == 2) {
+            fillPoint(p2, x, y);
+            drawPoint(p0, RADIUS, COLOR_OUTSIDE);
+        }
+        MLV_update_window();
+    }
+}
+
 int main(void) {
+    // init_window_param();
+    MLV_create_window("Setting convex hull", "Setting", 1000, 1000);
+    //////////////////////
+    // char *choice, *endPtr;
+    // MLV_create_input_box(
+    //     200, 100,
+    //     100, 100,
+    //     MLV_COLOR_RED, MLV_COLOR_GREEN, MLV_COLOR_WHITE,
+    //     "Hauteur : ",
+    //     &choice);
+    // MLV_create_input_box(
+    //     200, 200,
+    //     100, 100,
+    //     MLV_COLOR_RED, MLV_COLOR_GREEN, MLV_COLOR_WHITE,
+    //     "Hauteur : ",
+    //     &choice);
+    // MLV_create_input_box(
+    //     200, 300,
+    //     100, 100,
+    //     MLV_COLOR_RED, MLV_COLOR_GREEN, MLV_COLOR_WHITE,
+    //     "Hauteur : ",
+    //     &choice);
+    // MLV_draw_all_input_boxes();
+    // MLV_update_window();
+    // MLV_wait_seconds(5);
+    //////////////////////
+    MLV_free_window();
     srand(time(NULL));
     ConvexHull convex = createConvex(-1);
     MLV_create_window("Setting convex hull", "Setting", 1000, 1000);
     MLV_clear_window(MLV_COLOR_WHITE);
     // MLV_update_window();
-    // draw_convex_click(&convex);
-    draw_circle_random_rising(&convex, 400, 100, 1000, 1000, 500);
+    draw_convex_click(&convex);
+    // draw_circle_random_rising(&convex, 400, 100, 1000, 1000, 500);
     // draw_circle_random(&convex, 400, 100, 1000, 1000, 500);
 
     // draw_square_random(&convex, 400, 400, 1000, 1000, 500);

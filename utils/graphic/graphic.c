@@ -94,7 +94,7 @@ void window_param_preclose(void) {
 }
 
 void init_window_param(void) {
-    int stop = 0, pressed = 0, x = 0, y = 0;
+    int stop = 0, pressed = 0, x = 0, y = 0, choix;
     Button tab_button_distrib[LENGTH_DISTRIB], tab_button_shapes[LENGTH_SHAPES], tab_button_display[LENGTH_DISPLAY];
     int tab_value_distrib[LENGTH_DISTRIB] = {}, tab_value_shapes[LENGTH_SHAPES] = {}, tab_value_display[LENGTH_DISPLAY] = {};
     MLV_Color tab_color[2] = {MLV_COLOR_RED,
@@ -127,6 +127,17 @@ void init_window_param(void) {
         if (tab_value_distrib[2] == 1) {
             button_draw_tab(tab_button_shapes, tab_value_shapes, LENGTH_SHAPES, tab_color);
         }
+
+        //////////////////////
+        // char *choice, *endPtr;
+        // MLV_wait_input_box(
+        //     200, 100,
+        //     100, 100,
+        //     MLV_COLOR_RED, MLV_COLOR_GREEN, MLV_COLOR_WHITE,
+        //     "Hauteur : ",
+        //     &choice);
+        // choix = strtol(choice, &endPtr, 10);
+        //////////////////////
         MLV_actualise_window();
         MLV_update_window();
 
