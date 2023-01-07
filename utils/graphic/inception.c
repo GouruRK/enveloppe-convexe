@@ -8,11 +8,19 @@ typedef struct {
     int size;
 } InceptionConvex;
 
+/*
+clang -c ../list/list.c -Wall -std=c17
+clang -c ../math/math.c list.o -Wall -std=c17
+clang -c draw.c -Wall -std=c17
+clang -c graphic.c -Wall -std=c17 -lMLV
+clang inception.c graphic.o math.o list.o draw.o -Wall -std=c17 -o inc -lMLV -lm
+*/
+
 void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
     // si tableau trop petit
     if (convexs->size == depth) {
         ConvexHull* temp = convexs->tabconvex;
-        temp = realloc(temp, ++convexs->size * sizeof(ConvexHull));
+        temp = realloc(temp, (++convexs->size) * sizeof(ConvexHull));
         if (!temp) {
             printf("%s Problème d'allocation mémoire %s\n", RED, RESET);
             exit(1);
@@ -23,8 +31,8 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
 
     // si cas init
     if (convexs->tabconvex[depth].curlen < 2) {
-        fprintf(stderr, "entree cas init\n");
         addPoint(&(convexs->tabconvex[depth].poly), p, addVertexTail);
+        convexs->tabconvex[depth].curlen++;
         return;
     }
 
@@ -52,7 +60,7 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
         }
     }
     if (direct) {
-        newPoint2(convexs, depth++, p);
+        newPoint2(convexs, depth+1, p);
         return;
     }
     // On fixe le début de poly au nouveau point
@@ -63,8 +71,7 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
         direct = isDirect(convexs->tabconvex[depth].poly->p, convexs->tabconvex[depth].poly->next->p, convexs->tabconvex[depth].poly->next->next->p);
         if (!direct) {
             Vertex* v = extractVertexHead(&(convexs->tabconvex[depth].poly->next));
-            // addVertexHead(&(insidePoints->poly), v);
-            newPoint2(convexs, depth++, v->p);
+            newPoint2(convexs, depth+1, v->p);
             convexs->tabconvex[depth].curlen--;
         } else {
             break;
@@ -77,8 +84,7 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
             Vertex* keep = convexs->tabconvex[depth].poly;
             convexs->tabconvex[depth].poly = convexs->tabconvex[depth].poly->prev;
             Vertex* v = extractVertexHead(&(convexs->tabconvex[depth].poly));
-            // addVertexHead(&(insidePoints->poly), v);
-            newPoint2(convexs, depth++, v->p);
+            newPoint2(convexs, depth+1, v->p);
             convexs->tabconvex[depth].poly = keep;
             convexs->tabconvex[depth].curlen--;
         } else {
@@ -106,7 +112,6 @@ void DrawInceptionClick(void) {
             drawPoly(convexs.tabconvex[i], MLV_COLOR_BLACK, MLV_draw_polygon);
             drawPoints(convexs.tabconvex[i].poly, 2, MLV_COLOR_BLUE);
         }
-        fprintf(stderr, "%d\n", convexs.size);
         MLV_update_window();
     }
 }

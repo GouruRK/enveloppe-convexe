@@ -53,3 +53,6 @@ dkms.conf
 env
 
 .vscode
+main
+env
+inc

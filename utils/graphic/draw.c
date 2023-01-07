@@ -25,6 +25,9 @@ void drawPoints(Polygon poly, int radius, MLV_Color color) {
 
 void drawPoly(ConvexHull convex, MLV_Color color,
               void (*drawFunction)(const int*, const int*, int, MLV_Color)) {
+    if (!convex.curlen) {
+        return;
+    }
     int* vx = malloc(sizeof(int) * convex.curlen);
     int* vy = malloc(sizeof(int) * convex.curlen);
     if (!vx || !vy) {
