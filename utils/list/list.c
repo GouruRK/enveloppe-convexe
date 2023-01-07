@@ -4,13 +4,16 @@
  * @brief Ensemble de fonctions pour créer et modifier des listes doublement
  *        chaînées circulaire contenant des points
  * @date 2023-01-07
+ * 
  * @copyright Copyright (c) 2023
+ * 
  */
 
 #include "../utils.h"
 
 /*
 gcc -c list.c -Wall -std=c17
+gcc -c ../args/errs.c -Wall -std=c17
 */
 
 /**
@@ -65,14 +68,14 @@ int maxX(const Point* A, const Point* B) {
 
 /**
  * @brief Crée un pointeur Point vide
- *        exit si erreur dans l'allocation
  * 
- * @return Point* 
+ * @return Point* Renvoie `NULL` si erreur lors de l'allocation
  */
 Point* createPoint(void) {
     Point* p = (Point*)malloc(sizeof(Point));
     if (!p) {
-        exit(1);
+        errAlloc();
+        return NULL;
     }
     return p;
 }
@@ -91,14 +94,15 @@ void fillPoint(Point* p, int x, int y) {
 
 /**
  * @brief Crée un pointeur Vertex vide qui pointe sur lui même
- *        exit si erreur dans l'allocation
+ *        Renvoie NULL si erreur dans l'allocation
  * 
  * @return Vertex* 
  */
 Vertex* createVertex(void) {
     Vertex* v = (Vertex*)malloc(sizeof(Vertex));
     if (!v) {
-        exit(1);
+        errAlloc();
+        return NULL;
     }
     v->prev = v;
     v->next = v;
@@ -163,11 +167,16 @@ void addVertexHead(Polygon* poly, Vertex* vertex) {
  * @param poly 
  * @param p 
  * @param addFunction 
+ * @return int Renvoie `1` si pas d'erreur d'allocation, `0` sinon
  */
-void addPoint(Polygon* poly, Point* p, void (*addFunction)(Polygon*, Vertex*)) {
+int addPoint(Polygon* poly, Point* p, void (*addFunction)(Polygon*, Vertex*)) {
     Vertex* vertex = createVertex();
+    if (!vertex) {
+        return 0;
+    }
     fillVertex(vertex, p);
     addFunction(poly, vertex);
+    return 1;
 }
 
 /**
@@ -175,14 +184,20 @@ void addPoint(Polygon* poly, Point* p, void (*addFunction)(Polygon*, Vertex*)) {
  *        de la fonction `addFunction` a partir de ses coordonnées
  * 
  * @param poly 
- * @param p 
+ * @param x 
+ * @param y 
  * @param addFunction 
+ * @return int Renvoie `1` si pas d'erreur dans l'allocation, `0` sinon
  */
-void addPointCoordinates(Polygon* poly, int x, int y,
+int addPointCoordinates(Polygon* poly, int x, int y,
                          void (*addFunction)(Polygon*, Vertex*)) {
     Point* p = createPoint();
+    if (!p) {
+        return 0;
+    }
     fillPoint(p, x, y);
     addPoint(poly, p, addFunction);
+    return 1;
 }
 
 /**

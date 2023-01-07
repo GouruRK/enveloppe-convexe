@@ -1,3 +1,13 @@
+/**
+ * @file main.c
+ * @author Quentin Laborde - Kies Rémy
+ * @brief Fichier principal
+ * @date 2023-01-07
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include "main.h"
 
 /*

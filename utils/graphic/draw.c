@@ -3,7 +3,9 @@
  * @author Quentin Laborde - Kies Rémy
  * @brief Contient toutes les fonctions pour gérer l'affichage des enveloppes
  * @date 2023-01-07
+ * 
  * @copyright Copyright (c) 2023
+ * 
  */
 
 #include "../utils.h"

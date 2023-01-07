@@ -6,24 +6,40 @@
  * @date 2023-01-07
  * 
  * @copyright Copyright (c) 2023
+ * 
  */
 
-#include <MLV/MLV_all.h>
+#include "../utils.h"
+
 #include <math.h>
 #include <time.h>
-
-#include "../utils.h"
 
 #define RADIUS 5
 #define PI 3.14159265
 
 /*
-clang -c ../list/list.c -Wall -std=c17
-clang -c ../math/math.c list.o -Wall -std=c17
+Lignes de compilation : 
+
+clang -c ../args/errs.c -Wall -std=c17
+clang -c ../list/list.c errs.o -Wall -std=c17
+clang -c ../math/math.c list.o errs.o -Wall -std=c17
 clang -c draw.c -Wall -std=c17
 clang -c graphic.c -Wall -std=c17 -lMLV
-clang enveloppe.c graphic.o math.o list.o draw.o -Wall -std=c17 -o env -lMLV -lm
+clang enveloppe.c graphic.o math.o list.o draw.o errs.o -Wall -std=c17 -o env -lMLV -lm
 */
+
+/**
+ * @brief Permet de free tous les polynomes
+ * 
+ * @param convex 
+ * @param insidePoints 
+ * @param p 
+ */
+void freeAll(ConvexHull* convex, ConvexHull* insidePoints, Point* p) {
+    freePolygon(&(convex->poly));
+    freePolygon(&(insidePoints->poly));
+    free(p);
+}
 
 /**
  * @brief Permet d'ajouter un point dans une enveloppe convexe
@@ -49,7 +65,10 @@ void newPoint(ConvexHull* convex, ConvexHull* insidePoints, Point* p) {
             // on insère p entre [Si, Si+1]
             // on insère a (*poly)->next pcq sinon on insère avant Si
             // *poly = (*poly)->next;
-            addPoint(&(convex->poly), p, addVertexHead);
+            if (!addPoint(&(convex->poly), p, addVertexHead)) {
+                freeAll(convex, insidePoints, p);
+                exit(1);
+            }
             // point devient l'endroit où on a insérer le point
             point = convex->poly;
             convex->curlen++;
@@ -57,7 +76,10 @@ void newPoint(ConvexHull* convex, ConvexHull* insidePoints, Point* p) {
         }
     }
     if (direct) {
-        addPoint(&(insidePoints->poly), p, addVertexHead);
+        if (!addPoint(&(insidePoints->poly), p, addVertexHead)) {
+            freeAll(convex, insidePoints, p);
+            exit(1);
+        }
         insidePoints->curlen++;
         return;
     }
@@ -123,6 +145,10 @@ void draw_circle_random_rising(ConvexHull* convex, int radius_max,
 
     for (int i = 0; i < nb_points; i++) {
         Point* p = createPoint();
+        if (!p) {
+            freeAll(convex, &insidePoints, NULL);
+            exit(1);
+        }
         nb_random = rand();
         fillPoint(p, window_widht / 2 + radius * i * cos(nb_random),
                   window_height / 2 + radius * i * sin(nb_random));
@@ -139,7 +165,10 @@ void draw_circle_random_rising(ConvexHull* convex, int radius_max,
                 MLV_draw_line(p->x, p->y, convex->poly->p->x, 
                               convex->poly->p->y, COLOR_LINE);
             }
-            addPoint(&(convex->poly), p, addVertexTail);
+            if (!addPoint(&(convex->poly), p, addVertexTail)) {
+                freeAll(convex, &insidePoints, p);
+                exit(1);
+            }
             MLV_update_window();
         } else {
             newPoint(convex, &insidePoints, p);
@@ -172,6 +201,10 @@ void draw_circle_random(ConvexHull* convex, int radius_max, int nb_points,
 
     for (int i = 0; i < nb_points; i++) {
         Point* p = createPoint();
+        if (!p) {
+            freeAll(convex, &insidePoints, NULL);
+            exit(1);
+        }
         nb_random = rand();
         radius = rand() % radius_max;
         fillPoint(p, window_widht / 2 + radius * cos(nb_random),
@@ -189,7 +222,10 @@ void draw_circle_random(ConvexHull* convex, int radius_max, int nb_points,
                 MLV_draw_line(p->x, p->y, convex->poly->p->x, 
                               convex->poly->p->y, COLOR_LINE);
             }
-            addPoint(&(convex->poly), p, addVertexTail);
+            if (!addPoint(&(convex->poly), p, addVertexTail)) {
+                freeAll(convex, &insidePoints, p);
+                exit(1);
+            }
             MLV_update_window();
         } else {
             newPoint(convex, &insidePoints, p);
@@ -222,6 +258,10 @@ void draw_square_random(ConvexHull* convex, int radius_max, int nb_points,
 
     for (int i = 0; i < nb_points; i++) {
         Point* p = createPoint();
+        if (!p) {
+            freeAll(convex, &insidePoints, NULL);
+            exit(1);
+        }
         fillPoint(p, min_x + rand() % (2 * radius_max),
                   min_y + rand() % (2 * radius_max));
 
@@ -237,7 +277,10 @@ void draw_square_random(ConvexHull* convex, int radius_max, int nb_points,
                 MLV_draw_line(p->x, p->y, convex->poly->p->x, 
                               convex->poly->p->y, COLOR_LINE);
             }
-            addPoint(&(convex->poly), p, addVertexTail);
+            if (!addPoint(&(convex->poly), p, addVertexTail)) {
+                freeAll(convex, &insidePoints, p);
+                exit(1);
+            }
             MLV_update_window();
         } else {
             newPoint(convex, &insidePoints, p);
@@ -271,6 +314,10 @@ void draw_square_random_rising(ConvexHull* convex, int radius_max,
 
     for (int i = 0; i < nb_points; i++) {
         Point* p = createPoint();
+        if (!p) {
+            freeAll(convex, &insidePoints, NULL);
+            exit(1);
+        }
         int nb = (radius * i) + 1;
         fillPoint(p, window_widht / 2 + r_sign() * (rand() % nb),
                   window_height / 2 + r_sign() * (rand() % nb));
@@ -287,7 +334,10 @@ void draw_square_random_rising(ConvexHull* convex, int radius_max,
                 MLV_draw_line(p->x, p->y, convex->poly->p->x, 
                               convex->poly->p->y, COLOR_LINE);
             }
-            addPoint(&(convex->poly), p, addVertexTail);
+            if (!addPoint(&(convex->poly), p, addVertexTail)) {
+                freeAll(convex, &insidePoints, p);
+                exit(1);
+            }
             MLV_update_window();
         } else {
             newPoint(convex, &insidePoints, p);
@@ -310,6 +360,11 @@ void draw_square_random_rising(ConvexHull* convex, int radius_max,
 void init_Convex_click(ConvexHull* convex) {
     int points = 0, x, y;
     Point *p0 = createPoint(), *p1 = createPoint();
+    if (!p0 || !p1) {
+        freeAll(convex, NULL, p0);
+        free(p1);
+        exit(1);
+    }
     while (points < 2) {
         MLV_wait_mouse(&x, &y);
         if (points == 0) {
@@ -347,6 +402,10 @@ void draw_convex_click(ConvexHull* convex) {
         int x, y;
         MLV_wait_mouse(&x, &y);
         Point* p = createPoint();
+        if (!p) {
+            freeAll(convex, &insidePoints, NULL);
+            exit(1);
+        }
         fillPoint(p, x, y);
         newPoint(convex, &insidePoints, p);
         MLV_clear_window(MLV_COLOR_WHITE);
@@ -356,6 +415,7 @@ void draw_convex_click(ConvexHull* convex) {
 }
 
 int main(void) {
+    errAlloc();
     // init_window_param();
     MLV_create_window("Setting convex hull", "Setting", 1000, 1000);
     //////////////////////

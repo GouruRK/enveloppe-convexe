@@ -9,11 +9,16 @@
 
 #include "struct.h"
 
-// define
-
+// define draw color
 #define COLOR_INSIDE MLV_COLOR_ORANGE
 #define COLOR_OUTSIDE MLV_COLOR_BLUE
 #define COLOR_LINE MLV_COLOR_BLACK
+
+// define console color
+#define RED "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define CYAN "\x1b[36m"
+#define RESET "\x1b[0m"
 
 // Fichier: ./list/list.c
 int isPointEqual(const Point* A, const Point* B);
@@ -27,8 +32,8 @@ void fillVertex(Vertex* vertex, Point* p);
 Polygon createPolygon(void);
 void addVertexTail(Polygon* poly, Vertex* vertex);
 void addVertexHead(Polygon* poly, Vertex* vertex);
-void addPoint(Polygon* poly, Point* p, void (*addFunction)(Polygon*, Vertex*));
-void addPointCoordinates(Polygon* poly, int x, int y, void (*addFunction)(Polygon*, Vertex*));
+int addPoint(Polygon* poly, Point* p, void (*addFunction)(Polygon*, Vertex*));
+int addPointCoordinates(Polygon* poly, int x, int y, void (*addFunction)(Polygon*, Vertex*));
 Vertex* extractVertexTail(Polygon* poly);
 Vertex* extractVertexHead(Polygon* poly);
 Vertex* extractPoint(Polygon* poly, Point* p);
@@ -55,6 +60,8 @@ void switch_(int val[], int size, int index);
 void window_param_preclose(void);
 void init_window_param(void);
 
+
+
 // Fichier : ./graphic/draw.c
 ConvexHull createConvex(int maxlen);
 void drawPoint(Point* p, int radius, MLV_Color color);
@@ -63,5 +70,7 @@ void drawPoly(ConvexHull convex, MLV_Color color, void (*drawFunction)(const int
 void drawTriangle(Point* A, Point* B, Point* C);
 void drawAll(ConvexHull* convex, ConvexHull* insidePoints, int radius, void (*drawFunction)(const int*, const int*, int, MLV_Color));
 
+// Fichier : ./args/errs.c
+void errAlloc(void);
 
 #endif

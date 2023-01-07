@@ -22,3 +22,8 @@ typedef struct button {
     int height;
     int width;
 } Button;
+
+typedef struct {
+    ConvexHull* tabconvex;
+    int size;
+} InceptionConvex;

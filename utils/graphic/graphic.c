@@ -1,34 +1,39 @@
+/**
+ * @file graphic.c
+ * @author Quentin Laborde - Kies Rémy
+ * @brief Affiche le menu
+ * @date 2023-01-07
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include "../utils.h"
+
+/* Ligne de compilation :
+clang -c ../args/errs.c -Wall -std=c17
+clang graphic.c errs.o -Wall -std=c17 -o graph -lMLV
+*/
 
 #define BORDER 8
 #define LENGTH_DISTRIB 3
 #define LENGTH_SHAPES 5
 #define LENGTH_DISPLAY 2
 
-static const char red[] = "\x1b[31m";
-static const char green[] = "\x1b[32m";
-static const char cyan[] = "\x1b[36m";
-static const char reset[] = "\x1b[0m";
-
-void exit_function(void* data);
-void init_window_param();
-void window_param_preclose();
-
-Button button_create(int x, int y, char* text);
-void button_draw_Wborder(Button but, MLV_Color color_text, MLV_Color color_border);
-void button_draw_WOborder(Button but, MLV_Color color_text);
-int button_onclick(Button but, int x, int y);
-
 void exit_function(void* data) {
     int* arret = (int*)data;
     *arret = 1;
+}
+
+int isClick(x, y, minX, maxX, minY, maxY) {
+    return (x > minX && x < maxX) && (y > minY && y < maxY);
 }
 
 Button button_create(int x, int y, char* text) {
     Button but;
     but.text = (char*)malloc(strlen(text) * sizeof(char));
     if (but.text == NULL) {
-        printf("%s Problème d'allocation mémoire %s\n", red, reset);
+        errAlloc();
         exit(1);
     }
     but.x = x, but.y = y;
@@ -41,34 +46,43 @@ int button_onclick(Button but, int x, int y) {
     // 1 si clické sinon 0
     int but_max_x = but.x + but.width + BORDER;
     int but_max_y = but.y + but.height + BORDER;
-    if (x < but.x || x > but_max_x || y < but.y || y > but_max_y) {
-        return 0;
-    }
-    return 1;
+    // if (x < but.x || x > but_max_x || y < but.y || y > but_max_y) {
+    //     return 0;
+    // }
+    // return 1;
+    return isClick(x, y, but.x, but_max_x, but.y, but_max_y);
 }
 
 int button_onclick_tab(Button tab[], int size, int x, int y) {
     for (int i = 0; i < size; i++) {
-        int but_max_x = tab[i].x + tab[i].width + BORDER;
-        int but_max_y = tab[i].y + tab[i].height + BORDER;
+        // int but_max_x = tab[i].x + tab[i].width + BORDER;
+        // int but_max_y = tab[i].y + tab[i].height + BORDER;
         // est dans le bouton
-        if (!(x < tab[i].x || x > but_max_x || y < tab[i].y || y > but_max_y)) {
+        // if (!(x < tab[i].x || x > but_max_x || y < tab[i].y || y > but_max_y)) {
+        //     return i;
+        // }
+        if (button_onclick(tab[i], x, y)) {
             return i;
         }
     }
     return -1;
 }
 
-void button_draw_Wborder(Button but, MLV_Color color_text, MLV_Color color_border) {
-    MLV_draw_rectangle(but.x, but.y, but.width + BORDER, but.height + BORDER, color_border);
-    MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text, color_text);
+void button_draw_Wborder(Button but, MLV_Color color_text, 
+                         MLV_Color color_border) {
+    MLV_draw_rectangle(but.x, but.y, but.width + BORDER, but.height + BORDER,
+                       color_border);
+    MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text,
+                  color_text);
 }
 
 void button_draw_WOborder(Button but, MLV_Color color_text) {
-    MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text, color_text);
+    MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text, 
+                  color_text);
 }
 
-void button_draw_tab(Button tab[], int val[], int size, MLV_Color color[]) {
+void button_draw_tab(Button tab[], int val[], int size, 
+                     MLV_Color color[]) {
     for (int i = 0; i < size; i++) {
         // fprintf(stderr, "x:%d y:%d w:%d h:%d val%d\n", tab[i].x, tab[i].y, tab[i].width, tab[i].height, val[i]);
         button_draw_Wborder(tab[i], color[val[i]], color[val[i]]);
@@ -88,13 +102,13 @@ void switch_(int val[], int size, int index) {
 void window_param_preclose(void) {
     MLV_clear_window(MLV_COLOR_BLACK);
     MLV_draw_text(150, 50, "cc", MLV_COLOR_GREEN);
-    printf("%s Fin d'execusion %s\n", green, reset);
+    printf("%s Fin d'execusion %s\n", GREEN, RESET);
     MLV_actualise_window();
     MLV_wait_seconds(2);
 }
 
 void init_window_param(void) {
-    int stop = 0, pressed = 0, x = 0, y = 0, choix;
+    int stop = 0, pressed = 0, x = 0, y = 0;
     Button tab_button_distrib[LENGTH_DISTRIB], tab_button_shapes[LENGTH_SHAPES], tab_button_display[LENGTH_DISPLAY];
     int tab_value_distrib[LENGTH_DISTRIB] = {}, tab_value_shapes[LENGTH_SHAPES] = {}, tab_value_display[LENGTH_DISPLAY] = {};
     MLV_Color tab_color[2] = {MLV_COLOR_RED,
@@ -161,4 +175,9 @@ void init_window_param(void) {
     }
     window_param_preclose();
     MLV_free_window();
+}
+
+int main(void) {
+    init_window_param();
+    return 0;
 }

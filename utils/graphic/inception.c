@@ -1,12 +1,14 @@
+/**
+ * @file inception.c
+ * @author Quentin Laborde - Kies Rémy
+ * @brief Permet de créer des enveloppes convexes imbriquées
+ * @date 2023-01-07
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include "../utils.h"
-
-#define RED "\x1b[31m"
-#define RESET "\x1b[0m"
-
-typedef struct {
-    ConvexHull* tabconvex;
-    int size;
-} InceptionConvex;
 
 /*
 clang -c ../list/list.c -Wall -std=c17

@@ -1,3 +1,13 @@
+/**
+ * @file math.c
+ * @author Quentin Laborde - Kies Rémy
+ * @brief Fonctions de maths utiles au projet
+ * @date 2023-01-07
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include "../utils.h"
 
 /*
@@ -20,6 +30,14 @@ int crossProduct(Point* A, Point* B, Point* C) {
     return (B->x - A->x)*(C->y - A->y) - (C->x - A->x)*(B->y - A->y);
 }
 
+/**
+ * @brief Permet de savoir si un triangle est direct
+ * 
+ * @param A 
+ * @param B 
+ * @param C 
+ * @return int Renvoie `1` si direct, `0` sinon
+ */
 int isDirect(Point* A, Point* B, Point* C) {
     return crossProduct(A, B, C) >= 0;
 }
