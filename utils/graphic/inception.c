@@ -10,13 +10,21 @@
 
 #include "../utils.h"
 
-/*
+/* Lignes de compilation :
+clang -c ../args/errs.c -Wall -std=c17
 clang -c ../list/list.c -Wall -std=c17
 clang -c ../math/math.c list.o -Wall -std=c17
 clang -c draw.c -Wall -std=c17
 clang -c graphic.c -Wall -std=c17 -lMLV
-clang inception.c graphic.o math.o list.o draw.o -Wall -std=c17 -o inc -lMLV -lm
+clang inception.c graphic.o math.o list.o draw.o errs.o -Wall -std=c17 -o inc -lMLV -lm
 */
+
+void freeAllList(InceptionConvex* convexs) {
+    for (int i = 0; i < convexs->size; i++) {
+        freePolygon(&(convexs->tabconvex[0].poly));
+    }
+    free(convexs->tabconvex);
+}
 
 void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
     // si tableau trop petit
@@ -24,7 +32,9 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
         ConvexHull* temp = convexs->tabconvex;
         temp = realloc(temp, (++convexs->size) * sizeof(ConvexHull));
         if (!temp) {
-            printf("%s Problème d'allocation mémoire %s\n", RED, RESET);
+            errAlloc();
+            freeAllList(convexs);
+            free(p);
             exit(1);
         }
         convexs->tabconvex = temp;
@@ -33,7 +43,11 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
 
     // si cas init
     if (convexs->tabconvex[depth].curlen < 2) {
-        addPoint(&(convexs->tabconvex[depth].poly), p, addVertexTail);
+        if (!addPoint(&(convexs->tabconvex[depth].poly), p, addVertexTail)) {
+            freeAllList(convexs);
+            free(p);
+            exit(1);
+        }
         convexs->tabconvex[depth].curlen++;
         return;
     }
@@ -54,7 +68,11 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
             // on insère p entre [Si, Si+1]
             // on insère a (*poly)->next pcq sinon on insère avant Si
             // *poly = (*poly)->next;
-            addPoint(&(convexs->tabconvex[depth].poly), p, addVertexHead);
+            if (!addPoint(&(convexs->tabconvex[depth].poly), p, addVertexHead)) {
+                freeAllList(convexs);
+                free(p);
+                exit(1);
+            }
             // point devient l'endroit où on a insérer le point
             point = convexs->tabconvex[depth].poly;
             convexs->tabconvex[depth].curlen++;
@@ -102,10 +120,17 @@ void DrawInceptionClick(void) {
     int x, y;
     InceptionConvex convexs;
     convexs.tabconvex = (ConvexHull*)malloc(sizeof(ConvexHull));
+    if (!convexs.tabconvex) {
+        exit(1);
+    }
     convexs.tabconvex[0] = createConvex(-1);
     convexs.size = 1;
     while (1) {
         Point* p = createPoint();
+        if (!p) {
+            freeAllList(convexs);
+            exit(1);
+        }
         MLV_wait_mouse(&x, &y);
         fillPoint(p, x, y);
         newPoint2(&convexs, 0, p);
@@ -116,6 +141,7 @@ void DrawInceptionClick(void) {
         }
         MLV_update_window();
     }
+    freeAllList(&convexs);
 }
 
 int main(void) {

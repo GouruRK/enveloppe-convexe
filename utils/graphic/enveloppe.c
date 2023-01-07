@@ -181,6 +181,7 @@ void draw_circle_random_rising(ConvexHull* convex, int radius_max,
                                                        NULL, NULL, wait);
         }
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 /**
@@ -238,6 +239,7 @@ void draw_circle_random(ConvexHull* convex, int radius_max, int nb_points,
                                                        NULL, NULL, wait);
         }
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 /**
@@ -293,10 +295,11 @@ void draw_square_random(ConvexHull* convex, int radius_max, int nb_points,
                                                        NULL, NULL, wait);
         }
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 /**
- * @brief Crée et affiche une enveloppe convexe en forme de carré et qui 
+ * @brief Crée et affiche une enveloppe convexe en forme de carré et qui
  *        s'agrandit
  * 
  * @param convex 
@@ -350,6 +353,7 @@ void draw_square_random_rising(ConvexHull* convex, int radius_max,
                                                        NULL, NULL, wait);
         }
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 /**
@@ -412,6 +416,7 @@ void draw_convex_click(ConvexHull* convex) {
         drawAll(convex, &insidePoints, RADIUS, MLV_draw_polygon);
         MLV_update_window();
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 int main(void) {
