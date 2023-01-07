@@ -52,7 +52,12 @@ Mkfile.old
 dkms.conf
 env
 
+# Other
 .vscode
 main
 env
 inc
+html
+latex
+html/
+latex/
