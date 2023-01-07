@@ -3,19 +3,22 @@
  * @author Quentin Laborde - Kies Rémy
  * @brief Permet de créer des enveloppes convexes imbriquées
  * @date 2023-01-07
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
 
 #include "../utils.h"
 
+#define SIZECOLOR 6
+
 /*
+clang -c ../args/errs.c -Wall -std=c17
 clang -c ../list/list.c -Wall -std=c17
 clang -c ../math/math.c list.o -Wall -std=c17
 clang -c draw.c -Wall -std=c17
 clang -c graphic.c -Wall -std=c17 -lMLV
-clang inception.c graphic.o math.o list.o draw.o -Wall -std=c17 -o inc -lMLV -lm
+clang inception.c graphic.o math.o list.o draw.o errs.o -Wall -std=c17 -o inc -lMLV -lm
 */
 
 void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
@@ -62,7 +65,7 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
         }
     }
     if (direct) {
-        newPoint2(convexs, depth+1, p);
+        newPoint2(convexs, depth + 1, p);
         return;
     }
     // On fixe le début de poly au nouveau point
@@ -73,7 +76,7 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
         direct = isDirect(convexs->tabconvex[depth].poly->p, convexs->tabconvex[depth].poly->next->p, convexs->tabconvex[depth].poly->next->next->p);
         if (!direct) {
             Vertex* v = extractVertexHead(&(convexs->tabconvex[depth].poly->next));
-            newPoint2(convexs, depth+1, v->p);
+            newPoint2(convexs, depth + 1, v->p);
             convexs->tabconvex[depth].curlen--;
         } else {
             break;
@@ -86,7 +89,7 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
             Vertex* keep = convexs->tabconvex[depth].poly;
             convexs->tabconvex[depth].poly = convexs->tabconvex[depth].poly->prev;
             Vertex* v = extractVertexHead(&(convexs->tabconvex[depth].poly));
-            newPoint2(convexs, depth+1, v->p);
+            newPoint2(convexs, depth + 1, v->p);
             convexs->tabconvex[depth].poly = keep;
             convexs->tabconvex[depth].curlen--;
         } else {
@@ -96,6 +99,20 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
 }
 
 void DrawInceptionClick(void) {
+    MLV_Color tabcolora[SIZECOLOR] = {
+        MLV_rgba(0, 0, 255, 100),
+        MLV_rgba(0, 255, 0, 100),
+        MLV_rgba(255, 0, 0, 100),
+        MLV_rgba(255, 0, 255, 100),
+        MLV_rgba(0, 255, 255, 100),
+        MLV_rgba(255, 255, 0, 100)};
+    MLV_Color tabcolor[SIZECOLOR] = {
+        MLV_rgba(0, 0, 255, 255),
+        MLV_rgba(0, 255, 0, 255),
+        MLV_rgba(255, 0, 0, 255),
+        MLV_rgba(255, 0, 255, 255),
+        MLV_rgba(0, 255, 255, 255),
+        MLV_rgba(255, 255, 0, 255)};
     MLV_create_window("", "", 1000, 1000);
     MLV_clear_window(MLV_COLOR_WHITE);
     MLV_update_window();
@@ -111,11 +128,12 @@ void DrawInceptionClick(void) {
         newPoint2(&convexs, 0, p);
         MLV_clear_window(MLV_COLOR_WHITE);
         for (int i = 0; i < convexs.size; i++) {
-            drawPoly(convexs.tabconvex[i], MLV_COLOR_BLACK, MLV_draw_polygon);
-            drawPoints(convexs.tabconvex[i].poly, 2, MLV_COLOR_BLUE);
+            drawPoly(convexs.tabconvex[i], tabcolora[i % SIZECOLOR], MLV_draw_filled_polygon);
+            drawPoints(convexs.tabconvex[i].poly, 2, tabcolor[i % SIZECOLOR]);
         }
         MLV_update_window();
     }
+    MLV_free_window();
 }
 
 int main(void) {

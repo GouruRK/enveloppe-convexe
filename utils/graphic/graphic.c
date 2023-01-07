@@ -3,9 +3,9 @@
  * @author Quentin Laborde - Kies Rémy
  * @brief Affiche le menu
  * @date 2023-01-07
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
  */
 
 #include "../utils.h"
@@ -68,7 +68,7 @@ int button_onclick_tab(Button tab[], int size, int x, int y) {
     return -1;
 }
 
-void button_draw_Wborder(Button but, MLV_Color color_text, 
+void button_draw_Wborder(Button but, MLV_Color color_text,
                          MLV_Color color_border) {
     MLV_draw_rectangle(but.x, but.y, but.width + BORDER, but.height + BORDER,
                        color_border);
@@ -77,11 +77,11 @@ void button_draw_Wborder(Button but, MLV_Color color_text,
 }
 
 void button_draw_WOborder(Button but, MLV_Color color_text) {
-    MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text, 
+    MLV_draw_text(but.x + BORDER / 2, but.y + BORDER / 2, but.text,
                   color_text);
 }
 
-void button_draw_tab(Button tab[], int val[], int size, 
+void button_draw_tab(Button tab[], int val[], int size,
                      MLV_Color color[]) {
     for (int i = 0; i < size; i++) {
         // fprintf(stderr, "x:%d y:%d w:%d h:%d val%d\n", tab[i].x, tab[i].y, tab[i].width, tab[i].height, val[i]);
@@ -177,7 +177,7 @@ void init_window_param(void) {
     MLV_free_window();
 }
 
-int main(void) {
-    init_window_param();
-    return 0;
-}
+// int main(void) {
+//     init_window_param();
+//     return 0;
+// }
