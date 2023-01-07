@@ -1,5 +1,19 @@
+/**
+ * @file draw.c
+ * @author Quentin Laborde - Kies Rémy
+ * @brief Contient toutes les fonctions pour gérer l'affichage des enveloppes
+ * @date 2023-01-07
+ * @copyright Copyright (c) 2023
+ */
+
 #include "../utils.h"
 
+/**
+ * @brief Crée une enveloppe convexe vide
+ * 
+ * @param maxlen 
+ * @return ConvexHull 
+ */
 ConvexHull createConvex(int maxlen) {
     ConvexHull convex;
     convex.poly = createPolygon();
@@ -8,10 +22,24 @@ ConvexHull createConvex(int maxlen) {
     return convex;
 }
 
+/**
+ * @brief Dessine un point
+ * 
+ * @param p 
+ * @param radius 
+ * @param color 
+ */
 void drawPoint(Point* p, int radius, MLV_Color color) {
     MLV_draw_filled_circle(p->x, p->y, radius, color);
 }
 
+/**
+ * @brief Dessine les points d'un polygone
+ * 
+ * @param poly 
+ * @param radius 
+ * @param color 
+ */
 void drawPoints(Polygon poly, int radius, MLV_Color color) {
     if (poly) {
         Vertex* head = poly->prev;
@@ -23,6 +51,15 @@ void drawPoints(Polygon poly, int radius, MLV_Color color) {
     }
 }
 
+/**
+ * @brief Affiche les contours d'ene enveloppe convexe
+ * 
+ * @param convex 
+ * @param color 
+ * @param drawFunction L'intéret d'avoir une fonction `drawFunction` est que
+ *                     l'on peut passer en argument MLV_draw_polygon ou
+ *                     MLV_draw_filled_polygon
+ */
 void drawPoly(ConvexHull convex, MLV_Color color,
               void (*drawFunction)(const int*, const int*, int, MLV_Color)) {
     if (!convex.curlen) {
@@ -43,6 +80,13 @@ void drawPoly(ConvexHull convex, MLV_Color color,
     free(vy);
 }
 
+/**
+ * @brief Affiche un triangle de points
+ * 
+ * @param A 
+ * @param B 
+ * @param C 
+ */
 void drawTriangle(Point* A, Point* B, Point* C) {
     MLV_Color color = isDirect(A, B, C) ? MLV_COLOR_GREEN : MLV_COLOR_RED;
     MLV_draw_line(A->x, A->y, B->x, B->y, color);
@@ -54,6 +98,15 @@ void drawTriangle(Point* A, Point* B, Point* C) {
     MLV_update_window();
 }
 
+/**
+ * @brief Permet de dessiner directement une enveloppe convexe ainsi que les
+ *        points qu'elle englobe
+ * 
+ * @param convex 
+ * @param insidePoints 
+ * @param radius 
+ * @param drawFunction 
+ */
 void drawAll(ConvexHull* convex, ConvexHull* insidePoints, int radius,
               void (*drawFunction)(const int*, const int*, int, MLV_Color)) {
     MLV_clear_window(MLV_COLOR_WHITE);

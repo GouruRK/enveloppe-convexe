@@ -1,3 +1,12 @@
+/**
+ * @file list.c
+ * @author Quentin Laborde - Kies Rémy
+ * @brief Ensemble de fonctions pour créer et modifier des listes doublement
+ *        chaînées circulaire contenant des points
+ * @date 2023-01-07
+ * @copyright Copyright (c) 2023
+ */
+
 #include "../utils.h"
 
 /*
