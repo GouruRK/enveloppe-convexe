@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 #include "struct.h"
 
 // define draw color
@@ -58,9 +57,7 @@ void button_draw_WOborder(Button but, MLV_Color color_text);
 void button_draw_tab(Button tab[], int val[], int size, MLV_Color color[]);
 void switch_(int val[], int size, int index);
 void window_param_preclose(void);
-void init_window_param(void);
-
-
+void init_window_param(int* window_width, int* window_height);
 
 // Fichier : ./graphic/draw.c
 ConvexHull createConvex(int maxlen);
