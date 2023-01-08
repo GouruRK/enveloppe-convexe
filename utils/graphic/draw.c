@@ -1,7 +1,8 @@
 /**
  * @file draw.c
  * @author Quentin Laborde - Kies Rémy
- * @brief Contient toutes les fonctions pour gérer l'affichage des enveloppes
+ * @brief Contient toutes les fonctions pour gérer l'affichage des 
+ *        enveloppes
  * @date 2023-01-07
  * 
  * @copyright Copyright (c) 2023
@@ -164,8 +165,9 @@ void drawTriangle(Point* A, Point* B, Point* C) {
  *                     l'on peut passer en argument MLV_draw_polygon ou
  *                     MLV_draw_filled_polygon
  */
-void drawAll(Window* window, ConvexHull* convex, ListPoint* insidePoints, int radius,
-              void (*drawFunction)(const int*, const int*, int, MLV_Color)) {
+void drawAll(Window* window, ConvexHull* convex, ListPoint* insidePoints, 
+             int radius, 
+             void (*drawFunction)(const int*, const int*, int, MLV_Color)) {
     MLV_clear_window(MLV_COLOR_WHITE);
     drawPoly(*convex, COLOR_LINE, drawFunction);
     drawPoints((*convex).poly, radius, COLOR_OUTSIDE);
@@ -208,7 +210,8 @@ void printInfo(Window* window, ConvexHull* convex, ListPoint* insidePoints) {
     if (insidePoints && insidePoints->poly) {
         inside = insidePoints->curlen;
     }
-    MLV_draw_line(0, window->clickableHeight, window->infoWidth, window->clickableHeight, MLV_COLOR_GRAY);
+    MLV_draw_line(0, window->clickableHeight, window->infoWidth,
+                  window->clickableHeight, MLV_COLOR_GRAY);
     int w, h;
     // distance moyenne entre les points de l'enveloppe
     MLV_get_size_of_text("Total des points : %d", &w, &h, points + inside);
@@ -218,7 +221,8 @@ void printInfo(Window* window, ConvexHull* convex, ListPoint* insidePoints) {
                   MLV_COLOR_BLACK,
                   points + inside);
 
-    MLV_get_size_of_text("Points qui composent l'enveloppe : %d", &w, &h, points);
+    MLV_get_size_of_text("Points qui composent l'enveloppe : %d", &w, &h,
+                         points);
     MLV_draw_text(window->infoWidth * 3/7 - w/2,
                   window->clickableHeight + window->infoHeight/2 - h/2,
                   "Points qui composent l'enveloppe : %d",

@@ -4,14 +4,14 @@ Laborde Quentin - Kies Rémy
 TD C - TP 5
 ___
 
+![img](screenshots/screen1.png)
+
 Sommaire
 
 - [Projet 1 Programmation C - Enveloppes Convexes](#projet-1-programmation-c---enveloppes-convexes)
   - [Comment compiler](#comment-compiler)
     - [Makefile](#makefile)
     - [Fichier par fichier](#fichier-par-fichier)
-  - [Lancement](#lancement)
-    - [Options en ligne de commande](#options-en-ligne-de-commande)
   - [Documentation](#documentation)
 
 ## Comment compiler
@@ -23,7 +23,7 @@ cd enveloppe-convexe
 make
 ```
 
-Il est possible d'avoir quelques des warnings : ils correspondent au lien entre les différents fichiers. L'utilisateur ne doit pas en tenir compte
+Il est possible d'avoir quelques des warnings : ils correspondent au lien entre les différents fichiers compilés. L'utilisateur ne doit pas en tenir compte
 
 Une fois la compilation achevée, l'utilisateur dispose d'un exécutable `main`.
 
@@ -36,17 +36,11 @@ Il est également possible de compiler le projet fichier par fichier. Une fois d
 
 L'utilisateur dispose alors d'un exécutable `main`.
 
-## Lancement
-
-### Options en ligne de commande
-
-...
-
 ## Documentation
 
 Vous pouvez accéder a la documentation Doxygen en cliquant [ici](./html/index.html).
 
-*Si le fichier ne s'ouvre pas, utilisez la commande* `doxygen doxygenfile` *depuis le dossier du projet `enveloppe-convexe`pour créer la documentation.*
+*Si le fichier ne s'ouvre pas, utilisez la commande* `doxygen doxygenfile` *depuis le dossier du projet `enveloppe-convexe` pour créer la documentation.*
 
 ___
 Quentin Laborde - Kies Rémy
