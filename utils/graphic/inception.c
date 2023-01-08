@@ -41,7 +41,7 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
             exit(1);
         }
         convexs->tabconvex = temp;
-        convexs->tabconvex[depth] = createConvexPointeur(-1);
+        convexs->tabconvex[depth] = createConvexPointer(-1);
     }
 
     ConvexHull* convex = convexs->tabconvex[depth];
@@ -165,7 +165,7 @@ void DrawInceptionClick(void) {
     if (!convexs.tabconvex) {
         exit(1);
     }
-    convexs.tabconvex[0] = createConvexPointeur(-1);
+    convexs.tabconvex[0] = createConvexPointer(-1);
     if (!convexs.tabconvex[0]) {
         free(convexs.tabconvex);
         exit(1);

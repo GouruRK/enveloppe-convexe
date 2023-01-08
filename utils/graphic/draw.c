@@ -11,9 +11,21 @@
 #include "../utils.h"
 
 /**
+ * @brief Permet de savoir si les coordonnées (`x`, `y`) sont comprises dans
+ *        la "boîte" composée des points (`minX`, `minY`), (`maxX`, `maxY`)
+ * 
+ * @return int Renvoie `1` si (`x`, `y`) est dans la boite, `0` sinon
+ */
+int isInside(int x, int y, int minX, int maxX, int minY, int maxY) {
+    return (x > minX && x < maxX) && (y > minY && y < maxY);
+}
+
+/**
  * @brief Crée une enveloppe convexe vide
  * 
- * @param maxlen 
+ * @param maxlen La longueur maximale d'une enveloppe convexe
+ *               Actuellement, la longueur est juste indicative
+ *               Pour un nombre infini de point, mettre -1 par convention
  * @return ConvexHull 
  */
 ConvexHull createConvex(int maxlen) {
@@ -27,10 +39,12 @@ ConvexHull createConvex(int maxlen) {
 /**
  * @brief Créer un pointeur d'enveloppe convexe
  * 
- * @param maxlen 
+ * @param maxlen Longueur maximale d'une enveloppe convexe
+ *               Actuellement, la longueur est juste indicative
+ *               Pour un nombre infini de point, mettre -1 par convention
  * @return ConvexHull* 
  */
-ConvexHull* createConvexPointeur(int maxlen) {
+ConvexHull* createConvexPointer(int maxlen) {
     ConvexHull* convex = (ConvexHull*)malloc(sizeof(ConvexHull));
     convex->poly = createPolygon();
     convex->curlen = 0;
@@ -39,11 +53,35 @@ ConvexHull* createConvexPointeur(int maxlen) {
 }
 
 /**
+ * @brief Créer une ListPoint vide
+ * 
+ * @param maxlen Longueur maximale d'une enveloppe convexe
+ *               Actuellement, la longueur est juste indicative
+ *               Pour un nombre infini de point, mettre -1 par convention
+ * @return ListPoint 
+ */
+ListPoint createListPoint(int maxlen) {
+    return createConvex(maxlen);
+}
+
+/**
+ * @brief Créer un pointeur de ListPoint
+ * 
+ * @param maxlen Longueur maximale d'une enveloppe convexe
+ *               Actuellement, la longueur est juste indicative
+ *               Pour un nombre infini de point, mettre -1 par convention
+ * @return ListPoint* 
+ */
+ListPoint* createListPointPointer(int maxlen) {
+    return createConvexPointer(maxlen);
+}
+
+/**
  * @brief Dessine un point
  * 
- * @param p 
- * @param radius 
- * @param color 
+ * @param p Coordonnées du point a afficher (p->x et p->y)
+ * @param radius Rayon
+ * @param color Couleur
  */
 void drawPoint(Point* p, int radius, MLV_Color color) {
     MLV_draw_filled_circle(p->x, p->y, radius, color);
@@ -52,9 +90,9 @@ void drawPoint(Point* p, int radius, MLV_Color color) {
 /**
  * @brief Dessine les points d'un polygone
  * 
- * @param poly 
- * @param radius 
- * @param color 
+ * @param poly Polygon contenant les points a dessiner
+ * @param radius Rayon des points
+ * @param color Couleur
  */
 void drawPoints(Polygon poly, int radius, MLV_Color color) {
     if (poly) {
@@ -70,8 +108,9 @@ void drawPoints(Polygon poly, int radius, MLV_Color color) {
 /**
  * @brief Affiche les contours d'ene enveloppe convexe
  * 
- * @param convex 
- * @param color 
+ * @param convex Informations relatives a une enveloppe convexe (Points et 
+ *               longueur)
+ * @param color Couleur
  * @param drawFunction L'intéret d'avoir une fonction `drawFunction` est que
  *                     l'on peut passer en argument MLV_draw_polygon ou
  *                     MLV_draw_filled_polygon
@@ -118,12 +157,14 @@ void drawTriangle(Point* A, Point* B, Point* C) {
  * @brief Permet de dessiner directement une enveloppe convexe ainsi que les
  *        points qu'elle englobe
  * 
- * @param convex 
- * @param insidePoints 
- * @param radius 
- * @param drawFunction 
+ * @param convex L'enveloppe convexe
+ * @param insidePoints Les points contenus dans l'enveloppe convexe
+ * @param radius Rayon
+ * @param drawFunction L'intéret d'avoir une fonction `drawFunction` est que
+ *                     l'on peut passer en argument MLV_draw_polygon ou
+ *                     MLV_draw_filled_polygon
  */
-void drawAll(Window* window, ConvexHull* convex, ConvexHull* insidePoints, int radius,
+void drawAll(Window* window, ConvexHull* convex, ListPoint* insidePoints, int radius,
               void (*drawFunction)(const int*, const int*, int, MLV_Color)) {
     MLV_clear_window(MLV_COLOR_WHITE);
     drawPoly(*convex, COLOR_LINE, drawFunction);
@@ -133,6 +174,15 @@ void drawAll(Window* window, ConvexHull* convex, ConvexHull* insidePoints, int r
     MLV_update_window();
 }
 
+/**
+ * @brief Initialise les attributs de `window` 
+ * 
+ * @param window L'élément qui doit être initialisé
+ * @param width La largeur de la fenêtre
+ * @param height La hauteur de la fenêtre
+ * @param panelHeight La hauteur du panel contenant les informations
+ *                    sur l'actuelle enveloppe convexe
+ */
 void initWindow(Window* window, int width, int height, int panelHeight) {
     window->width = width;
     window->height = height;
@@ -142,7 +192,14 @@ void initWindow(Window* window, int width, int height, int panelHeight) {
     window->clickableHeight = height - panelHeight;
 }
 
-void printInfo(Window* window, ConvexHull* convex, ConvexHull* insidePoints) {
+/**
+ * @brief Affiche les informations d'une enveloppe convexe
+ * 
+ * @param window Contient les paramètes de la fenêtre
+ * @param convex L'enveloppe convexe
+ * @param insidePoints Les points contenus dans l'enveloppe
+ */
+void printInfo(Window* window, ConvexHull* convex, ListPoint* insidePoints) {
     int points = 0;
     int inside = 0;
     if (convex && convex->poly) {
@@ -173,8 +230,4 @@ void printInfo(Window* window, ConvexHull* convex, ConvexHull* insidePoints) {
                   "Points dans l'enveloppe : %d",
                   MLV_COLOR_BLACK,
                   inside);
-}
-
-int isInside(int x, int y, int minX, int maxX, int minY, int maxY) {
-    return (x > minX && x < maxX) && (y > minY && y < maxY);
 }

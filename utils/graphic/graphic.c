@@ -30,16 +30,6 @@ void exit_function(void* data) {
 }
 
 /**
- * @brief Permet de savoir si les coordonnées (`x`, `y`) sont comprises dans
- *        la "boîte" composée des points (`minX`, `minY`), (`maxX`, `maxY`)
- * 
- * @return int Renvoie `1` si (`x`, `y`) est dans la boite, `0` sinon
- */
-int isClick(x, y, minX, maxX, minY, maxY) {
-    return (x > minX && x < maxX) && (y > minY && y < maxY);
-}
-
-/**
  * @brief Permet de créer un bouton
  * 
  * @param x 
@@ -72,7 +62,7 @@ Button createButton(int x, int y, char* text) {
 int button_onclick(Button but, int x, int y) {
     int but_max_x = but.x + but.width + BORDER;
     int but_max_y = but.y + but.height + BORDER;
-    return isClick(x, y, but.x, but_max_x, but.y, but_max_y);
+    return isInside(x, y, but.x, but_max_x, but.y, but_max_y);
 }
 
 /**

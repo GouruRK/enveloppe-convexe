@@ -48,7 +48,7 @@ int isDirect(Point* A, Point* B, Point* p);
 
 // Fichier : graphic.c
 void exit_function(void* data);
-Button button_create(int x, int y, char* text);
+Button createButton(int x, int y, char* text);
 int button_onclick(Button but, int x, int y);
 int button_onclick_tab(Button tab[], int size, int x, int y);
 void button_draw_Wborder(Button but, MLV_Color color_text, MLV_Color color_border);
@@ -59,16 +59,18 @@ void window_param_preclose(int w_width, int w_height, int array[]);
 void init_window_param(int* window_width, int* window_height, int tab[]);
 
 // Fichier : ./graphic/draw.c
+int isInside(int x, int y, int minX, int maxX, int minY, int maxY);
 ConvexHull createConvex(int maxlen);
-ConvexHull* createConvexPointeur(int maxlen);
+ConvexHull* createConvexPointer(int maxlen);
+ListPoint createListPoint(int maxlen);
+ListPoint* createListPointPointer(int maxlen);
 void drawPoint(Point* p, int radius, MLV_Color color);
 void drawPoints(Polygon poly, int radius, MLV_Color color);
 void drawPoly(ConvexHull convex, MLV_Color color, void (*drawFunction)(const int*, const int*, int, MLV_Color));
 void drawTriangle(Point* A, Point* B, Point* C);
 void drawAll(Window* window, ConvexHull* convex, ConvexHull* insidePoints, int radius, void (*drawFunction)(const int*, const int*, int, MLV_Color));
-void printInfo(Window* window, ConvexHull* convex, ConvexHull* insidePoints);
-int isInside(int x, int y, int minX, int maxX, int minY, int maxY);
 void initWindow(Window* window, int width, int height, int panelHeight);
+void printInfo(Window* window, ConvexHull* convex, ConvexHull* insidePoints);
 
 // Fichier : ./args/errs.c
 void errAlloc(void);

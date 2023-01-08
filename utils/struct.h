@@ -13,7 +13,7 @@ typedef struct {
     Polygon poly;
     int curlen;
     int maxlen;
-} ConvexHull;
+} ConvexHull, ListPoint;
 
 typedef struct button {
     char* text;
