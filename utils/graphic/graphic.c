@@ -158,7 +158,7 @@ int indexActiveButton(Button tab[], int size) {
             return i;
         }
     }
-    return -1;
+    return 0;
 }
 
 /**
@@ -356,7 +356,7 @@ void initWindowParam(int* window_width, int* window_height, int array[], int* st
                 if (val) {
                     waiting_time = val;
                 }
-            } else if (input_box == input3 
+            } else if (input_box == input5
                        && tab_button_distrib[1].value == 1) 
                 {
                 val = (int)strtol(text, &endPtr, 10);

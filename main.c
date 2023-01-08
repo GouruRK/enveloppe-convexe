@@ -20,6 +20,14 @@ clang -c ./utils/graphic/enveloppe.c -Wall -std=c17
 clang -c ./utils/graphic/inception.c -Wall -std=c17
 clang main.c errs.o list.o math.o draw.o graphic.o enveloppe.o inception.o -Wall -std=c17 -o main -lMLV -lm
 */
+
+/**
+ * @brief Permet de lancer la simulation
+ * 
+ * @param window 
+ * @param initArray 
+ * @param stop 
+ */
 void lunchGameFromArray(Window* window, int initArray[], int* stop) {
     srand(time(NULL));
     ConvexHull convex = createConvex(-1);
