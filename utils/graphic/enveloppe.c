@@ -427,15 +427,6 @@ void draw_convex_click(Window* window, ConvexHull* convex) {
     }
 }
 
-void initWindow(Window* window, int width, int height, int panelHeight) {
-    window->width = width;
-    window->height = height;
-    window->infoWidth = width;
-    window->infoHeight = panelHeight;
-    window->clickableWidth = width;
-    window->clickableHeight = height - panelHeight;
-}
-
 int main(void) {
     srand(time(NULL));
     Window window;

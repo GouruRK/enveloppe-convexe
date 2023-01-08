@@ -67,6 +67,7 @@ void drawTriangle(Point* A, Point* B, Point* C);
 void drawAll(Window* window, ConvexHull* convex, ConvexHull* insidePoints, int radius, void (*drawFunction)(const int*, const int*, int, MLV_Color));
 void printInfo(Window* window, ConvexHull* convex, ConvexHull* insidePoints);
 int isInside(int x, int y, int minX, int maxX, int minY, int maxY);
+void initWindow(Window* window, int width, int height, int panelHeight);
 
 // Fichier : ./args/errs.c
 void errAlloc(void);

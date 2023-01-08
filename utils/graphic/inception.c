@@ -98,7 +98,31 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
     }
 }
 
+void printInfoRec(Window* window, InceptionConvex convexs) {
+    int points = 0;
+    for (int i = 0; i < convexs.size; i++) {
+        points += convexs.tabconvex[i].curlen;
+    }
+    
+    MLV_draw_line(0, window->clickableHeight, window->infoWidth, window->clickableHeight, MLV_COLOR_GRAY);
+    int w, h;
+    MLV_get_size_of_text("Nombre de points : %d", &w, &h, points);
+    MLV_draw_text(window->infoWidth * 1/3 - w/2,
+                  window->clickableHeight + window->infoHeight/2 - h/2,
+                  "Nombre de points : %d",
+                  MLV_COLOR_BLACK,
+                  points);
+    MLV_get_size_of_text("Nombre d'enveloppes : %d", &w, &h, convexs.size);
+    MLV_draw_text(window->infoWidth * 2/3 - w/2,
+                  window->clickableHeight + window->infoHeight/2 - h/2,
+                  "Nombre d'enveloppes : %d",
+                  MLV_COLOR_BLACK,
+                  convexs.size);
+}
+
 void DrawInceptionClick(void) {
+    Window window;
+    initWindow(&window, 1000, 1000, 50);
     MLV_Color tabcolora[SIZECOLOR] = {
         MLV_rgba(0, 0, 255, 100),
         MLV_rgba(0, 255, 0, 100),
@@ -115,12 +139,13 @@ void DrawInceptionClick(void) {
         MLV_rgba(255, 255, 0, 255)};
     MLV_create_window("", "", 1000, 1000);
     MLV_clear_window(MLV_COLOR_WHITE);
-    MLV_update_window();
     int x, y;
     InceptionConvex convexs;
     convexs.tabconvex = (ConvexHull*)malloc(sizeof(ConvexHull));
     convexs.tabconvex[0] = createConvex(-1);
     convexs.size = 1;
+    printInfoRec(&window, convexs);
+    MLV_update_window();
     while (1) {
         Point* p = createPoint();
         MLV_wait_mouse(&x, &y);
@@ -131,6 +156,7 @@ void DrawInceptionClick(void) {
             drawPoly(convexs.tabconvex[i], tabcolora[i % SIZECOLOR], MLV_draw_filled_polygon);
             drawPoints(convexs.tabconvex[i].poly, 2, tabcolor[i % SIZECOLOR]);
         }
+        printInfoRec(&window, convexs);
         MLV_update_window();
     }
     MLV_free_window();

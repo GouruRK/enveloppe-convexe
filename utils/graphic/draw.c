@@ -115,8 +115,17 @@ void drawAll(Window* window, ConvexHull* convex, ConvexHull* insidePoints, int r
     drawPoly(*convex, COLOR_LINE, drawFunction);
     drawPoints((*convex).poly, radius, COLOR_OUTSIDE);
     drawPoints((*insidePoints).poly, radius, COLOR_INSIDE);
-    printInfo(window, convex, insidePoints);
+    printInfo(window, convex, insidePoints);    
     MLV_update_window();
+}
+
+void initWindow(Window* window, int width, int height, int panelHeight) {
+    window->width = width;
+    window->height = height;
+    window->infoWidth = width;
+    window->infoHeight = panelHeight;
+    window->clickableWidth = width;
+    window->clickableHeight = height - panelHeight;
 }
 
 void printInfo(Window* window, ConvexHull* convex, ConvexHull* insidePoints) {
