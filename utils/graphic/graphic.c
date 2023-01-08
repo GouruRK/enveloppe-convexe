@@ -17,8 +17,12 @@ clang graphic.c errs.o -Wall -std=c17 -o graph -lMLV
 
 #define BORDER 8
 #define LENGTH_DISTRIB 2
-#define LENGTH_SHAPES 5
+#define LENGTH_SHAPES 4
 #define LENGTH_DISPLAY 2
+
+int min(int x, int y) {
+    return x < y ? x : y;
+}
 
 void exit_function(void* data) {
     int* arret = (int*)data;
@@ -100,25 +104,50 @@ void switch_(Button tab[], int size, int index) {
     }
 }
 
-void window_param_preclose(void) {
-    MLV_clear_window(MLV_COLOR_BLACK);
-    MLV_draw_text(150, 50, "cc", MLV_COLOR_GREEN);
-    printf("%s Fin d'execusion %s\n", GREEN, RESET);
+int index_active_button(Button tab_but[], int size) {
+    for (int i = 0; i < size; i++) {
+        if (tab_but[i].value == 1) {
+            return i;
+        }
+    }
+    return 0;
+}
+
+void window_param_preclose(int array[]) {
+    MLV_clear_window(MLV_COLOR_LIGHT_GREY);
+
+    if (array[0] == 0) {
+        MLV_draw_text(100, 100, "Click", MLV_COLOR_BLACK);
+        if (array[1] == 1) {
+            MLV_draw_text(100, 100, "avec envellope imbriquee", MLV_COLOR_BLACK);
+        }
+    } else {
+        if (array[1] == 0) {
+            MLV_draw_text(100, 100, "Cercle", MLV_COLOR_BLACK);
+        } else if (array[1] == 1) {
+            MLV_draw_text(100, 100, "Carré", MLV_COLOR_BLACK);
+        } else if (array[1] == 2) {
+            MLV_draw_text(100, 100, "Rectangle", MLV_COLOR_BLACK);
+        } else if (array[1] == 3) {
+            MLV_draw_text(100, 100, "Ellipse", MLV_COLOR_BLACK);
+        }
+    }
+
     MLV_actualise_window();
     MLV_wait_seconds(2);
 }
 
-void init_window_param(int* window_width, int* window_height) {
-    int stop = 0, pressed = 0;
+void init_window_param(int* window_width, int* window_height, int array[]) {
+    int stop = 0, pressed = 0, rayon = (0.9 * min(*window_height, *window_width)) / 2;
+    int nb_points = 400, waiting_time = 1000;
     Button tab_button_distrib[LENGTH_DISTRIB], tab_button_shapes[LENGTH_SHAPES], tab_button_display[LENGTH_DISPLAY];
     MLV_Color tab_color[2] = {MLV_COLOR_RED,
                               MLV_COLOR_DARKGREEN};
-
     MLV_execute_at_exit(exit_function, &stop);
     MLV_create_window("Setting convex hull", "Setting", 600, 400);
 
     /////////
-    MLV_Input_box *input_box = NULL, *input1, *input2;  // *input3;
+    MLV_Input_box *input_box = NULL, *input1, *input2, *input3, *input4, *input5;
     MLV_Event event = MLV_NONE;
     int x = 0,
         y = 0;  // Position de la souris
@@ -136,11 +165,21 @@ void init_window_param(int* window_width, int* window_height) {
         200, 20,
         MLV_COLOR_BLACK, MLV_COLOR_BLACK, MLV_COLOR_LIGHT_GRAY,
         "Hauteur de la fenetre: ");
-    // input3 = MLV_create_input_box(
-    //     200, 300,
-    //     100, 50,
-    //     MLV_COLOR_RED, MLV_COLOR_GREEN, MLV_COLOR_WHITE,
-    //     "Rayon: ");
+    input3 = MLV_create_input_box(
+        255, 250,
+        100, 20,
+        MLV_COLOR_BLACK, MLV_COLOR_BLACK, MLV_COLOR_LIGHT_GRAY,
+        "Rayon: ");
+    input4 = MLV_create_input_box(
+        25, 150,
+        150, 20,
+        MLV_COLOR_BLACK, MLV_COLOR_BLACK, MLV_COLOR_LIGHT_GRAY,
+        "Delai en ms : ");
+    input5 = MLV_create_input_box(
+        205, 275,
+        200, 20,
+        MLV_COLOR_BLACK, MLV_COLOR_BLACK, MLV_COLOR_LIGHT_GRAY,
+        "Nombre de points : ");
     // MLV_draw_all_input_boxes();
     /////////
     tab_button_distrib[0] = button_create(250, 50, "Placer à la souris");
@@ -154,6 +193,9 @@ void init_window_param(int* window_width, int* window_height) {
     tab_button_display[0] = button_create(50, 50, "Automatique");
     tab_button_display[1] = button_create(50, 100, "Avec delai");
 
+    Button but_incep = button_create(240, 200, "Envellope imbriquee");
+    Button but_rising = button_create(250, 200, "Rayon croissant");
+
     while (!stop) {
         MLV_clear_window(MLV_COLOR_LIGHT_GRAY);
         // MLV_draw_text(150, 20, "%d", MLV_COLOR_DARKGREEN, MLV_get_time());
@@ -164,7 +206,18 @@ void init_window_param(int* window_width, int* window_height) {
             MLV_draw_text(440, 25, " Mode d'afficahge :", MLV_COLOR_DARKGREEN);
             button_draw_tab(tab_button_display, LENGTH_DISPLAY, tab_color);
             button_draw_tab(tab_button_shapes, LENGTH_SHAPES, tab_color);
+            button_draw_Wborder(but_rising, tab_color[but_rising.value], tab_color[but_rising.value]);
+            MLV_draw_input_box(input3);
+            MLV_draw_input_box(input5);
+            if (tab_button_display[1].value == 1) {
+                MLV_draw_input_box(input4);
+            }
+        } else if (tab_button_distrib[0].value == 1) {
+            button_draw_Wborder(but_incep, tab_color[but_incep.value], tab_color[but_incep.value]);
         }
+
+        MLV_draw_input_box(input1);
+        MLV_draw_input_box(input2);
         //////////////////////
         event = MLV_get_event(
             NULL, NULL, NULL,
@@ -174,20 +227,39 @@ void init_window_param(int* window_width, int* window_height) {
 
         //////////////////////
         if (event == MLV_INPUT_BOX) {
+            int val = 0;
             if (input_box == input1) {
                 fprintf(stderr, "Largeur");
-                if (strtol(text, &endPtr, 10)) {
-                    *window_width = (int)strtol(text, &endPtr, 10);
+                val = (int)strtol(text, &endPtr, 10);
+                if (val && val > 300) {
+                    *window_width = val;
                 }
             } else if (input_box == input2) {
-                fprintf(stderr, "hateur");
-                if (strtol(text, &endPtr, 10)) {
-                    *window_height = (int)strtol(text, &endPtr, 10);
+                fprintf(stderr, "Hauteur");
+                val = (int)strtol(text, &endPtr, 10);
+                if (val && val > 300) {
+                    *window_height = val;
+                }
+            } else if (input_box == input3 && tab_button_distrib[1].value == 1) {
+                fprintf(stderr, "Rayon");
+                val = (int)strtol(text, &endPtr, 10);
+                if (val && val < min(*window_height - 50, *window_width) / 2) {
+                    rayon = val;
+                }
+            } else if (input_box == input4 && tab_button_distrib[1].value == 1 && tab_button_display[1].value == 1) {
+                fprintf(stderr, "Cooldown");
+                val = (int)strtol(text, &endPtr, 10);
+                if (val) {
+                    waiting_time = val;
+                }
+            } else if (input_box == input3 && tab_button_distrib[1].value == 1) {
+                fprintf(stderr, "NB point");
+                val = (int)strtol(text, &endPtr, 10);
+                if (val) {
+                    nb_points = val;
                 }
             }
         }
-        MLV_draw_input_box(input1);
-        MLV_draw_input_box(input2);
 
         //////////////////////
         MLV_actualise_window();
@@ -199,25 +271,52 @@ void init_window_param(int* window_width, int* window_height) {
             int val = button_onclick_tab(tab_button_distrib, LENGTH_DISTRIB, x, y);
             int val2 = button_onclick_tab(tab_button_display, LENGTH_DISPLAY, x, y);
             int val3 = button_onclick_tab(tab_button_shapes, LENGTH_SHAPES, x, y);
+            int val4 = button_onclick(but_rising, x, y);
+            int val5 = button_onclick(but_incep, x, y);
             if (val != -1) {
                 switch_(tab_button_distrib, LENGTH_DISTRIB, val);
+
             } else if (val2 != -1 && tab_button_distrib[1].value == 1) {
                 switch_(tab_button_display, LENGTH_DISPLAY, val2);
+
             } else if (val3 != -1 && tab_button_distrib[1].value == 1) {
                 switch_(tab_button_shapes, LENGTH_SHAPES, val3);
+
+            } else if (val4 != 0 && tab_button_distrib[1].value == 1) {
+                but_rising.value = 1 - but_rising.value;
+
+            } else if (val5 != 0 && tab_button_distrib[1].value == 0) {
+                but_incep.value = 1 - but_incep.value;
             }
         }
         if (MLV_get_mouse_button_state(MLV_BUTTON_LEFT) == MLV_RELEASED) {
             pressed = 0;
         }
     }
-    window_param_preclose();
+
+    array[0] = index_active_button(tab_button_distrib, LENGTH_DISTRIB);
+    if (array[0] == 1) {
+        array[1] = index_active_button(tab_button_shapes, LENGTH_SHAPES);
+        array[2] = but_rising.value;
+        array[3] = nb_points;
+        array[4] = rayon;
+        array[5] = index_active_button(tab_button_display, LENGTH_DISPLAY);
+        if (array[5] == 1) {
+            array[6] = waiting_time;
+        }
+    } else {
+        array[1] = but_incep.value;
+    }
+    window_param_preclose(array);
     MLV_free_window();
 }
 
 int main(void) {
     int window_width = 1000, window_height = 1000;
-    init_window_param(&window_width, &window_height);
-    printf("w:%d h:%d", window_width, window_height);
+    int tab[6] = {};
+    init_window_param(&window_width, &window_height, tab);
+    for (int i = 0; i < 7; i++) {
+        printf("%d\n", tab[i]);
+    }
     return 0;
 }
