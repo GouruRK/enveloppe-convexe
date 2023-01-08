@@ -37,6 +37,7 @@ Button button_create(int x, int y, char* text) {
         exit(1);
     }
     but.x = x, but.y = y;
+    but.value = 0;
     strcpy(but.text, text);
     MLV_get_size_of_text(but.text, &but.width, &but.height);
     return but;
@@ -117,7 +118,7 @@ void init_window_param(int* window_width, int* window_height) {
     MLV_create_window("Setting convex hull", "Setting", 600, 400);
 
     /////////
-    MLV_Input_box *input_box = NULL, *input1, *input2, *input3;
+    MLV_Input_box *input_box = NULL, *input1, *input2;  // *input3;
     MLV_Event event = MLV_NONE;
     int x = 0,
         y = 0;  // Position de la souris
@@ -142,7 +143,6 @@ void init_window_param(int* window_width, int* window_height) {
     //     "Rayon: ");
     // MLV_draw_all_input_boxes();
     /////////
-    fprintf(stderr, "cc\n");
     tab_button_distrib[0] = button_create(250, 50, "Placer à la souris");
     tab_button_distrib[1] = button_create(250, 100, "Forme prédéfini");
 
@@ -151,8 +151,8 @@ void init_window_param(int* window_width, int* window_height) {
     tab_button_shapes[2] = button_create(450, 150, "Rectangle");
     tab_button_shapes[3] = button_create(450, 200, "Ellipse");
 
-    tab_button_display[1] = button_create(50, 50, "Automatique");
-    tab_button_display[0] = button_create(50, 100, "Avec delai");
+    tab_button_display[0] = button_create(50, 50, "Automatique");
+    tab_button_display[1] = button_create(50, 100, "Avec delai");
 
     while (!stop) {
         MLV_clear_window(MLV_COLOR_LIGHT_GRAY);

@@ -21,6 +21,7 @@ typedef struct button {
     int y;
     int height;
     int width;
+    int value;
 } Button;
 
 typedef struct {
