@@ -206,9 +206,10 @@ void drawCircleRandom(Window* window, ConvexHull* convex, int radius_max, int nb
         }
         nb_random = rand();
         radius = rand() % radius_max;
+        fprintf(stderr, "%d\n", window->clickableHeight);
         fillPoint(p,
-                  window->width / 2 + radius * coef * cos(nb_random),
-                  window->clickableHeight / 2 + radius * sin(nb_random));
+                  (window->width / 2) + radius * coef * cos(nb_random),
+                  (window->clickableHeight / 2) + radius * sin(nb_random));
 
         if (i == 2) {
             if (isPointEqual(convex->poly->p, convex->poly->next->p)) {
@@ -425,7 +426,6 @@ void drawConvexClick(Window* window, ConvexHull* convex) {
         drawAll(window, convex, &insidePoints, RADIUS, MLV_draw_polygon);
         MLV_update_window();
     }
-    freeAll(convex, &insidePoints, NULL);
 }
 
 // int main(void) {

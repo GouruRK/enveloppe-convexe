@@ -51,16 +51,61 @@ void lunchGameFromArray(Window* window, int initArray[]) {
                 }
             }
         }
+        if (initArray[1] == 1) {
+            if (initArray[2]) {
+                if (!initArray[5]) {
+                    drawSquareRandomRising(window, &convex, initArray[4], initArray[3], 0, 1);
+                } else {
+                    drawSquareRandomRising(window, &convex, initArray[4], initArray[3], initArray[6], 1);
+                }
+            } else {
+                if (!initArray[5]) {
+                    drawSquareRandom(window, &convex, initArray[4], initArray[3], 0, 1);
+                } else {
+                    drawSquareRandom(window, &convex, initArray[4], initArray[3], initArray[6], 1);
+                }
+            }
+        }
+        if (initArray[1] == 2) {
+            if (initArray[2]) {
+                if (!initArray[5]) {
+                    drawSquareRandomRising(window, &convex, initArray[4], initArray[3], 0, 0.7);
+                } else {
+                    drawSquareRandomRising(window, &convex, initArray[4], initArray[3], initArray[6], 0.7);
+                }
+            } else {
+                if (!initArray[5]) {
+                    drawSquareRandom(window, &convex, initArray[4], initArray[3], 0, 0.7);
+                } else {
+                    drawSquareRandom(window, &convex, initArray[4], initArray[3], initArray[6], 0.7);
+                }
+            }
+        }
+        if (initArray[1] == 3) {
+            if (initArray[2]) {
+                if (!initArray[5]) {
+                    drawCircleRandomRising(window, &convex, initArray[4], initArray[3], 0, 0.7);
+                } else {
+                    drawCircleRandomRising(window, &convex, initArray[4], initArray[3], initArray[6], 0.7);
+                }
+            } else {
+                if (!initArray[5]) {
+                    drawCircleRandom(window, &convex, initArray[4], initArray[3], 0, 0.7);
+                } else {
+                    drawCircleRandom(window, &convex, initArray[4], initArray[3], initArray[6], 0.7);
+                }
+            }
+        }
     }
-
-    MLV_wait_seconds(2);
+    // MLV_wait_seconds(2);
     MLV_free_window();
 }
 
 int main(void) {
     Window window;
     int initArray[6] = {};
-    initWindow(&window, 1000, 1000, 50);
-    init_window_param(&window.width, &window.height, initArray);
+    int winWidth = 1000, winHeight = 1000;
+    init_window_param(&winWidth, &winHeight, initArray);
+    initWindow(&window, winWidth, winHeight, 50);
     lunchGameFromArray(&window, initArray);
 }

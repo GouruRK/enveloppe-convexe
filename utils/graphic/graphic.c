@@ -255,12 +255,19 @@ void init_window_param(int* window_width, int* window_height, int array[]) {
                 val = (int)strtol(text, &endPtr, 10);
                 if (val && val > 300) {
                     *window_width = val;
+                    if (rayon > (0.9 * val) / 2) {
+                        rayon = (0.9 * min(*window_height, *window_width)) / 2;
+                    }
                 }
             } else if (input_box == input2) {
                 fprintf(stderr, "Hauteur");
                 val = (int)strtol(text, &endPtr, 10);
                 if (val && val > 300) {
                     *window_height = val;
+                    fprintf(stderr, "%f\n", 0.9 * val);
+                    if (rayon > (0.9 * val) / 2) {
+                        rayon = (0.9 * min(*window_height, *window_width)) / 2;
+                    }
                 }
             } else if (input_box == input3 && tab_button_distrib[1].value == 1) {
                 fprintf(stderr, "Rayon");
