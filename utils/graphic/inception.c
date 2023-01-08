@@ -140,7 +140,7 @@ void printInfoRec(Window* window, InceptionConvex convexs) {
                   convexs.size);
 }
 
-void DrawInceptionClick(Window* window) {
+void DrawInceptionClick(Window* window, int* stop) {
     MLV_Color tabcolora[SIZECOLOR] = {
         MLV_rgba(0, 0, 255, 100),
         MLV_rgba(0, 255, 0, 100),
@@ -169,7 +169,7 @@ void DrawInceptionClick(Window* window) {
     convexs.size = 1;
     printInfoRec(window, convexs);
     MLV_update_window();
-    while (1) {
+    while (!(*stop)) {
         Point* p = createPoint();
         if (!p) {
             freeAllList(&convexs);

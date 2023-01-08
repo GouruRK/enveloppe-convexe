@@ -206,7 +206,6 @@ void drawCircleRandom(Window* window, ConvexHull* convex, int radius_max, int nb
         }
         nb_random = rand();
         radius = rand() % radius_max;
-        fprintf(stderr, "%d\n", window->clickableHeight);
         fillPoint(p,
                   (window->width / 2) + radius * coef * cos(nb_random),
                   (window->clickableHeight / 2) + radius * sin(nb_random));
@@ -403,14 +402,14 @@ void initConvexClick(Window* window, ConvexHull* convex) {
  * @param window Paramètres de la fenêtre
  * @param convex Enveloppe convexe
  */
-void drawConvexClick(Window* window, ConvexHull* convex) {
+void drawConvexClick(Window* window, ConvexHull* convex, int* stop) {
     ListPoint insidePoints = createListPoint(-1);
     MLV_clear_window(MLV_COLOR_WHITE);
     printInfo(window, NULL, NULL);
     MLV_update_window();
     initConvexClick(window, convex);
     int x, y;
-    while (1) {
+    while (!(*stop)) {
         MLV_wait_mouse(&x, &y);
         if (!isInside(x, y, 0, window->clickableWidth, 0, window->clickableHeight)) {
             continue;

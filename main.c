@@ -13,14 +13,14 @@
 /*
 clang -c ./utils/args/errs.c -Wall -std=c17
 clang -c ./utils/list/list.c -Wall -std=c17
-clang -c ./utils/math/math.c list.o -Wall -std=c17
+clang -c ./utils/math/math.c -Wall -std=c17
 clang -c ./utils/graphic/draw.c -Wall -std=c17
-clang -c ./utils/graphic/graphic.c -Wall -std=c17 -lMLV
+clang -c ./utils/graphic/graphic.c -Wall -std=c17
 clang -c ./utils/graphic/enveloppe.c -Wall -std=c17
 clang -c ./utils/graphic/inception.c -Wall -std=c17
 clang main.c errs.o list.o math.o draw.o graphic.o enveloppe.o inception.o -Wall -std=c17 -o main -lMLV -lm
 */
-void lunchGameFromArray(Window* window, int initArray[]) {
+void lunchGameFromArray(Window* window, int initArray[], int* stop) {
     srand(time(NULL));
     ConvexHull convex = createConvex(-1);
 
@@ -31,9 +31,9 @@ void lunchGameFromArray(Window* window, int initArray[]) {
 
     if (!initArray[0]) {
         if (!initArray[1]) {
-            drawConvexClick(window, &convex);
+            drawConvexClick(window, &convex, stop);
         } else {
-            DrawInceptionClick(window);
+            DrawInceptionClick(window, stop);
         }
     } else {
         if (initArray[1] == 0) {
@@ -104,8 +104,10 @@ void lunchGameFromArray(Window* window, int initArray[]) {
 int main(void) {
     Window window;
     int initArray[6] = {};
-    int winWidth = 1000, winHeight = 1000;
-    init_window_param(&winWidth, &winHeight, initArray);
+    int winWidth = 1000, winHeight = 1000, stop = 0;
+    MLV_execute_at_exit(exit_function, &stop);
+    init_window_param(&winWidth, &winHeight, initArray, &stop);
     initWindow(&window, winWidth, winHeight, 50);
-    lunchGameFromArray(&window, initArray);
+    stop = 0;
+    lunchGameFromArray(&window, initArray, &stop);
 }

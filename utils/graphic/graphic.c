@@ -159,13 +159,12 @@ void window_param_preclose(int w_width, int w_height, int array[]) {
     MLV_wait_seconds(2);
 }
 
-void init_window_param(int* window_width, int* window_height, int array[]) {
-    int stop = 0, pressed = 0, rayon = (0.9 * min(*window_height, *window_width)) / 2;
+void init_window_param(int* window_width, int* window_height, int array[], int* stop) {
+    int pressed = 0, rayon = (0.9 * min(*window_height, *window_width)) / 2;
     int nb_points = 400, waiting_time = 1000;
     Button tab_button_distrib[LENGTH_DISTRIB], tab_button_shapes[LENGTH_SHAPES], tab_button_display[LENGTH_DISPLAY];
     MLV_Color tab_color[2] = {MLV_COLOR_RED,
                               MLV_COLOR_DARKGREEN};
-    MLV_execute_at_exit(exit_function, &stop);
     MLV_create_window("Setting convex hull", "Setting", 600, 400);
 
     /////////
@@ -218,7 +217,7 @@ void init_window_param(int* window_width, int* window_height, int array[]) {
     Button but_incep = createButton(240, 200, "Envellope imbriquee");
     Button but_rising = createButton(250, 200, "Rayon croissant");
 
-    while (!stop) {
+    while (!(*stop)) {
         MLV_clear_window(MLV_COLOR_LIGHT_GRAY);
         // MLV_draw_text(150, 20, "%d", MLV_COLOR_DARKGREEN, MLV_get_time());
         MLV_draw_text(240, 25, "Mode de distribution :", MLV_COLOR_DARKGREEN);
@@ -251,7 +250,6 @@ void init_window_param(int* window_width, int* window_height, int array[]) {
         if (event == MLV_INPUT_BOX) {
             int val = 0;
             if (input_box == input1) {
-                fprintf(stderr, "Largeur");
                 val = (int)strtol(text, &endPtr, 10);
                 if (val && val > 300) {
                     *window_width = val;
@@ -260,7 +258,6 @@ void init_window_param(int* window_width, int* window_height, int array[]) {
                     }
                 }
             } else if (input_box == input2) {
-                fprintf(stderr, "Hauteur");
                 val = (int)strtol(text, &endPtr, 10);
                 if (val && val > 300) {
                     *window_height = val;
@@ -270,19 +267,16 @@ void init_window_param(int* window_width, int* window_height, int array[]) {
                     }
                 }
             } else if (input_box == input3 && tab_button_distrib[1].value == 1) {
-                fprintf(stderr, "Rayon");
                 val = (int)strtol(text, &endPtr, 10);
                 if (val && val < min(*window_height - 50, *window_width) / 2) {
                     rayon = val;
                 }
             } else if (input_box == input4 && tab_button_distrib[1].value == 1 && tab_button_display[1].value == 1) {
-                fprintf(stderr, "Cooldown");
                 val = (int)strtol(text, &endPtr, 10);
                 if (val) {
                     waiting_time = val;
                 }
             } else if (input_box == input5 && tab_button_distrib[1].value == 1) {
-                fprintf(stderr, "NB point");
                 val = (int)strtol(text, &endPtr, 10);
                 if (val) {
                     nb_points = val;

@@ -58,7 +58,7 @@ void button_draw_WOborder(Button but, MLV_Color color_text);
 void button_draw_tab(Button tab[], int size, MLV_Color color[]);
 void switch_(Button tab[], int size, int index);
 void window_param_preclose(int w_width, int w_height, int array[]);
-void init_window_param(int* window_width, int* window_height, int tab[]);
+void init_window_param(int* window_width, int* window_height, int tab[], int* stop);
 
 // Fichier ./graphic/enveloppe.c
 void freeAll(ConvexHull* convex, ListPoint* insidePoints, Point* p);
@@ -69,7 +69,7 @@ void drawCircleRandom(Window* window, ConvexHull* convex, int radius_max, int nb
 void drawSquareRandom(Window* window, ConvexHull* convex, int radius_max, int nb_points, int wait, float coef);
 void drawSquareRandomRising(Window* window, ConvexHull* convex, int radius_max, int nb_points, int wait, float coef);
 void initConvexClick(Window* window, ConvexHull* convex);
-void drawConvexClick(Window* window, ConvexHull* convex);
+void drawConvexClick(Window* window, ConvexHull* convex, int* stop);
 
 // Fichier : ./graphic/draw.c
 int isInside(int x, int y, int minX, int maxX, int minY, int maxY);
@@ -92,6 +92,6 @@ void errAlloc(void);
 void freeAllList(InceptionConvex* convexs);
 void newPoint2(InceptionConvex* convexs, int depth, Point* p);
 void printInfoRec(Window* window, InceptionConvex convexs);
-void DrawInceptionClick(Window* window);
+void DrawInceptionClick(Window* window, int* stop);
 
 #endif
