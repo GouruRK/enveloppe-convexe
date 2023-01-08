@@ -28,6 +28,15 @@ clang -c graphic.c -Wall -std=c17 -lMLV
 clang enveloppe.c graphic.o math.o list.o draw.o errs.o -Wall -std=c17 -o env -lMLV -lm
 */
 
+typedef struct window {
+    int width;
+    int height;
+    int clickableWidth;
+    int clickableHeight;
+    int infoWidth;
+    int infoHeight;
+} Window;
+
 /**
  * @brief Permet de free tous les polynomes
  *
@@ -419,10 +428,22 @@ void draw_convex_click(ConvexHull* convex) {
     }
 }
 
+void initWindow(Window* window, int width, int height, int panelHeight) {
+    window->width = width;
+    window->height = height;
+    window->infoWidth = width;
+    window->infoHeight = panelHeight;
+    window->clickableWidth = width;
+    window->clickableHeight = height - panelHeight;
+}
+
 int main(void) {
     srand(time(NULL));
+    Window window;
+    initWindow(&window, 1000, 1000, 150);<
+
     ConvexHull convex = createConvex(-1);
-    MLV_create_window("Setting convex hull", "Setting", 1000, 1000);
+    MLV_create_window("Setting convex hull", "Setting", window.width, window.height);
     MLV_clear_window(MLV_COLOR_WHITE);
     // MLV_update_window();
     // draw_convex_click(&convex);
