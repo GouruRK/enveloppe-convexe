@@ -1,7 +1,8 @@
 /**
  * @file enveloppe.c
  * @author Quentin Laborde - Rémy Kies
- * @brief Génération d'enveloppe convexe, par click, ou génération aléatoire
+ * @brief Génération d'enveloppe convexe, par click, ou génération 
+ *        aléatoire
  *        en suivant une forme (carré, cercle)
  * @date 2023-01-07
  * 
@@ -420,7 +421,6 @@ void draw_convex_click(ConvexHull* convex) {
 }
 
 int main(void) {
-    errAlloc();
     // init_window_param();
     MLV_create_window("Setting convex hull", "Setting", 1000, 1000);
     //////////////////////
