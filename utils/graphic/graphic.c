@@ -25,10 +25,6 @@ void exit_function(void* data) {
     *arret = 1;
 }
 
-int isClick(x, y, minX, maxX, minY, maxY) {
-    return (x > minX && x < maxX) && (y > minY && y < maxY);
-}
-
 Button button_create(int x, int y, char* text) {
     Button but;
     but.text = (char*)malloc(strlen(text) * sizeof(char));
@@ -51,7 +47,7 @@ int button_onclick(Button but, int x, int y) {
     //     return 0;
     // }
     // return 1;
-    return isClick(x, y, but.x, but_max_x, but.y, but_max_y);
+    return isInside(x, y, but.x, but_max_x, but.y, but_max_y);
 }
 
 int button_onclick_tab(Button tab[], int size, int x, int y) {
@@ -215,9 +211,9 @@ void init_window_param(int* window_width, int* window_height) {
     MLV_free_window();
 }
 
-int main(void) {
-    int window_width = 1000, window_height = 1000;
-    init_window_param(&window_width, &window_height);
-    printf("w:%d h:%d", window_width, window_height);
-    return 0;
-}
+// int main(void) {
+//     int window_width = 1000, window_height = 1000;
+//     init_window_param(&window_width, &window_height);
+//     printf("w:%d h:%d", window_width, window_height);
+//     return 0;
+// }

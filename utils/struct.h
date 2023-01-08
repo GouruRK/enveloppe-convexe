@@ -28,3 +28,12 @@ typedef struct {
     ConvexHull* tabconvex;
     int size;
 } InceptionConvex;
+
+typedef struct win {
+    int width;
+    int height;
+    int clickableWidth;
+    int clickableHeight;
+    int infoWidth;
+    int infoHeight;
+} Window;

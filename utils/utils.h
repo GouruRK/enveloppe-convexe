@@ -45,7 +45,6 @@ void freePolygon(Polygon* poly);
 // Fichier : ./math/math.c
 int crossProduct(Point* p, Point* q, Point* r);
 int isDirect(Point* A, Point* B, Point* p);
-int isInside(Polygon* poly, Point* p);
 
 // Fichier : graphic.c
 void exit_function(void* data);
@@ -65,7 +64,9 @@ void drawPoint(Point* p, int radius, MLV_Color color);
 void drawPoints(Polygon poly, int radius, MLV_Color color);
 void drawPoly(ConvexHull convex, MLV_Color color, void (*drawFunction)(const int*, const int*, int, MLV_Color));
 void drawTriangle(Point* A, Point* B, Point* C);
-void drawAll(ConvexHull* convex, ConvexHull* insidePoints, int radius, void (*drawFunction)(const int*, const int*, int, MLV_Color));
+void drawAll(Window* window, ConvexHull* convex, ConvexHull* insidePoints, int radius, void (*drawFunction)(const int*, const int*, int, MLV_Color));
+void printInfo(Window* window, ConvexHull* convex, ConvexHull* insidePoints);
+int isInside(int x, int y, int minX, int maxX, int minY, int maxY);
 
 // Fichier : ./args/errs.c
 void errAlloc(void);
