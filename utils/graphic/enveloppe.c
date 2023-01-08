@@ -11,9 +11,6 @@
 
 #include "../utils.h"
 
-#define RADIUS 5
-#define PI 3.14159265
-
 /*
 Lignes de compilation :
 
@@ -21,7 +18,7 @@ clang -c ../args/errs.c -Wall -std=c17
 clang -c ../list/list.c errs.o -Wall -std=c17
 clang -c ../math/math.c list.o errs.o -Wall -std=c17
 clang -c draw.c -Wall -std=c17
-clang -c graphic.c -Wall -std=c17 -lMLV
+clang -c graphic.c -Wall -std=c17
 clang enveloppe.c graphic.o math.o list.o draw.o errs.o -g3 -Wall -std=c17 -o env -lMLV -lm
 */
 
@@ -134,8 +131,9 @@ int r_sign(void) {
  * @param wait Temps d'attente entre chaque itération (graphique uniquement)
  * @param coef Coefficient d'aplatissement
  */
-void drawCircleRandomRising(Window* window, ConvexHull* convex, int radius_max,
-                            int nb_points, int wait, float coef) {
+void drawCircleRandomRising(Window* window, ConvexHull* convex, 
+                            int radius_max, int nb_points, int wait, 
+                            float coef) {
     ListPoint insidePoints = createListPoint(nb_points);
     double nb_random, radius = radius_max / (float)nb_points;
 
@@ -146,9 +144,9 @@ void drawCircleRandomRising(Window* window, ConvexHull* convex, int radius_max,
             exit(1);
         }
         nb_random = rand();
-        fillPoint(p,
-                  window->width / 2 + radius * coef * i * cos(nb_random),
-                  window->clickableHeight / 2 + radius * i * sin(nb_random));
+        fillPoint(p, 
+                  window->width/2 + radius * coef * i * cos(nb_random),
+                  window->clickableHeight/2 + radius * i * sin(nb_random));
 
         if (i == 2) {
             if (isPointEqual(convex->poly->p, convex->poly->next->p)) {
@@ -192,8 +190,8 @@ void drawCircleRandomRising(Window* window, ConvexHull* convex, int radius_max,
  * @param wait Temps d'attente entre chaque itération (graphique uniquement)
  * @param coef Coefficient d'aplatissement
  */
-void drawCircleRandom(Window* window, ConvexHull* convex, int radius_max, int nb_points,
-                      int wait, float coef) {
+void drawCircleRandom(Window* window, ConvexHull* convex, int radius_max, 
+                      int nb_points, int wait, float coef) {
     ListPoint insidePoints = createListPoint(nb_points);
     double nb_random;
     int radius;
@@ -252,8 +250,8 @@ void drawCircleRandom(Window* window, ConvexHull* convex, int radius_max, int nb
  * @param wait Temps d'attente entre chaque itération (graphique uniquement)
  * @param coef Coefficient d'aplatissement
  */
-void drawSquareRandom(Window* window, ConvexHull* convex, int radius_max, int nb_points,
-                      int wait, float coef) {
+void drawSquareRandom(Window* window, ConvexHull* convex, int radius_max,
+                      int nb_points, int wait, float coef) {
     ListPoint insidePoints = createListPoint(nb_points);
 
     for (int i = 0; i < nb_points; i++) {
@@ -263,8 +261,8 @@ void drawSquareRandom(Window* window, ConvexHull* convex, int radius_max, int nb
             exit(1);
         }
         fillPoint(p,
-                  window->width / 2 + r_sign() * coef * (rand() % radius_max),
-                  window->clickableHeight / 2 + r_sign() * (rand() % radius_max));
+                  window->width/2 + r_sign() * coef * (rand() % radius_max),
+                  window->clickableHeight/2 + r_sign()*(rand()%radius_max));
 
         if (i == 2) {
             if (isPointEqual(convex->poly->p, convex->poly->next->p)) {
@@ -308,8 +306,9 @@ void drawSquareRandom(Window* window, ConvexHull* convex, int radius_max, int nb
  * @param wait Temps d'attente entre chaque itération (graphique uniquement)
  * @param coef Coefficient d'aplatissement
  */
-void drawSquareRandomRising(Window* window, ConvexHull* convex, int radius_max,
-                            int nb_points, int wait, float coef) {
+void drawSquareRandomRising(Window* window, ConvexHull* convex, 
+                            int radius_max, int nb_points, int wait, 
+                            float coef) {
     ListPoint insidePoints = createListPoint(nb_points);
     float radius = radius_max / (float)nb_points;
 
@@ -321,8 +320,8 @@ void drawSquareRandomRising(Window* window, ConvexHull* convex, int radius_max,
         }
         int nb = (radius * i) + 1;
         fillPoint(p,
-                  window->width / 2 + r_sign() * coef * (rand() % nb),
-                  window->clickableHeight / 2 + r_sign() * (rand() % nb));
+                  window->width/2 + r_sign() * coef * (rand() % nb),
+                  window->clickableHeight/2 + r_sign()*(rand() % nb));
 
         if (i == 2) {
             if (isPointEqual(convex->poly->p, convex->poly->next->p)) {
@@ -372,7 +371,9 @@ void initConvexClick(Window* window, ConvexHull* convex) {
     }
     while (points < 2) {
         MLV_wait_mouse(&x, &y);
-        if (!isInside(x, y, 0, window->clickableWidth, 0, window->clickableHeight)) {
+        int inside = isInside(x, y, 0, window->clickableWidth, 0, 
+                              window->clickableHeight);
+        if (!inside) {
             continue;
         }
         if (points == 0) {
@@ -411,7 +412,9 @@ void drawConvexClick(Window* window, ConvexHull* convex, int* stop) {
     int x, y;
     while (!(*stop)) {
         MLV_wait_mouse(&x, &y);
-        if (!isInside(x, y, 0, window->clickableWidth, 0, window->clickableHeight)) {
+        int inside = isInside(x, y, 0, window->clickableWidth, 0,
+                              window->clickableHeight);
+        if (!inside) {
             continue;
         }
         Point* p = createPoint();

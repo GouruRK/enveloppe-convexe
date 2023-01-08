@@ -12,7 +12,7 @@
 
 #define SIZECOLOR 6
 
-/* Lignes de compilations
+/* Lignes de compilations :
 clang -c ../args/errs.c -Wall -std=c17
 clang -c ../list/list.c -Wall -std=c17
 clang -c ../math/math.c list.o -Wall -std=c17
@@ -21,6 +21,11 @@ clang -c graphic.c -Wall -std=c17 -lMLV
 clang inception.c graphic.o math.o list.o draw.o errs.o -g3 -Wall -std=c17 -o inc -lMLV -lm
 */
 
+/**
+ * @brief Permet de libérer la mémoire de tous les polygons dans `convexs`
+ * 
+ * @param convexs Liste d'enveloppes convexes
+ */
 void freeAllList(InceptionConvex* convexs) {
     for (int i = 0; i < convexs->size; i++) {
         freePolygon(&(convexs->tabconvex[i]->poly));
@@ -29,7 +34,15 @@ void freeAllList(InceptionConvex* convexs) {
     free(convexs->tabconvex);
 }
 
-void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
+/**
+ * @brief Permet d'ajouter un point récursivement a la liste des 
+ *        enveloppes convexes
+ * 
+ * @param convexs Listes des enveloppes
+ * @param depth Indice de l'enveloppe courrante
+ * @param p Point a ajouter
+ */
+void newPointRec(InceptionConvex* convexs, int depth, Point* p) {
     // si tableau trop petit
     if (convexs->size == depth) {
         ConvexHull** temp = convexs->tabconvex;
@@ -85,7 +98,7 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
         }
     }
     if (direct) {
-        newPoint2(convexs, depth + 1, p);
+        newPointRec(convexs, depth + 1, p);
         return;
     }
     // On fixe le début de poly au nouveau point
@@ -93,10 +106,11 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
 
     // nettoyage avant
     while (1) {
-        direct = isDirect(convex->poly->p, convex->poly->next->p, convex->poly->next->next->p);
+        direct = isDirect(convex->poly->p, convex->poly->next->p,
+                          convex->poly->next->next->p);
         if (!direct) {
             Vertex* v = extractVertexHead(&(convex->poly->next));
-            newPoint2(convexs, depth + 1, v->p);
+            newPointRec(convexs, depth + 1, v->p);
             convexs->tabconvex[depth]->curlen--;
         } else {
             break;
@@ -104,12 +118,13 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
     }
     // nettoyage arriere
     while (1) {
-        direct = isDirect(convex->poly->p, convex->poly->prev->prev->p, convex->poly->prev->p);
+        direct = isDirect(convex->poly->p, convex->poly->prev->prev->p,
+                          convex->poly->prev->p);
         if (!direct) {
             Vertex* keep = convex->poly;
             convex->poly = convex->poly->prev;
             Vertex* v = extractVertexHead(&(convex->poly));
-            newPoint2(convexs, depth + 1, v->p);
+            newPointRec(convexs, depth + 1, v->p);
             convex->poly = keep;
             convexs->tabconvex[depth]->curlen--;
         } else {
@@ -118,13 +133,20 @@ void newPoint2(InceptionConvex* convexs, int depth, Point* p) {
     }
 }
 
+/**
+ * @brief Affiche les informations des enveloppes convexes
+ * 
+ * @param window Informations de la fenêtre d'affichage 
+ * @param convexs Listes des enveloppes convexes
+ */
 void printInfoRec(Window* window, InceptionConvex convexs) {
     int points = 0;
     for (int i = 0; i < convexs.size; i++) {
         points += convexs.tabconvex[i]->curlen;
     }
-
-    MLV_draw_line(0, window->clickableHeight, window->infoWidth, window->clickableHeight, MLV_COLOR_GRAY);
+    
+    MLV_draw_line(0, window->clickableHeight, window->infoWidth, 
+                  window->clickableHeight, MLV_COLOR_GRAY);
     int w, h;
     MLV_get_size_of_text("Nombre de points : %d", &w, &h, points);
     MLV_draw_text(window->infoWidth * 1 / 3 - w / 2,
@@ -140,6 +162,10 @@ void printInfoRec(Window* window, InceptionConvex convexs) {
                   convexs.size);
 }
 
+/**
+ * @brief Permet de dessiner des enveloppes convexes imbriquées
+ * 
+ */
 void DrawInceptionClick(Window* window, int* stop) {
     MLV_Color tabcolora[SIZECOLOR] = {
         MLV_rgba(0, 0, 255, 100),
@@ -177,11 +203,13 @@ void DrawInceptionClick(Window* window, int* stop) {
         }
         MLV_wait_mouse(&x, &y);
         fillPoint(p, x, y);
-        newPoint2(&convexs, 0, p);
+        newPointRec(&convexs, 0, p);
         MLV_clear_window(MLV_COLOR_WHITE);
         for (int i = 0; i < convexs.size; i++) {
-            drawPoly(*(convexs.tabconvex[i]), tabcolora[i % SIZECOLOR], MLV_draw_filled_polygon);
-            drawPoints(convexs.tabconvex[i]->poly, 2, tabcolor[i % SIZECOLOR]);
+            drawPoly(*(convexs.tabconvex[i]), tabcolora[i % SIZECOLOR],
+                     MLV_draw_filled_polygon);
+            drawPoints(convexs.tabconvex[i]->poly, RADIUS,
+                       tabcolor[i % SIZECOLOR]);
         }
         printInfoRec(window, convexs);
         MLV_update_window();

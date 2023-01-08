@@ -41,3 +41,14 @@ int crossProduct(Point* A, Point* B, Point* C) {
 int isDirect(Point* A, Point* B, Point* C) {
     return crossProduct(A, B, C) >= 0;
 }
+
+/**
+ * @brief Renvoie l'élément le plus petit des deux
+ * 
+ * @param x 
+ * @param y 
+ * @return int 
+ */
+int min(int x, int y) {
+    return x < y ? x : y;
+}

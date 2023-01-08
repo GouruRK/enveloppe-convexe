@@ -97,7 +97,7 @@ void lunchGameFromArray(Window* window, int initArray[], int* stop) {
             }
         }
     }
-    // MLV_wait_seconds(2);
+    MLV_wait_seconds(2);
     MLV_free_window();
 }
 
@@ -106,7 +106,7 @@ int main(void) {
     int initArray[6] = {};
     int winWidth = 1000, winHeight = 1000, stop = 0;
     MLV_execute_at_exit(exit_function, &stop);
-    init_window_param(&winWidth, &winHeight, initArray, &stop);
+    initWindowParam(&winWidth, &winHeight, initArray, &stop);
     initWindow(&window, winWidth, winHeight, 50);
     stop = 0;
     lunchGameFromArray(&window, initArray, &stop);

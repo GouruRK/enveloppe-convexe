@@ -169,7 +169,8 @@ void addVertexHead(Polygon* poly, Vertex* vertex) {
  * @param addFunction 
  * @return int Renvoie `1` si pas d'erreur d'allocation, `0` sinon
  */
-int addPoint(Polygon* poly, Point* p, void (*addFunction)(Polygon*, Vertex*)) {
+int addPoint(Polygon* poly, Point* p, 
+             void (*addFunction)(Polygon*, Vertex*)) {
     Vertex* vertex = createVertex();
     if (!vertex) {
         return 0;
