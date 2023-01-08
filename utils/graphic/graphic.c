@@ -31,11 +31,11 @@ void exit_function(void* data) {
 
 /**
  * @brief Permet de créer un bouton
- * 
- * @param x 
- * @param y 
- * @param text 
- * @return Button 
+ *
+ * @param x
+ * @param y
+ * @param text
+ * @return Button
  */
 Button createButton(int x, int y, char* text) {
     Button but;
@@ -53,10 +53,10 @@ Button createButton(int x, int y, char* text) {
 
 /**
  * @brief Permet de savoir si un boutton est cliqué
- * 
- * @param but 
- * @param x 
- * @param y 
+ *
+ * @param but
+ * @param x
+ * @param y
  * @return int Renvoie `1` si clické, `0` sinon
  */
 int button_onclick(Button but, int x, int y) {
@@ -67,12 +67,12 @@ int button_onclick(Button but, int x, int y) {
 
 /**
  * @brief Renvoie l'indice du boutton qui a été cliqué
- * 
- * @param tab 
- * @param size 
- * @param x 
- * @param y 
- * @return int -1 si aucun bouton cliqué, l'indice dans le tableau `tab` 
+ *
+ * @param tab
+ * @param size
+ * @param x
+ * @param y
+ * @return int -1 si aucun bouton cliqué, l'indice dans le tableau `tab`
  *         sinon
  */
 int button_onclick_tab(Button tab[], int size, int x, int y) {
@@ -151,7 +151,7 @@ void window_param_preclose(int w_width, int w_height, int array[]) {
         if (array[5]) {
             MLV_draw_text(75, 175, "- Avec un delai de %d ms", MLV_COLOR_BLACK, array[6]);
         } else {
-            MLV_draw_text(75, 200, "- Avec une generation automatique", MLV_COLOR_BLACK, array[6]);
+            MLV_draw_text(75, 200, "- Avec une generation automatique", MLV_COLOR_BLACK);
         }
     }
     MLV_draw_text(150, 350, "La fenetre sera de dimension %d,%d", MLV_COLOR_RED, w_width, w_height);
@@ -274,7 +274,7 @@ void init_window_param(int* window_width, int* window_height, int array[]) {
                 if (val) {
                     waiting_time = val;
                 }
-            } else if (input_box == input3 && tab_button_distrib[1].value == 1) {
+            } else if (input_box == input5 && tab_button_distrib[1].value == 1) {
                 fprintf(stderr, "NB point");
                 val = (int)strtol(text, &endPtr, 10);
                 if (val) {

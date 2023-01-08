@@ -3,8 +3,10 @@
 #define INIT
 
 #include <MLV/MLV_all.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "struct.h"
 
@@ -85,5 +87,11 @@ void printInfo(Window* window, ConvexHull* convex, ConvexHull* insidePoints);
 
 // Fichier : ./args/errs.c
 void errAlloc(void);
+
+// Fichier : ./graphic/inception.c
+void freeAllList(InceptionConvex* convexs);
+void newPoint2(InceptionConvex* convexs, int depth, Point* p);
+void printInfoRec(Window* window, InceptionConvex convexs);
+void DrawInceptionClick(Window* window);
 
 #endif
