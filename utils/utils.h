@@ -46,7 +46,7 @@ void freePolygon(Polygon* poly);
 int crossProduct(Point* p, Point* q, Point* r);
 int isDirect(Point* A, Point* B, Point* p);
 
-// Fichier : graphic.c
+// Fichier : ./graphic/graphic.c
 void exit_function(void* data);
 Button createButton(int x, int y, char* text);
 int button_onclick(Button but, int x, int y);
@@ -57,6 +57,17 @@ void button_draw_tab(Button tab[], int size, MLV_Color color[]);
 void switch_(Button tab[], int size, int index);
 void window_param_preclose(int w_width, int w_height, int array[]);
 void init_window_param(int* window_width, int* window_height, int tab[]);
+
+// Fichier ./graphic/enveloppe.c
+void freeAll(ConvexHull* convex, ListPoint* insidePoints, Point* p);
+void newPoint(ConvexHull* convex, ListPoint* insidePoints, Point* p);
+int r_sign(void);
+void drawCircleRandomRising(Window* window, ConvexHull* convex, int radius_max, int nb_points, int wait, float coef);
+void drawCircleRandom(Window* window, ConvexHull* convex, int radius_max, int nb_points, int wait, float coef);
+void drawSquareRandom(Window* window, ConvexHull* convex, int radius_max, int nb_points, int wait, float coef);
+void drawSquareRandomRising(Window* window, ConvexHull* convex, int radius_max, int nb_points, int wait, float coef);
+void initConvexClick(Window* window, ConvexHull* convex);
+void drawConvexClick(Window* window, ConvexHull* convex);
 
 // Fichier : ./graphic/draw.c
 int isInside(int x, int y, int minX, int maxX, int minY, int maxY);

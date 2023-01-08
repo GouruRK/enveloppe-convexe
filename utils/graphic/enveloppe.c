@@ -29,13 +29,13 @@ clang enveloppe.c graphic.o math.o list.o draw.o errs.o -g3 -Wall -std=c17 -o en
 */
 
 /**
- * @brief Permet de free tous les polynomes
+ * @brief Permet de free tous les polygomes
  *
- * @param convex
- * @param insidePoints
- * @param p
+ * @param convex L'enveloppe convexe
+ * @param insidePoints Les points dans l'enveloppe convexe
+ * @param p Point
  */
-void freeAll(ConvexHull* convex, ConvexHull* insidePoints, Point* p) {
+void freeAll(ConvexHull* convex, ListPoint* insidePoints, Point* p) {
     freePolygon(&(convex->poly));
     freePolygon(&(insidePoints->poly));
     free(p);
@@ -44,11 +44,11 @@ void freeAll(ConvexHull* convex, ConvexHull* insidePoints, Point* p) {
 /**
  * @brief Permet d'ajouter un point dans une enveloppe convexe
  *
- * @param convex
- * @param insidePoints
- * @param p
+ * @param convex L'enveloppe convexe
+ * @param insidePoints Les points dans l'enveloppe convexe
+ * @param p Nouveau point
  */
-void newPoint(ConvexHull* convex, ConvexHull* insidePoints, Point* p) {
+void newPoint(ConvexHull* convex, ListPoint* insidePoints, Point* p) {
     // On regarde si le point est a l'intérieur de l'enveloppe
     Vertex* head = NULL;
     Vertex* point;
@@ -122,26 +122,24 @@ void newPoint(ConvexHull* convex, ConvexHull* insidePoints, Point* p) {
  *
  * @return int
  */
-int r_sign() {
+int r_sign(void) {
     return !(rand() % 2) ? -1 : 1;
 }
 
 /**
  * @brief Crée et affiche une enveloppe convexe en forme de cercle
  *        ou d'ellipse (param coef) qui s'agrandit
- *
- * @param convex
- * @param radius_max
- * @param nb_points
- * @param window_widht
- * @param window_height
- * @param wait
- * @param coef
+ * 
+ * @param window Les paramètres de la fenêtre
+ * @param convex L'enveloppe convexe
+ * @param radius_max Rayon maximum du cercle
+ * @param nb_points Nombre de points à générer 
+ * @param wait Temps d'attente entre chaque itération (graphique uniquement)
+ * @param coef Coefficient d'aplatissement
  */
-void draw_circle_random_rising(Window* window, ConvexHull* convex, int radius_max,
-                               int nb_points, int window_widht,
-                               int window_height, int wait, float coef) {
-    ConvexHull insidePoints = createConvex(nb_points);
+void drawCircleRandomRising(Window* window, ConvexHull* convex, int radius_max,
+                               int nb_points, int wait, float coef) {
+    ListPoint insidePoints = createListPoint(nb_points);
     double nb_random, radius = radius_max / (float)nb_points;
 
     for (int i = 0; i < nb_points; i++) {
@@ -151,8 +149,9 @@ void draw_circle_random_rising(Window* window, ConvexHull* convex, int radius_ma
             exit(1);
         }
         nb_random = rand();
-        fillPoint(p, window_widht / 2 + radius * coef * i * cos(nb_random),
-                  window_height / 2 + radius * i * sin(nb_random));
+        fillPoint(p, 
+                  window->Width/2 + radius * coef * i * cos(nb_random),
+                  window->clickableHeight/2 + radius * i * sin(nb_random));
 
         if (i == 2) {
             if (isPointEqual(convex->poly->p, convex->poly->next->p)) {
@@ -189,18 +188,16 @@ void draw_circle_random_rising(Window* window, ConvexHull* convex, int radius_ma
  * @brief Crée et affiche une enveloppe convexe
  *        en forme de cercle ou d'ellipse (param coef)
  *
- * @param convex
- * @param radius_max
- * @param nb_points
- * @param window_widht
- * @param window_height
- * @param wait
- * @param coef
+ * @param window Les paramètres de la fenêtre
+ * @param convex L'enveloppe convexe
+ * @param radius_max Rayon maximum du cercle
+ * @param nb_points Nombre de points à générer 
+ * @param wait Temps d'attente entre chaque itération (graphique uniquement)
+ * @param coef Coefficient d'aplatissement
  */
-void draw_circle_random(Window* window, ConvexHull* convex, int radius_max, int nb_points,
-                        int window_widht, int window_height,
+void drawCircleRandom(Window* window, ConvexHull* convex, int radius_max, int nb_points,
                         int wait, float coef) {
-    ConvexHull insidePoints = createConvex(nb_points);
+    ListPoint insidePoints = createListPoint(nb_points);
     double nb_random;
     int radius;
 
@@ -212,8 +209,9 @@ void draw_circle_random(Window* window, ConvexHull* convex, int radius_max, int 
         }
         nb_random = rand();
         radius = rand() % radius_max;
-        fillPoint(p, window_widht / 2 + radius * coef * cos(nb_random),
-                  window_height / 2 + radius * sin(nb_random));
+        fillPoint(p, 
+                  window->width/2 + radius * coef * cos(nb_random),
+                  window->clickableHeight/2 + radius * sin(nb_random));
 
         if (i == 2) {
             if (isPointEqual(convex->poly->p, convex->poly->next->p)) {
@@ -250,18 +248,16 @@ void draw_circle_random(Window* window, ConvexHull* convex, int radius_max, int 
  * @brief Crée et affiche une enveloppe convexe
  *        en forme de carré ou de rectangle (param coef)
  *
- * @param convex
- * @param radius_max
- * @param nb_points
- * @param window_widht
- * @param window_height
- * @param wait
- * @param coef
+ * @param window Les paramètres de la fenêtre
+ * @param convex L'enveloppe convexe
+ * @param radius_max Rayon maximum du cercle
+ * @param nb_points Nombre de points à générer 
+ * @param wait Temps d'attente entre chaque itération (graphique uniquement)
+ * @param coef Coefficient d'aplatissement
  */
-void draw_square_random(Window* window, ConvexHull* convex, int radius_max, int nb_points,
-                        int window_widht, int window_height,
+void drawSquareRandom(Window* window, ConvexHull* convex, int radius_max, int nb_points,
                         int wait, float coef) {
-    ConvexHull insidePoints = createConvex(nb_points);
+    ListPoint insidePoints = createListPoint(nb_points);
 
     for (int i = 0; i < nb_points; i++) {
         Point* p = createPoint();
@@ -269,8 +265,9 @@ void draw_square_random(Window* window, ConvexHull* convex, int radius_max, int 
             freeAll(convex, &insidePoints, NULL);
             exit(1);
         }
-        fillPoint(p, window_widht / 2 + r_sign() * coef * (rand() % radius_max),
-                  window_height / 2 + r_sign() * (rand() % radius_max));
+        fillPoint(p,
+                  window->width/2 + r_sign() * coef * (rand() % radius_max),
+                  window->clickableHeight/2 + r_sign() * (rand() % radius_max));
 
         if (i == 2) {
             if (isPointEqual(convex->poly->p, convex->poly->next->p)) {
@@ -307,17 +304,16 @@ void draw_square_random(Window* window, ConvexHull* convex, int radius_max, int 
  * @brief Crée et affiche une enveloppe convexe en forme de carré
  *        ou de rectangle (param coef) et qui s'agrandit
  *
- * @param convex
- * @param radius_max
- * @param nb_points
- * @param window_widht
- * @param window_height
- * @param wait
+ * @param window Les paramètres de la fenêtre
+ * @param convex L'enveloppe convexe
+ * @param radius_max Rayon maximum du cercle
+ * @param nb_points Nombre de points à générer 
+ * @param wait Temps d'attente entre chaque itération (graphique uniquement)
+ * @param coef Coefficient d'aplatissement
  */
-void draw_square_random_rising(Window* window, ConvexHull* convex, int radius_max,
-                               int nb_points, int window_widht,
-                               int window_height, int wait, float coef) {
-    ConvexHull insidePoints = createConvex(nb_points);
+void drawSquareRandomRising(Window* window, ConvexHull* convex, int radius_max,
+                               int nb_points, int wait, float coef) {
+    ListPoint insidePoints = createListPoint(nb_points);
     float radius = radius_max / (float)nb_points;
 
     for (int i = 0; i < nb_points; i++) {
@@ -327,8 +323,9 @@ void draw_square_random_rising(Window* window, ConvexHull* convex, int radius_ma
             exit(1);
         }
         int nb = (radius * i) + 1;
-        fillPoint(p, window_widht / 2 + r_sign() * coef * (rand() % nb),
-                  window_height / 2 + r_sign() * (rand() % nb));
+        fillPoint(p,
+                  window->width/2 + r_sign() * coef * (rand() % nb),
+                  window->clickableHeight/2 + r_sign() * (rand() % nb));
 
         if (i == 2) {
             if (isPointEqual(convex->poly->p, convex->poly->next->p)) {
@@ -364,10 +361,11 @@ void draw_square_random_rising(Window* window, ConvexHull* convex, int radius_ma
 
 /**
  * @brief Initialise une enveloppe convexe crée par des clicks
- *
- * @param convex
+ * 
+ * @param window Paramètres de la fenêtre
+ * @param convex L'enveloppe convexe
  */
-void init_Convex_click(Window* window, ConvexHull* convex) {
+void initConvexClick(Window* window, ConvexHull* convex) {
     int points = 0, x, y;
     Point *p0 = createPoint(), *p1 = createPoint();
     if (!p0 || !p1) {
@@ -403,15 +401,16 @@ void init_Convex_click(Window* window, ConvexHull* convex) {
 /**
  * @brief Crée et affiche une enveloppe convexe généré par les clicks
  *        de l'utilisateur
- *
- * @param convex
+ * 
+ * @param window Paramètres de la fenêtre
+ * @param convex Enveloppe convexe
  */
-void draw_convex_click(Window* window, ConvexHull* convex) {
-    ConvexHull insidePoints = createConvex(-1);
+void drawConvexClick(Window* window, ConvexHull* convex) {
+    ListPoint insidePoints = createListPoint(-1);
     MLV_clear_window(MLV_COLOR_WHITE);
     printInfo(window, NULL, NULL);
     MLV_update_window();
-    init_Convex_click(window, convex);
+    initConvexClick(window, convex);
     int x, y;
     while (1) {
         MLV_wait_mouse(&x, &y);
@@ -441,11 +440,11 @@ int main(void) {
     MLV_clear_window(MLV_COLOR_WHITE);
     printInfo(&window, NULL, NULL);
     // MLV_update_window();
-    // draw_convex_click(&window, &convex);
-    draw_circle_random_rising(&window, &convex, 400, 400, 1000, 1000, 2000, 1);
-    // draw_circle_random(&window, &convex, 400, 400, 1000, 1000, 0, 1);
-    // draw_square_random(&window, &convex, 400, 400, 1000, 1000, 0, 1);
-    // draw_square_random_rising(&window, &convex, 400, 400, 1000, 1000, 0, 0.5);
+    // drawConvexClick(&window, &convex);
+    drawCircleRandomRising(&window, &convex, 400, 400, 1000, 1000, 2000, 1);
+    // drawCircleRandom(&window, &convex, 400, 400, 1000, 1000, 0, 1);
+    // drawSquareRandom(&window, &convex, 400, 400, 1000, 1000, 0, 1);
+    // drawSquareRandomRising(&window, &convex, 400, 400, 1000, 1000, 0, 0.5);
 
     MLV_wait_seconds(2);
     MLV_free_window();
