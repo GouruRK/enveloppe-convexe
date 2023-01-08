@@ -365,25 +365,3 @@ void freePolygon(Polygon* poly) {
     free(head->p);
     free(head);
 }
-
-
-/*int main(void) {
-    ConvexHull convex1 = createConvex(10);
-    ConvexHull convex2 = createConvex(10);
-
-    addPointCoordinates(&convex1, 0, 0, addVertexHead);
-    addPointCoordinates(&convex1, 1, 1, addVertexHead);
-    addPointCoordinates(&convex1, 2, 2, addVertexHead);
-    addPointCoordinates(&convex2, 3, 3, addVertexHead);
-    addPointCoordinates(&convex2, 4, 4, addVertexHead);
-
-    printf("Convex 1 : %d/%d\n", convex1.curlen, convex1.maxlen);
-    printf("Convex 2 : %d/%d\n", convex2.curlen, convex2.maxlen);
-
-    concatConvex(&convex1, &convex2);
-
-    printf("Convex 1 : %d/%d\n", convex1.curlen, convex1.maxlen);
-    printf("Convex 2 : %d/%d\n", convex2.curlen, convex2.maxlen);
-
-    freeConvex(&convex1);
-}*/

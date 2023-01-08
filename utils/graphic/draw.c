@@ -123,11 +123,58 @@ void drawTriangle(Point* A, Point* B, Point* C) {
  * @param radius 
  * @param drawFunction 
  */
-void drawAll(ConvexHull* convex, ConvexHull* insidePoints, int radius,
+void drawAll(Window* window, ConvexHull* convex, ConvexHull* insidePoints, int radius,
               void (*drawFunction)(const int*, const int*, int, MLV_Color)) {
     MLV_clear_window(MLV_COLOR_WHITE);
     drawPoly(*convex, COLOR_LINE, drawFunction);
     drawPoints((*convex).poly, radius, COLOR_OUTSIDE);
     drawPoints((*insidePoints).poly, radius, COLOR_INSIDE);
+    printInfo(window, convex, insidePoints);    
     MLV_update_window();
+}
+
+void initWindow(Window* window, int width, int height, int panelHeight) {
+    window->width = width;
+    window->height = height;
+    window->infoWidth = width;
+    window->infoHeight = panelHeight;
+    window->clickableWidth = width;
+    window->clickableHeight = height - panelHeight;
+}
+
+void printInfo(Window* window, ConvexHull* convex, ConvexHull* insidePoints) {
+    int points = 0;
+    int inside = 0;
+    if (convex && convex->poly) {
+        points = convex->curlen;
+    }
+    if (insidePoints && insidePoints->poly) {
+        inside = insidePoints->curlen;
+    }
+    MLV_draw_line(0, window->clickableHeight, window->infoWidth, window->clickableHeight, MLV_COLOR_GRAY);
+    int w, h;
+    // distance moyenne entre les points de l'enveloppe
+    MLV_get_size_of_text("Total des points : %d", &w, &h, points + inside);
+    MLV_draw_text(window->infoWidth * 1/7 - w/2,
+                  window->clickableHeight + window->infoHeight/2 - h/2,
+                  "Total des points : %d",
+                  MLV_COLOR_BLACK,
+                  points + inside);
+
+    MLV_get_size_of_text("Points qui composent l'enveloppe : %d", &w, &h, points);
+    MLV_draw_text(window->infoWidth * 3/7 - w/2,
+                  window->clickableHeight + window->infoHeight/2 - h/2,
+                  "Points qui composent l'enveloppe : %d",
+                  MLV_COLOR_BLACK,
+                  points);
+    MLV_get_size_of_text("Points dans l'enveloppe : %d", &w, &h, inside);
+    MLV_draw_text(window->infoWidth * 5/7 - w/2,
+                  window->clickableHeight + window->infoHeight/2 - h/2,
+                  "Points dans l'enveloppe : %d",
+                  MLV_COLOR_BLACK,
+                  inside);
+}
+
+int isInside(int x, int y, int minX, int maxX, int minY, int maxY) {
+    return (x > minX && x < maxX) && (y > minY && y < maxY);
 }

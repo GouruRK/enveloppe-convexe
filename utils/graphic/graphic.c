@@ -164,7 +164,7 @@ void window_param_preclose(int w_width, int w_height, int array[]) {
             MLV_draw_text(75, 200, "- Avec une generation automatique", MLV_COLOR_BLACK, array[6]);
         }
     }
-    MLV_draw_text(150, 200, "La fenetre sera de dimension %d,%d", MLV_COLOR_RED, w_width, w_height);
+    MLV_draw_text(150, 350, "La fenetre sera de dimension %d,%d", MLV_COLOR_RED, w_width, w_height);
     MLV_actualise_window();
     MLV_wait_seconds(2);
 }
