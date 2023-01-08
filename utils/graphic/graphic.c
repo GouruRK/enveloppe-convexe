@@ -113,26 +113,37 @@ int index_active_button(Button tab_but[], int size) {
     return 0;
 }
 
-void window_param_preclose(int array[]) {
+void window_param_preclose(int w_width, int w_height, int array[]) {
     MLV_clear_window(MLV_COLOR_LIGHT_GREY);
-
+    MLV_draw_text(50, 50, "Vous allez dessiner une envellope convexe avec :", MLV_COLOR_BLACK);
     if (array[0] == 0) {
-        MLV_draw_text(100, 100, "Click", MLV_COLOR_BLACK);
+        MLV_draw_text(75, 100, "- Des clics souris", MLV_COLOR_BLACK);
         if (array[1] == 1) {
-            MLV_draw_text(100, 100, "avec envellope imbriquee", MLV_COLOR_BLACK);
+            MLV_draw_text(75, 125, "- Une envellope imbriquee", MLV_COLOR_BLACK);
         }
     } else {
         if (array[1] == 0) {
-            MLV_draw_text(100, 100, "Cercle", MLV_COLOR_BLACK);
+            MLV_draw_text(75, 100, "- Un Cercle", MLV_COLOR_BLACK);
+            if (array[2]) MLV_draw_text(155, 100, "croissant", MLV_COLOR_BLACK);
         } else if (array[1] == 1) {
-            MLV_draw_text(100, 100, "Carré", MLV_COLOR_BLACK);
+            MLV_draw_text(75, 100, "- Un Carré", MLV_COLOR_BLACK);
+            if (array[2]) MLV_draw_text(150, 100, "croissant", MLV_COLOR_BLACK);
         } else if (array[1] == 2) {
-            MLV_draw_text(100, 100, "Rectangle", MLV_COLOR_BLACK);
+            MLV_draw_text(75, 100, "- Un Rectangle", MLV_COLOR_BLACK);
+            if (array[2]) MLV_draw_text(180, 100, "croissant", MLV_COLOR_BLACK);
         } else if (array[1] == 3) {
-            MLV_draw_text(100, 100, "Ellipse", MLV_COLOR_BLACK);
+            MLV_draw_text(75, 100, "- Une Ellipse", MLV_COLOR_BLACK);
+            if (array[2]) MLV_draw_text(170, 100, "croissante", MLV_COLOR_BLACK);
+        }
+        MLV_draw_text(75, 125, "- Avec %d points", MLV_COLOR_BLACK, array[3]);
+        MLV_draw_text(75, 150, "- Avec un rayon de %d px", MLV_COLOR_BLACK, array[4]);
+        if (array[5]) {
+            MLV_draw_text(75, 175, "- Avec un delai de %d ms", MLV_COLOR_BLACK, array[6]);
+        } else {
+            MLV_draw_text(75, 200, "- Avec une generation automatique", MLV_COLOR_BLACK, array[6]);
         }
     }
-
+    MLV_draw_text(150, 200, "La fenetre sera de dimension %d,%d", MLV_COLOR_RED, w_width, w_height);
     MLV_actualise_window();
     MLV_wait_seconds(2);
 }
@@ -307,7 +318,7 @@ void init_window_param(int* window_width, int* window_height, int array[]) {
     } else {
         array[1] = but_incep.value;
     }
-    window_param_preclose(array);
+    window_param_preclose(*window_width, *window_height, array);
     MLV_free_window();
 }
 
