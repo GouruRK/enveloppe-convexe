@@ -25,6 +25,20 @@ ConvexHull createConvex(int maxlen) {
 }
 
 /**
+ * @brief Créer un pointeur d'enveloppe convexe
+ * 
+ * @param maxlen 
+ * @return ConvexHull* 
+ */
+ConvexHull* createConvexPointeur(int maxlen) {
+    ConvexHull* convex = (ConvexHull*)malloc(sizeof(ConvexHull));
+    convex->poly = createPolygon();
+    convex->curlen = 0;
+    convex->maxlen = maxlen;
+    return convex;
+}
+
+/**
  * @brief Dessine un point
  * 
  * @param p 

@@ -29,11 +29,25 @@ void exit_function(void* data) {
     *arret = 1;
 }
 
+/**
+ * @brief Permet de savoir si les coordonnées (`x`, `y`) sont comprises dans
+ *        la "boîte" composée des points (`minX`, `minY`), (`maxX`, `maxY`)
+ * 
+ * @return int Renvoie `1` si (`x`, `y`) est dans la boite, `0` sinon
+ */
 int isClick(x, y, minX, maxX, minY, maxY) {
     return (x > minX && x < maxX) && (y > minY && y < maxY);
 }
 
-Button button_create(int x, int y, char* text) {
+/**
+ * @brief Permet de créer un bouton
+ * 
+ * @param x 
+ * @param y 
+ * @param text 
+ * @return Button 
+ */
+Button createButton(int x, int y, char* text) {
     Button but;
     but.text = (char*)malloc(strlen(text) * sizeof(char));
     if (but.text == NULL) {
@@ -47,25 +61,32 @@ Button button_create(int x, int y, char* text) {
     return but;
 }
 
+/**
+ * @brief Permet de savoir si un boutton est cliqué
+ * 
+ * @param but 
+ * @param x 
+ * @param y 
+ * @return int Renvoie `1` si clické, `0` sinon
+ */
 int button_onclick(Button but, int x, int y) {
-    // 1 si clické sinon 0
     int but_max_x = but.x + but.width + BORDER;
     int but_max_y = but.y + but.height + BORDER;
-    // if (x < but.x || x > but_max_x || y < but.y || y > but_max_y) {
-    //     return 0;
-    // }
-    // return 1;
     return isClick(x, y, but.x, but_max_x, but.y, but_max_y);
 }
 
+/**
+ * @brief Renvoie l'indice du boutton qui a été cliqué
+ * 
+ * @param tab 
+ * @param size 
+ * @param x 
+ * @param y 
+ * @return int -1 si aucun bouton cliqué, l'indice dans le tableau `tab` 
+ *         sinon
+ */
 int button_onclick_tab(Button tab[], int size, int x, int y) {
     for (int i = 0; i < size; i++) {
-        // int but_max_x = tab[i].x + tab[i].width + BORDER;
-        // int but_max_y = tab[i].y + tab[i].height + BORDER;
-        // est dans le bouton
-        // if (!(x < tab[i].x || x > but_max_x || y < tab[i].y || y > but_max_y)) {
-        //     return i;
-        // }
         if (button_onclick(tab[i], x, y)) {
             return i;
         }
@@ -193,19 +214,19 @@ void init_window_param(int* window_width, int* window_height, int array[]) {
         "Nombre de points : ");
     // MLV_draw_all_input_boxes();
     /////////
-    tab_button_distrib[0] = button_create(250, 50, "Placer à la souris");
-    tab_button_distrib[1] = button_create(250, 100, "Forme prédéfini");
+    tab_button_distrib[0] = createButton(250, 50, "Placer à la souris");
+    tab_button_distrib[1] = createButton(250, 100, "Forme prédéfini");
 
-    tab_button_shapes[0] = button_create(450, 50, "Cercle");
-    tab_button_shapes[1] = button_create(450, 100, "Carré");
-    tab_button_shapes[2] = button_create(450, 150, "Rectangle");
-    tab_button_shapes[3] = button_create(450, 200, "Ellipse");
+    tab_button_shapes[0] = createButton(450, 50, "Cercle");
+    tab_button_shapes[1] = createButton(450, 100, "Carré");
+    tab_button_shapes[2] = createButton(450, 150, "Rectangle");
+    tab_button_shapes[3] = createButton(450, 200, "Ellipse");
 
-    tab_button_display[0] = button_create(50, 50, "Automatique");
-    tab_button_display[1] = button_create(50, 100, "Avec delai");
+    tab_button_display[0] = createButton(50, 50, "Automatique");
+    tab_button_display[1] = createButton(50, 100, "Avec delai");
 
-    Button but_incep = button_create(240, 200, "Envellope imbriquee");
-    Button but_rising = button_create(250, 200, "Rayon croissant");
+    Button but_incep = createButton(240, 200, "Envellope imbriquee");
+    Button but_rising = createButton(250, 200, "Rayon croissant");
 
     while (!stop) {
         MLV_clear_window(MLV_COLOR_LIGHT_GRAY);
@@ -322,12 +343,12 @@ void init_window_param(int* window_width, int* window_height, int array[]) {
     MLV_free_window();
 }
 
-int main(void) {
-    int window_width = 1000, window_height = 1000;
-    int tab[6] = {};
-    init_window_param(&window_width, &window_height, tab);
-    for (int i = 0; i < 7; i++) {
-        printf("%d\n", tab[i]);
-    }
-    return 0;
-}
+// int main(void) {
+//     int window_width = 1000, window_height = 1000;
+//     int tab[6] = {};
+//     init_window_param(&window_width, &window_height, tab);
+//     for (int i = 0; i < 7; i++) {
+//         printf("%d\n", tab[i]);
+//     }
+//     return 0;
+// }

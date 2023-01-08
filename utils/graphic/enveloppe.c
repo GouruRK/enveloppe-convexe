@@ -1,7 +1,8 @@
 /**
  * @file enveloppe.c
  * @author Quentin Laborde - Rémy Kies
- * @brief Génération d'enveloppe convexe, par click, ou génération aléatoire
+ * @brief Génération d'enveloppe convexe, par click, ou génération 
+ *        aléatoire
  *        en suivant une forme (carré, cercle)
  * @date 2023-01-07
  *
@@ -182,6 +183,7 @@ void draw_circle_random_rising(ConvexHull* convex, int radius_max,
                                                        NULL, NULL, wait);
         }
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 /**
@@ -242,6 +244,7 @@ void draw_circle_random(ConvexHull* convex, int radius_max, int nb_points,
                                                        NULL, NULL, wait);
         }
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 /**
@@ -298,6 +301,7 @@ void draw_square_random(ConvexHull* convex, int radius_max, int nb_points,
                                                        NULL, NULL, wait);
         }
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 /**
@@ -355,6 +359,7 @@ void draw_square_random_rising(ConvexHull* convex, int radius_max,
                                                        NULL, NULL, wait);
         }
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 /**
@@ -417,6 +422,7 @@ void draw_convex_click(ConvexHull* convex) {
         drawAll(convex, &insidePoints, RADIUS, MLV_draw_polygon);
         MLV_update_window();
     }
+    freeAll(convex, &insidePoints, NULL);
 }
 
 int main(void) {
@@ -425,8 +431,8 @@ int main(void) {
     MLV_create_window("Setting convex hull", "Setting", 1000, 1000);
     MLV_clear_window(MLV_COLOR_WHITE);
     // MLV_update_window();
-    // draw_convex_click(&convex);
-    draw_circle_random_rising(&convex, 400, 400, 1000, 1000, 0, 1);
+    draw_convex_click(&convex);
+    // draw_circle_random_rising(&convex, 400, 400, 1000, 1000, 0, 1);
     // draw_circle_random(&convex, 400, 400, 1000, 1000, 0, 1);
     // draw_square_random(&convex, 400, 400, 1000, 1000, 0, 1);
     // draw_square_random_rising(&convex, 400, 400, 1000, 1000, 0, 0.5);

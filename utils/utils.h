@@ -61,6 +61,7 @@ void init_window_param(int* window_width, int* window_height, int tab[]);
 
 // Fichier : ./graphic/draw.c
 ConvexHull createConvex(int maxlen);
+ConvexHull* createConvexPointeur(int maxlen);
 void drawPoint(Point* p, int radius, MLV_Color color);
 void drawPoints(Polygon poly, int radius, MLV_Color color);
 void drawPoly(ConvexHull convex, MLV_Color color, void (*drawFunction)(const int*, const int*, int, MLV_Color));
