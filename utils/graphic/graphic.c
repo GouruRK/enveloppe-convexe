@@ -187,8 +187,8 @@ void init_window_param(int* window_width, int* window_height) {
                 }
             }
         }
-        MLV_draw_input_box(&input1);
-        MLV_draw_input_box(&input2);
+        MLV_draw_input_box(input1);
+        MLV_draw_input_box(input2);
 
         //////////////////////
         MLV_actualise_window();

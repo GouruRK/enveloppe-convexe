@@ -426,9 +426,9 @@ int main(void) {
     MLV_clear_window(MLV_COLOR_WHITE);
     // MLV_update_window();
     // draw_convex_click(&convex);
-    // draw_circle_random_rising(&convex, 400, 400, 1000, 1000, 0, 0.5);
+    draw_circle_random_rising(&convex, 400, 400, 1000, 1000, 0, 1);
     // draw_circle_random(&convex, 400, 400, 1000, 1000, 0, 1);
-    draw_square_random(&convex, 400, 400, 1000, 1000, 0, 0.5);
+    // draw_square_random(&convex, 400, 400, 1000, 1000, 0, 1);
     // draw_square_random_rising(&convex, 400, 400, 1000, 1000, 0, 0.5);
 
     MLV_wait_seconds(2);
