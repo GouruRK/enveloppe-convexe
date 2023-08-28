@@ -1,41 +1,42 @@
-CC=clang
-CFLAGS=-Wall -g3 -std=c17 -pedantic
-LDFLAGS=
-EXEC=main
+CC=gcc
+BUILD_DIR=build
+SRC_DIR=src
+INC_DIR=include
+INCLUDE=-I$(INC_DIR)
+LIBS=-lMLV
+CFLAGS= -Wall -std=c17 -pedantic -g -g3
 
-all: $(EXEC) clean
+EXEC=convexhull
 
-errs.o: ./utils/args/errs.c
-	$(CC) -c ./utils/args/errs.c $(CFLAGS)
+SOURCES=$(wildcard $(SRC_DIR)/*.c)
+HEADERS=$(wildcard $(INC_DIR)/*.h)
 
-list.o: ./utils/list/list.c errs.o
-	$(CC) -c ./utils/list/list.c errs.o $(CFLAGS)
+# On récupère tous les fichiers sources .c, et on leurs préfixe
+# le chemin de build, et suffixe en .o :
+OBJS=$(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SOURCES))
+#$(info $(OBJS))
 
-math.o: ./utils/math/math.c list.o errs.o
-	$(CC) -c ./utils/math/math.c list.o errs.o $(CFLAGS)
+all: $(EXEC)
 
-draw.o: ./utils/graphic/draw.c math.o list.o errs.o
-	$(CC) -c ./utils/graphic/draw.c math.o list.o errs.o $(CFLAGS)
+# Assemblage de l'exécutable final
+$(EXEC): $(OBJS)
+	$(CC) $^ -o $@ $(LIBS)
 
-graphic.o: ./utils/graphic/graphic.c draw.o math.o list.o errs.o
-	$(CC) -c ./utils/graphic/graphic.c draw.o math.o list.o errs.o $(CFLAGS)
+# Dépendances
+main.o: main.c game.h graph.h init.h interaction.h struct.h tool.h
+game.o: struct.h game.h
+graph.o: struct.h graph.h
+init.o: struct.h init.h tool.h
+interaction.o: struct.h interaction.h
+tool.o: struct.h tool.h
 
-enveloppe.o: ./utils/graphic/enveloppe.c graphic.o draw.o math.o list.o errs.o
-	$(CC) -c ./utils/graphic/enveloppe.c graphic.o draw.o math.o list.o errs.o $(CFLAGS)
-
-inception.o: ./utils/graphic/inception.c enveloppe.o graphic.o draw.o math.o list.o errs.o
-	$(CC) -c ./utils/graphic/inception.c enveloppe.o graphic.o draw.o math.o list.o errs.o $(CFLAGS)
-
-main.o: main.c errs.o list.o math.o draw.o graphic.o enveloppe.o inception.o
-	$(CC) -c main.c errs.o list.o math.o draw.o graphic.o enveloppe.o inception.o $(CFLAGS) -lMLV -lm
-
-main: main.o errs.o list.o math.o draw.o graphic.o enveloppe.o inception.o
-	$(CC) -o main main.c errs.o list.o math.o draw.o graphic.o enveloppe.o inception.o $(CFLAGS) -lMLV -lm
+# Création des fichiers objets à partir des fichiers sources
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir --parents $(BUILD_DIR)
+	$(CC) $(INCLUDE) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o *~ 
+	rm -f $(OBJS)
 
 mrproper: clean
-	rm -rf $(EXEC)
-
-default: clean
+	rm -f $(EXEC)
