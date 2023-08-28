@@ -20,7 +20,7 @@ void add_vertex_head(Polygon* poly, Vertex* vrtx) {
     *poly = vrtx;
 }
 
-int addPoint(Polygon* poly, Point* point, void (*addFunction)(Polygon*, Vertex*)) {
+int add_point(Polygon* poly, Point* point, void (*addFunction)(Polygon*, Vertex*)) {
     Vertex* vrtx = create_vertex();
     if (!vrtx) {
         return 0;

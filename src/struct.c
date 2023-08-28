@@ -40,6 +40,22 @@ Vertex* create_filled_vertex(Point* point) {
     return vrtx;
 }
 
+Polygon create_polygon(void) {
+    return NULL;
+}
+
+Convex create_convex(int maxlen) {
+    Convex convex;
+    convex.curlen = 0;
+    convex.maxlen = 0;
+    convex.poly = create_polygon();
+    return convex;
+}
+
+Array create_array(int maxlen) {
+    return create_convex(maxlen);
+}
+
 void free_point(Point* point) {
     if (point) {
         free(point);
@@ -59,6 +75,52 @@ void deep_free_vertex(Vertex* vrtx) {
     }
 }
 
-Polygon create_polygon(void) {
-    return NULL;
+void free_polygon(Polygon* polygon) {
+    if (!(*polygon)) {
+        return;
+    }
+    Vertex* temp;
+    Vertex* head = *polygon;
+    *polygon = (*polygon)->next;
+    while (head != *polygon) {
+        temp = (*polygon)->next;
+        free_vertex(*polygon);
+        *polygon = temp;
+    }
+    free_vertex(head);
+}
+
+void deep_free_polygon(Polygon* polygon) {
+    if (!(*polygon)) {
+        return;
+    }
+    Vertex* temp;
+    Vertex* head = *polygon;
+    *polygon = (*polygon)->next;
+    while (head != *polygon) {
+        temp = (*polygon)->next;
+        deep_free_vertex(*polygon);
+        *polygon = temp;
+    }
+    deep_free_vertex(head);
+}
+
+void free_convex(Convex* convex) {
+    free_polygon(&((convex->poly)));
+    convex->curlen = 0;
+    convex->maxlen = 0;
+}
+
+void deep_free_convex(Convex* convex) {
+    deep_free_polygon(&((convex->poly)));
+    convex->curlen = 0;
+    convex->maxlen = 0;
+}
+
+void free_array(Array* array) {
+    free_convex(array);
+}
+
+void deep_free_array(Array* array) {
+    deep_free_convex(array);
 }
