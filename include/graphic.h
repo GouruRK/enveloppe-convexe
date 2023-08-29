@@ -17,7 +17,9 @@ void draw_inside_point(Point* point);
 void draw_online_point(Point* point);
 void draw_point(Point* point, MLV_Color color);
 void draw_line(Point* a, Point* b);
+void draw_surface(Point* a, Point* b, Point* c, MLV_Color color);
 void draw_array(Array points);
 void draw_outline(Convex convex);
+void draw_filled_outline(Convex convex, MLV_Color color);
 
 #endif

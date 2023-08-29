@@ -28,6 +28,10 @@ void draw_line(Point* a, Point* b) {
     MLV_draw_line(a->x, a->y, b->x, b->y, LINE_COLOR);
 }
 
+void draw_surface(Point* a, Point* b, Point* c, MLV_Color color) {
+    MLV_draw_filled_triangle(a->x, a->y, b->x, b->y, c->x, c->y, color);
+}
+
 void draw_array(Array points) {
     Polygon polygon = points.poly;
     if (polygon) {
@@ -47,6 +51,24 @@ void draw_outline(Convex convex) {
         Vertex* prev = polygon;
         polygon = polygon->next;
         while (head != polygon) {
+            draw_online_point(polygon->point);
+            draw_line(prev->point, polygon->point);
+            prev = polygon;
+            polygon = polygon->next;
+        }
+        draw_online_point(polygon->point);
+        draw_line(prev->point, polygon->point);
+    }
+}
+
+void draw_filled_outline(Convex convex, MLV_Color color) {
+    Polygon polygon = convex.poly;
+    if (polygon) {
+        Vertex* head = polygon;
+        Vertex* prev = polygon;
+        polygon = polygon->next;
+        while (head != polygon) {
+            draw_surface(head->point, prev->point, polygon->point, color);
             draw_online_point(polygon->point);
             draw_line(prev->point, polygon->point);
             prev = polygon;

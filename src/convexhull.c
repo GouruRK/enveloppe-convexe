@@ -9,14 +9,14 @@
 
 void create_convexhull(int* stop) {
     Convex convexhull = create_convex(-1);
-    Array points = create_array(-1);
     int err = init_convexhull(&convexhull, stop);
     if (!err) {
         return;
     }
 
+    Array points = create_array(-1);
     Point* point;
-    int x, y, mouse_pressed = 0;
+    int x, y, mouse_pressed = 1;
     while (!(*stop)) {
         if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
             MLV_get_mouse_position(&x, &y);
@@ -29,8 +29,8 @@ void create_convexhull(int* stop) {
             
             new_point(&convexhull, &points, point);
             MLV_clear_window(MLV_COLOR_WHITE);
-            draw_array(points);
             draw_outline(convexhull);
+            draw_array(points);
             MLV_update_window();
 
             mouse_pressed = 1;
