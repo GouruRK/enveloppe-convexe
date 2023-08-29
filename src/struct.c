@@ -56,6 +56,35 @@ Array create_array(int maxlen) {
     return create_convex(maxlen);
 }
 
+InceptionConvex create_inception_convex(void) {
+    InceptionConvex incepconv;
+    incepconv.curlen = 0;
+    incepconv.tab_convex = (Convex*)malloc(sizeof(Convex) * ALLOCATION_PATERN);
+    
+    if (!(incepconv.tab_convex)) {
+        incepconv.maxlen = 0;
+    } else {
+        incepconv.maxlen = ALLOCATION_PATERN;
+    }
+    return incepconv;
+}
+
+void resize_inception_convex(InceptionConvex* incepconv) {
+    if (!incepconv) {
+        return;
+    }
+    if (incepconv->curlen == incepconv->maxlen) {
+        Convex* tab_convex = incepconv->tab_convex;
+        tab_convex = (Convex*)realloc(tab_convex, (incepconv->curlen + ALLOCATION_PATERN) * sizeof(Convex));
+        if (!tab_convex) {
+            deep_free_inception_convex(incepconv);
+            return;
+        }
+        incepconv->tab_convex = tab_convex;
+        incepconv->maxlen += ALLOCATION_PATERN;
+    }
+}
+
 void free_point(Point* point) {
     if (point) {
         free(point);
@@ -123,4 +152,28 @@ void free_array(Array* array) {
 
 void deep_free_array(Array* array) {
     deep_free_convex(array);
+}
+
+void free_inception_convex(InceptionConvex* incepconv) {
+    if (!incepconv) {
+        return;
+    }
+    for (int i = 0; i < incepconv->curlen; i++) {
+        free_convex(&(incepconv->tab_convex[i]));
+    }
+    free(incepconv->tab_convex);
+    incepconv->curlen = 0;
+    incepconv->maxlen = 0;
+}
+
+void deep_free_inception_convex(InceptionConvex* incepconv) {
+    if (!incepconv) {
+        return;
+    }
+    for (int i = 0; i < incepconv->curlen; i++) {
+        deep_free_convex(&(incepconv->tab_convex[i]));
+    }
+    free(incepconv->tab_convex);
+    incepconv->curlen = 0;
+    incepconv->maxlen = 0;
 }

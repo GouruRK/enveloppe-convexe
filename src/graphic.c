@@ -74,7 +74,14 @@ void draw_filled_outline(Convex convex, MLV_Color color) {
             prev = polygon;
             polygon = polygon->next;
         }
+        draw_surface(head->point, prev->point, polygon->point, color);
         draw_online_point(polygon->point);
         draw_line(prev->point, polygon->point);
+    }
+}
+
+void draw_inception_convex(InceptionConvex incepconv) {
+    for (int i = 0; i < incepconv.curlen; i++) {
+        draw_filled_outline(incepconv.tab_convex[i], TAB_COLOR[i % TAB_COLOR_SIZE]);
     }
 }

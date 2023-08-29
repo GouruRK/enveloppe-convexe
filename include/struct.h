@@ -1,6 +1,8 @@
 #ifndef __INIT_STRUCT__
 #define __INIT_STRUCT__
 
+#define ALLOCATION_PATERN 10
+
 typedef struct {
     int x;
     int y;
@@ -19,8 +21,9 @@ typedef struct {
 } Convex, Array;
 
 typedef struct {
-    Convex** tab_convex;
-    int size;
+    Convex* tab_convex;
+    int curlen;
+    int maxlen;
 } InceptionConvex;
 
 Point* create_point(void);
@@ -35,6 +38,9 @@ Polygon create_polygon(void);
 Convex create_convex(int maxlen);
 Array create_array(int maxlen);
 
+InceptionConvex create_inception_convex(void);
+void resize_inception_convex(InceptionConvex* incepconv);
+
 void free_point(Point* point);
 void free_vertex(Vertex* vrtx);
 void deep_free_vertex(Vertex* vrtx);
@@ -44,5 +50,7 @@ void free_convex(Convex* convex);
 void deep_free_convex(Convex* convex);
 void free_array(Array* array);
 void deep_free_array(Array* array);
+void free_inception_convex(InceptionConvex* incepconv);
+void deep_free_inception_convex(InceptionConvex* incepconv);
 
 #endif
