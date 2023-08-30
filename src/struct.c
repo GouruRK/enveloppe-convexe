@@ -22,6 +22,7 @@ void fill_point(Point* point, int x, int y) {
 Vertex* create_vertex(void) {
     Vertex* vrtx = (Vertex*)malloc(sizeof(Vertex));
     if (vrtx) {
+        vrtx->point = NULL;
         vrtx->next = vrtx;
         vrtx->prev = vrtx;
     }
@@ -44,16 +45,15 @@ Polygon create_polygon(void) {
     return NULL;
 }
 
-Convex create_convex(int maxlen) {
+Convex create_convex(void) {
     Convex convex;
     convex.curlen = 0;
-    convex.maxlen = 0;
     convex.poly = create_polygon();
     return convex;
 }
 
-Array create_array(int maxlen) {
-    return create_convex(maxlen);
+Array create_array(void) {
+    return create_convex();
 }
 
 InceptionConvex create_inception_convex(void) {
@@ -77,7 +77,7 @@ void resize_inception_convex(InceptionConvex* incepconv) {
         Convex* tab_convex = incepconv->tab_convex;
         tab_convex = (Convex*)realloc(tab_convex, (incepconv->curlen + ALLOCATION_PATERN) * sizeof(Convex));
         if (!tab_convex) {
-            deep_free_inception_convex(incepconv);
+            free_inception_convex(incepconv);
             return;
         }
         incepconv->tab_convex = tab_convex;
@@ -91,13 +91,8 @@ void free_point(Point* point) {
     }
 }
 
-void free_vertex(Vertex* vrtx) {
-    if (vrtx) {
-        free(vrtx);
-    }
-}
 
-void deep_free_vertex(Vertex* vrtx) {
+void free_vertex(Vertex* vrtx) {
     if (vrtx) {
         free_point(vrtx->point);
         free(vrtx);
@@ -119,39 +114,13 @@ void free_polygon(Polygon* polygon) {
     free_vertex(head);
 }
 
-void deep_free_polygon(Polygon* polygon) {
-    if (!(*polygon)) {
-        return;
-    }
-    Vertex* temp;
-    Vertex* head = *polygon;
-    *polygon = (*polygon)->next;
-    while (head != *polygon) {
-        temp = (*polygon)->next;
-        deep_free_vertex(*polygon);
-        *polygon = temp;
-    }
-    deep_free_vertex(head);
-}
-
 void free_convex(Convex* convex) {
     free_polygon(&((convex->poly)));
     convex->curlen = 0;
-    convex->maxlen = 0;
-}
-
-void deep_free_convex(Convex* convex) {
-    deep_free_polygon(&((convex->poly)));
-    convex->curlen = 0;
-    convex->maxlen = 0;
 }
 
 void free_array(Array* array) {
     free_convex(array);
-}
-
-void deep_free_array(Array* array) {
-    deep_free_convex(array);
 }
 
 void free_inception_convex(InceptionConvex* incepconv) {
@@ -166,14 +135,3 @@ void free_inception_convex(InceptionConvex* incepconv) {
     incepconv->maxlen = 0;
 }
 
-void deep_free_inception_convex(InceptionConvex* incepconv) {
-    if (!incepconv) {
-        return;
-    }
-    for (int i = 0; i < incepconv->curlen; i++) {
-        deep_free_convex(&(incepconv->tab_convex[i]));
-    }
-    free(incepconv->tab_convex);
-    incepconv->curlen = 0;
-    incepconv->maxlen = 0;
-}

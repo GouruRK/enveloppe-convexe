@@ -8,12 +8,12 @@
 #include "../include/graphic.h"
 
 void create_convexhull(int* stop) {
-    Convex convexhull = create_convex(-1);
+    Convex convexhull = create_convex();
     int err = init_convexhull(&convexhull, stop);
     if (!err) {
         return;
     }
-    Array points = create_array(-1);
+    Array points = create_array();
     Point* point;
     int x, y, mouse_pressed = 1;
     while (!(*stop)) {
@@ -21,8 +21,8 @@ void create_convexhull(int* stop) {
             MLV_get_mouse_position(&x, &y);
             point = create_filled_point(x, y);
             if (!point) {
-                deep_free_convex(&convexhull);
-                deep_free_array(&points);
+                free_convex(&convexhull);
+                free_array(&points);
                 return;
             }
             
@@ -37,8 +37,8 @@ void create_convexhull(int* stop) {
             mouse_pressed = 0;
         }
     }
-    deep_free_array(&points);
-    deep_free_convex(&convexhull);
+    free_array(&points);
+    free_convex(&convexhull);
 }
 
 void create_inception_convexhull(int* stop) {
@@ -47,9 +47,8 @@ void create_inception_convexhull(int* stop) {
         return;
     }
 
-    incepconv.tab_convex[0] = create_convex(-1); // convexhull
-    incepconv.tab_convex[1] = create_convex(-1); // points
-    incepconv.curlen = 2;
+    incepconv.tab_convex[0] = create_convex();
+    incepconv.curlen = 1;
 
     int err = init_convexhull(&(incepconv.tab_convex[0]), stop);
     if (!err) {
@@ -57,14 +56,13 @@ void create_inception_convexhull(int* stop) {
         return;
     }
 
-    Point* point;
     int x, y, mouse_pressed = 1;
     while (!(*stop)) {
         if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
             MLV_get_mouse_position(&x, &y);
-            point = create_filled_point(x, y);
+            Point* point = create_filled_point(x, y);
             if (!point) {
-                deep_free_inception_convex(&incepconv);
+                free_inception_convex(&incepconv);
                 return;
             }
 
@@ -79,7 +77,7 @@ void create_inception_convexhull(int* stop) {
             mouse_pressed = 0;
         }
     }
-    deep_free_inception_convex(&incepconv);
+    free_inception_convex(&incepconv);
 }
 
 int init_convexhull(Convex* convex, int* stop) {
@@ -208,7 +206,7 @@ void new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
     }
 
     if (incepconv->curlen == depth) {
-        incepconv->tab_convex[incepconv->curlen++] = create_convex(-1);
+        incepconv->tab_convex[incepconv->curlen++] = create_convex();
     }
 
     Convex* convexhull = &(incepconv->tab_convex[depth]);
