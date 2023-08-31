@@ -125,7 +125,6 @@ int init_convexhull(Convex* convex, int* stop) {
 
 
 int new_point(Convex* convex, Array* inside_points, Point* point) {
-    // On regarde si le point est a l'intérieur de l'enveloppe
     Vertex* head = NULL;
     Vertex* point_container;
     int direct;
@@ -138,13 +137,9 @@ int new_point(Convex* convex, Array* inside_points, Point* point) {
         if (direct) {
             continue;
         } else {
-            // on insère p entre [Si, Si+1]
-            // on insère a (*poly)->next pcq sinon on insère avant Si
-            // *poly = (*poly)->next;
             if (!add_point(&(convex->poly), point, add_vertex_head)) {
                 return 0;
             }
-            // point devient l'endroit où on a insérer le point
             point_container = convex->poly;
             convex->curlen++;
             break;
@@ -157,10 +152,9 @@ int new_point(Convex* convex, Array* inside_points, Point* point) {
         inside_points->curlen++;
         return 1;
     }
-    // On fixe le début de poly au nouveau point
     convex->poly = point_container;
 
-    // nettoyage avant
+    // front cleaning
     while (1) {
         direct = is_direct(convex->poly->point, convex->poly->next->point,
                           convex->poly->next->next->point);
@@ -173,7 +167,7 @@ int new_point(Convex* convex, Array* inside_points, Point* point) {
             break;
         }
     }
-    // nettoyage arriere
+    // back cleaning
     while (1) {
         direct = is_direct(convex->poly->point, convex->poly->prev->prev->point,
                           convex->poly->prev->point);
@@ -193,6 +187,7 @@ int new_point(Convex* convex, Array* inside_points, Point* point) {
 }
 
 int new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
+    // if not enough space, resize incepconv to add more
     if (incepconv->maxlen == depth) {
         resize_inception_convex(incepconv);
         if (!(incepconv->tab_convex)) {
@@ -202,7 +197,7 @@ int new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
 
     Convex* convexhull = &(incepconv->tab_convex[depth]);
 
-    // si cas init
+    // initiate a polygon
     if (convexhull->curlen < 2) {
         if (!add_point(&(convexhull->poly), point, add_vertex_tail)) {
             return 0;
@@ -211,7 +206,6 @@ int new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
         return 1;
     }
 
-    // On regarde si le point est a l'intérieur de l'enveloppe
     Vertex* head = NULL;
     Vertex* vrtx;
     int direct;
@@ -227,7 +221,6 @@ int new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
             if (!add_point(&(convexhull->poly), point, add_vertex_head)) {
                 return 0;
             }
-            // point devient l'endroit où on a insérer le point
             vrtx = convexhull->poly;
             convexhull->curlen++;
             break;
@@ -237,10 +230,9 @@ int new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
         new_point_rec(incepconv, depth + 1, point);
         return 1;
     }
-    // On fixe le début de poly au nouveau point
     convexhull->poly = vrtx;
 
-    // nettoyage avant
+    // front cleaning
     while (1) {
         direct = is_direct(convexhull->poly->point, convexhull->poly->next->point,
                            convexhull->poly->next->next->point);
@@ -252,7 +244,7 @@ int new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
             break;
         }
     }
-    // nettoyage arriere
+    // back cleaning
     while (1) {
         direct = is_direct(convexhull->poly->point, convexhull->poly->prev->prev->point,
                           convexhull->poly->prev->point);

@@ -13,7 +13,7 @@ int main(void) {
     MLV_clear_window(MLV_COLOR_WHITE);
     MLV_update_window();
 
-    create_inception_convexhull(&stop);
+    create_convexhull(&stop);
 
     MLV_free_window();
 }
