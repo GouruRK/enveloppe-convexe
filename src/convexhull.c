@@ -26,7 +26,10 @@ void create_convexhull(int* stop) {
                 return;
             }
             
-            new_point(&convexhull, &points, point);
+            int res = new_point(&convexhull, &points, point);
+            if (!res) {
+                break;
+            }
             MLV_clear_window(MLV_COLOR_WHITE);
             draw_outline(convexhull);
             draw_array(points);
@@ -47,15 +50,6 @@ void create_inception_convexhull(int* stop) {
         return;
     }
 
-    incepconv.tab_convex[0] = create_convex();
-    incepconv.curlen = 1;
-
-    int err = init_convexhull(&(incepconv.tab_convex[0]), stop);
-    if (!err) {
-        free_inception_convex(&incepconv);
-        return;
-    }
-
     int x, y, mouse_pressed = 1;
     while (!(*stop)) {
         if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
@@ -66,7 +60,10 @@ void create_inception_convexhull(int* stop) {
                 return;
             }
 
-            new_point_rec(&incepconv, 0, point);
+            int res = new_point_rec(&incepconv, 0, point);
+            if (!res) {
+                break;
+            }
 
             MLV_clear_window(MLV_COLOR_WHITE);
             draw_inception_convex(incepconv);
@@ -127,7 +124,7 @@ int init_convexhull(Convex* convex, int* stop) {
 
 
 
-void new_point(Convex* convex, Array* inside_points, Point* point) {
+int new_point(Convex* convex, Array* inside_points, Point* point) {
     // On regarde si le point est a l'intérieur de l'enveloppe
     Vertex* head = NULL;
     Vertex* point_container;
@@ -145,8 +142,7 @@ void new_point(Convex* convex, Array* inside_points, Point* point) {
             // on insère a (*poly)->next pcq sinon on insère avant Si
             // *poly = (*poly)->next;
             if (!add_point(&(convex->poly), point, add_vertex_head)) {
-                // free
-                exit(1);
+                return 0;
             }
             // point devient l'endroit où on a insérer le point
             point_container = convex->poly;
@@ -156,11 +152,10 @@ void new_point(Convex* convex, Array* inside_points, Point* point) {
     }
     if (direct) {
         if (!add_point(&(inside_points->poly), point, add_vertex_head)) {
-            // free
-            exit(1);
+            return 0;
         }
         inside_points->curlen++;
-        return;
+        return 1;
     }
     // On fixe le début de poly au nouveau point
     convex->poly = point_container;
@@ -194,19 +189,15 @@ void new_point(Convex* convex, Array* inside_points, Point* point) {
             break;
         }
     }
+    return 1;
 }
 
-void new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
+int new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
     if (incepconv->maxlen == depth) {
         resize_inception_convex(incepconv);
         if (!(incepconv->tab_convex)) {
-            // free
-            exit(1);
+            return 0;
         }
-    }
-
-    if (incepconv->curlen == depth) {
-        incepconv->tab_convex[incepconv->curlen++] = create_convex();
     }
 
     Convex* convexhull = &(incepconv->tab_convex[depth]);
@@ -214,11 +205,10 @@ void new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
     // si cas init
     if (convexhull->curlen < 2) {
         if (!add_point(&(convexhull->poly), point, add_vertex_tail)) {
-            // free
-            exit(1);
+            return 0;
         }
         convexhull->curlen++;
-        return;
+        return 1;
     }
 
     // On regarde si le point est a l'intérieur de l'enveloppe
@@ -235,8 +225,7 @@ void new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
             continue;
         } else {
             if (!add_point(&(convexhull->poly), point, add_vertex_head)) {
-                // free
-                exit(1);
+                return 0;
             }
             // point devient l'endroit où on a insérer le point
             vrtx = convexhull->poly;
@@ -246,7 +235,7 @@ void new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
     }
     if (direct) {
         new_point_rec(incepconv, depth + 1, point);
-        return;
+        return 1;
     }
     // On fixe le début de poly au nouveau point
     convexhull->poly = vrtx;
@@ -273,9 +262,10 @@ void new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
             Vertex* v = extract_vertex_head(&(convexhull->poly));
             new_point_rec(incepconv, depth + 1, v->point);
             convexhull->poly = keep;
-            incepconv->curlen--;
+            convexhull->curlen--;
         } else {
             break;
         }
     }
+    return 1;
 }

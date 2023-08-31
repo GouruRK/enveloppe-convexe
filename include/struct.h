@@ -21,7 +21,6 @@ typedef struct {
 
 typedef struct {
     Convex* tab_convex;
-    int curlen;
     int maxlen;
 } InceptionConvex;
 

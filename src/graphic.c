@@ -81,7 +81,11 @@ void draw_filled_outline(Convex convex, MLV_Color color) {
 }
 
 void draw_inception_convex(InceptionConvex incepconv) {
-    for (int i = 0; i < incepconv.curlen; i++) {
-        draw_filled_outline(incepconv.tab_convex[i], TAB_COLOR[i % TAB_COLOR_SIZE]);
+    for (int i = 0; i < incepconv.maxlen; i++) {
+        if (incepconv.tab_convex[i].curlen) {
+            draw_filled_outline(incepconv.tab_convex[i], TAB_COLOR[i % TAB_COLOR_SIZE]);
+        } else {
+            break;
+        }
     }
 }
