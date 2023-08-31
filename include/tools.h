@@ -11,6 +11,6 @@
  * @return int '1' if their coordinates are equal
  *             else '0'
  */
-int equals_points(Point* a, Point* b);
+int equals_points(Point a, Point b);
 
 #endif

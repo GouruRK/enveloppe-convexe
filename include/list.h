@@ -5,9 +5,9 @@
 
 void add_vertex_tail(Polygon* poly, Vertex* vrtx);
 void add_vertex_head(Polygon* poly, Vertex* vrtx);
-int add_point(Polygon* poly, Point* point, void (*addFunction)(Polygon*, Vertex*));
+int add_point(Polygon* poly, Point point, void (*addFunction)(Polygon*, Vertex*));
 Vertex* extract_vertex_tail(Polygon* poly);
 Vertex* extract_vertex_head(Polygon* poly);
-Vertex* extract_point(Polygon* poly, Point* point);
+Vertex* extract_point(Polygon* poly, Point point);
 
 #endif

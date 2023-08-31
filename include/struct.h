@@ -9,7 +9,7 @@ typedef struct {
 } Point;
 
 typedef struct _vrtx {
-    Point* point;
+    Point point;
     struct _vrtx* next;
     struct _vrtx* prev;
 } Vertex, *Polygon;
@@ -27,18 +27,11 @@ typedef struct {
 /**
  * @brief Create a point object.
  * 
- * @return Point*, NULL in case of allocation error 
- */
-Point* create_point(void);
-
-/**
- * @brief Create a point object with its coordinates.
- * 
  * @param x point's abscissa
  * @param y point's ordinate
- * @return Point*, NULL in case of allocation error
+ * @return Point 
  */
-Point* create_filled_point(int x, int y);
+Point create_point(int x, int y);
 
 /**
  * @brief Fill a point object with its coordinates.
@@ -62,7 +55,7 @@ Vertex* create_vertex(void);
  * @param point point to be add to the vertex
  * @return Vertex*, NULL in case of allocation error
  */
-Vertex* create_filled_vertex(Point* point);
+Vertex* create_filled_vertex(Point point);
 
 /**
  * @brief Fill a vertex with a point object.
@@ -70,7 +63,7 @@ Vertex* create_filled_vertex(Point* point);
  * @param vrtx vertex to be filled
  * @param point point to add
  */
-void fill_vertex(Vertex* vrtx, Point* point);
+void fill_vertex(Vertex* vrtx, Point point);
 
 /**
  * @brief Create a polygon object.
@@ -106,13 +99,6 @@ InceptionConvex create_inception_convex(void);
  * @param incepconv object to resize
  */
 void resize_inception_convex(InceptionConvex* incepconv);
-
-/**
- * @brief Free allocated memory for a Point object.
- * 
- * @param point point to free
- */
-void free_point(Point* point);
 
 /**
  * @brief Free allocated memory for a Vertex object 

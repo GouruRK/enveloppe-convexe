@@ -12,24 +12,24 @@ int check_mouse_position(MLV_Mouse_button button, MLV_Button_state expected) {
     return MLV_get_mouse_button_state(button) == expected;
 }
 
-void draw_inside_point(Point* point) {
+void draw_inside_point(Point point) {
     draw_point(point, INSIDE_POINT_COLOR);
 }
 
-void draw_online_point(Point* point) {
+void draw_online_point(Point point) {
     draw_point(point, ONLINE_POINT_COLOR);
 }
 
-void draw_point(Point* point, MLV_Color color) {
-    MLV_draw_filled_circle(point->x, point->y, RADIUS, color);
+void draw_point(Point point, MLV_Color color) {
+    MLV_draw_filled_circle(point.x, point.y, RADIUS, color);
 }
 
-void draw_line(Point* a, Point* b) {
-    MLV_draw_line(a->x, a->y, b->x, b->y, LINE_COLOR);
+void draw_line(Point a, Point b) {
+    MLV_draw_line(a.x, a.y, b.x, b.y, LINE_COLOR);
 }
 
-void draw_surface(Point* a, Point* b, Point* c, MLV_Color color) {
-    MLV_draw_filled_triangle(a->x, a->y, b->x, b->y, c->x, c->y, color);
+void draw_surface(Point a, Point b, Point c, MLV_Color color) {
+    MLV_draw_filled_triangle(a.x, a.y, b.x, b.y, c.x, c.y, color);
 }
 
 void draw_array(Array points) {

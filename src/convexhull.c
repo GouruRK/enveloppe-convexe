@@ -14,17 +14,12 @@ void create_convexhull(int* stop) {
         return;
     }
     Array points = create_array();
-    Point* point;
+    Point point;
     int x, y, mouse_pressed = 1;
     while (!(*stop)) {
         if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
             MLV_get_mouse_position(&x, &y);
-            point = create_filled_point(x, y);
-            if (!point) {
-                free_convex(&convexhull);
-                free_array(&points);
-                return;
-            }
+            point = create_point(x, y);
             
             int res = new_point(&convexhull, &points, point);
             if (!res) {
@@ -54,11 +49,7 @@ void create_inception_convexhull(int* stop) {
     while (!(*stop)) {
         if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
             MLV_get_mouse_position(&x, &y);
-            Point* point = create_filled_point(x, y);
-            if (!point) {
-                free_inception_convex(&incepconv);
-                return;
-            }
+            Point point = create_point(x, y);
 
             int res = new_point_rec(&incepconv, 0, point);
             if (!res) {
@@ -79,24 +70,16 @@ void create_inception_convexhull(int* stop) {
 
 int init_convexhull(Convex* convex, int* stop) {
     int n_points = 0, x, y, mouse_pressed = 0;
-    Point* p0 = create_point();
-    if (!p0) {
-        return 0;
-    }
-    Point* p1 = create_point();
-    if (!p1) {
-        free_point(p0);
-        return 0;
-    }
+    Point p0, p1;
     while (!(*stop) && n_points < 2) {
         if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
             MLV_get_mouse_position(&x, &y);
             
             if (!n_points) {
-                fill_point(p0, x, y);
+                fill_point(&p0, x, y);
                 draw_online_point(p0);
             } else {
-                fill_point(p1, x, y);
+                fill_point(&p1, x, y);
                 draw_online_point(p1);
                 draw_line(p0, p1);
             }
@@ -109,12 +92,10 @@ int init_convexhull(Convex* convex, int* stop) {
         }
     }
     if (n_points != 2) {
-        free_point(p0);
-        free_point(p1);
         return 0;
     }
-    if (p0->x == p1->x && p0->y == p1->y) {
-        p1->x++;
+    if (p0.x == p1.x && p0.y == p1.y) {
+        p1.x++;
     }
     add_point(&(convex->poly), p0, add_vertex_tail);
     add_point(&(convex->poly), p1, add_vertex_tail);
@@ -124,7 +105,7 @@ int init_convexhull(Convex* convex, int* stop) {
 
 
 
-int new_point(Convex* convex, Array* inside_points, Point* point) {
+int new_point(Convex* convex, Array* inside_points, Point point) {
     Vertex* head = NULL;
     Vertex* point_container;
     int direct;
@@ -186,7 +167,7 @@ int new_point(Convex* convex, Array* inside_points, Point* point) {
     return 1;
 }
 
-int new_point_rec(InceptionConvex* incepconv, int depth, Point* point) {
+int new_point_rec(InceptionConvex* incepconv, int depth, Point point) {
     // if not enough space, resize incepconv to add more
     if (incepconv->maxlen == depth) {
         resize_inception_convex(incepconv);
