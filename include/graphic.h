@@ -13,13 +13,13 @@
 
 #define TAB_COLOR_SIZE 6
 
-#define TAB_COLOR (MLV_Color[TAB_COLOR_SIZE]) {       \
-    MLV_rgba(0, 0, 255, 100),                         \
-    MLV_rgba(0, 255, 0, 100),                         \
-    MLV_rgba(255, 0, 0, 100),                         \
-    MLV_rgba(255, 0, 255, 100),                       \
-    MLV_rgba(0, 255, 255, 100),                       \
-    MLV_rgba(255, 255, 0, 100)                        \
+#define TAB_COLOR (MLV_Color[TAB_COLOR_SIZE]) { \
+    MLV_rgba(0, 0, 255, 100),                   \
+    MLV_rgba(0, 255, 0, 100),                   \
+    MLV_rgba(255, 0, 0, 100),                   \
+    MLV_rgba(255, 0, 255, 100),                 \
+    MLV_rgba(0, 255, 255, 100),                 \
+    MLV_rgba(255, 255, 0, 100)                  \
 }
 
 /**
@@ -52,7 +52,7 @@ void draw_inside_point(Point point);
  * 
  * @param point point to draw
  */
-void draw_online_point(Point point);
+void draw_outline_point(Point point);
 
 /**
  * @brief Draw a point of the given color
@@ -108,5 +108,13 @@ void draw_filled_convex(Convex convex, MLV_Color color);
  * @param incepconv collection of convex hulls
  */
 void draw_inception_convex(InceptionConvex incepconv);
+
+/**
+ * @brief Create a point when the user click on the window.
+ * 
+ * @param stop set to '1' if the user close the window
+ * @return Point created point
+ */
+Point point_on_click(int* stop);
 
 #endif

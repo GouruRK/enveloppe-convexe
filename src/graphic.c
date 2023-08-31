@@ -16,7 +16,7 @@ void draw_inside_point(Point point) {
     draw_point(point, INSIDE_POINT_COLOR);
 }
 
-void draw_online_point(Point point) {
+void draw_outline_point(Point point) {
     draw_point(point, ONLINE_POINT_COLOR);
 }
 
@@ -51,12 +51,12 @@ void draw_outline_points(Array points) {
         Vertex* prev = polygon;
         polygon = polygon->next;
         while (head != polygon) {
-            draw_online_point(polygon->point);
+            draw_outline_point(polygon->point);
             draw_line(prev->point, polygon->point);
             prev = polygon;
             polygon = polygon->next;
         }
-        draw_online_point(polygon->point);
+        draw_outline_point(polygon->point);
         draw_line(prev->point, polygon->point);
     }
 }
@@ -69,13 +69,13 @@ void draw_filled_convex(Convex convex, MLV_Color color) {
         polygon = polygon->next;
         while (head != polygon) {
             draw_surface(head->point, prev->point, polygon->point, color);
-            draw_online_point(polygon->point);
+            draw_outline_point(polygon->point);
             draw_line(prev->point, polygon->point);
             prev = polygon;
             polygon = polygon->next;
         }
         draw_surface(head->point, prev->point, polygon->point, color);
-        draw_online_point(polygon->point);
+        draw_outline_point(polygon->point);
         draw_line(prev->point, polygon->point);
     }
 }
@@ -88,4 +88,21 @@ void draw_inception_convex(InceptionConvex incepconv) {
             break;
         }
     }
+}
+
+Point point_on_click(int* stop) {
+    int x, y, mouse_pressed = 1;
+    Point point;
+
+    while (!(*stop)) {
+        if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
+            MLV_get_mouse_position(&x, &y);
+            fill_point(&point, x, y);
+            return point;
+        } else if (check_mouse_position(MLV_BUTTON_LEFT, MLV_RELEASED) && mouse_pressed) {
+            mouse_pressed = 0;
+        }
+    }
+    fill_point(&point, -1, -1);
+    return point;
 }

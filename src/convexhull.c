@@ -15,25 +15,21 @@ void create_convexhull(int* stop) {
     }
     Array points = create_array();
     Point point;
-    int x, y, mouse_pressed = 1;
+    int res;
     while (!(*stop)) {
-        if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
-            MLV_get_mouse_position(&x, &y);
-            point = create_point(x, y);
-            
-            int res = new_point(&convexhull, &points, point);
-            if (!res) {
-                break;
-            }
-            MLV_clear_window(MLV_COLOR_WHITE);
-            draw_outline_points(convexhull);
-            draw_inside_points(points);
-            MLV_update_window();
-
-            mouse_pressed = 1;
-        } else if (check_mouse_position(MLV_BUTTON_LEFT, MLV_RELEASED) && mouse_pressed) {
-            mouse_pressed = 0;
+        point = point_on_click(stop);
+        if (*stop) {
+            break;
         }
+        res = new_point(&convexhull, &points, point);
+        if (!res) {
+            break;
+        }
+
+        MLV_clear_window(MLV_COLOR_WHITE);
+        draw_outline_points(convexhull);
+        draw_inside_points(points);
+        MLV_update_window();
     }
     free_array(&points);
     free_convex(&convexhull);
@@ -44,62 +40,47 @@ void create_inception_convexhull(int* stop) {
     if (!(incepconv.tab_convex)) {
         return;
     }
-
-    int x, y, mouse_pressed = 1;
+    Point point;
+    int res;
     while (!(*stop)) {
-        if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
-            MLV_get_mouse_position(&x, &y);
-            Point point = create_point(x, y);
-
-            int res = new_point_rec(&incepconv, 0, point);
-            if (!res) {
-                break;
-            }
-
-            MLV_clear_window(MLV_COLOR_WHITE);
-            draw_inception_convex(incepconv);
-            MLV_update_window();
-
-            mouse_pressed = 1;
-        } else if (check_mouse_position(MLV_BUTTON_LEFT, MLV_RELEASED) && mouse_pressed) {
-            mouse_pressed = 0;
+        point = point_on_click(stop);
+        if (*stop) {
+            break;
         }
+        res = new_point_rec(&incepconv, 0, point);
+        if (!res) {
+            break;
+        }
+
+        MLV_clear_window(MLV_COLOR_WHITE);
+        draw_inception_convex(incepconv);
+        MLV_update_window();
     }
     free_inception_convex(&incepconv);
 }
 
 int init_convexhull(Convex* convex, int* stop) {
-    int n_points = 0, x, y, mouse_pressed = 0;
     Point p0, p1;
-    while (!(*stop) && n_points < 2) {
-        if (check_mouse_position(MLV_BUTTON_LEFT, MLV_PRESSED) && !mouse_pressed) {
-            MLV_get_mouse_position(&x, &y);
-            
-            if (!n_points) {
-                fill_point(&p0, x, y);
-                draw_online_point(p0);
-            } else {
-                fill_point(&p1, x, y);
-                draw_online_point(p1);
-                draw_line(p0, p1);
-            }
-
-            MLV_update_window();
-            n_points++;
-            mouse_pressed = 1;
-        } else if (check_mouse_position(MLV_BUTTON_LEFT, MLV_RELEASED) && mouse_pressed) {
-            mouse_pressed = 0;
-        }
+    p0 = point_on_click(stop);
+    if (*stop) {
+        return 0;
     }
-    if (n_points != 2) {
+    draw_outline_point(p0);
+    MLV_update_window();
+    p1 = point_on_click(stop);
+    if (*stop) {
         return 0;
     }
     if (p0.x == p1.x && p0.y == p1.y) {
         p1.x++;
     }
+    draw_outline_point(p1);
+    draw_line(p0, p1);
+    MLV_update_window();
     add_point(&(convex->poly), p0, add_vertex_tail);
     add_point(&(convex->poly), p1, add_vertex_tail);
     convex->curlen = 2;
+
     return 1;
 }
 
