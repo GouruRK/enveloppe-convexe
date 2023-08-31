@@ -26,8 +26,8 @@ void create_convexhull(int* stop) {
                 break;
             }
             MLV_clear_window(MLV_COLOR_WHITE);
-            draw_outline(convexhull);
-            draw_array(points);
+            draw_outline_points(convexhull);
+            draw_inside_points(points);
             MLV_update_window();
 
             mouse_pressed = 1;

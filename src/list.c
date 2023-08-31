@@ -20,13 +20,13 @@ void add_vertex_head(Polygon* poly, Vertex* vrtx) {
     *poly = vrtx;
 }
 
-int add_point(Polygon* poly, Point point, void (*addFunction)(Polygon*, Vertex*)) {
+int add_point(Polygon* poly, Point point, void (*add_function)(Polygon*, Vertex*)) {
     Vertex* vrtx = create_vertex();
     if (!vrtx) {
         return 0;
     }
     fill_vertex(vrtx, point);
-    addFunction(poly, vrtx);
+    add_function(poly, vrtx);
     return 1;
 }
 

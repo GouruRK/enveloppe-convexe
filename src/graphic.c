@@ -32,7 +32,7 @@ void draw_surface(Point a, Point b, Point c, MLV_Color color) {
     MLV_draw_filled_triangle(a.x, a.y, b.x, b.y, c.x, c.y, color);
 }
 
-void draw_array(Array points) {
+void draw_inside_points(Array points) {
     Polygon polygon = points.poly;
     if (polygon) {
         Vertex* head = polygon->prev;
@@ -44,8 +44,8 @@ void draw_array(Array points) {
     }
 }
 
-void draw_outline(Convex convex) {
-   Polygon polygon = convex.poly;
+void draw_outline_points(Array points) {
+   Polygon polygon = points.poly;
     if (polygon) {
         Vertex* head = polygon;
         Vertex* prev = polygon;
@@ -61,7 +61,7 @@ void draw_outline(Convex convex) {
     }
 }
 
-void draw_filled_outline(Convex convex, MLV_Color color) {
+void draw_filled_convex(Convex convex, MLV_Color color) {
     Polygon polygon = convex.poly;
     if (polygon) {
         Vertex* head = polygon;
@@ -83,7 +83,7 @@ void draw_filled_outline(Convex convex, MLV_Color color) {
 void draw_inception_convex(InceptionConvex incepconv) {
     for (int i = 0; i < incepconv.maxlen; i++) {
         if (incepconv.tab_convex[i].curlen) {
-            draw_filled_outline(incepconv.tab_convex[i], TAB_COLOR[i % TAB_COLOR_SIZE]);
+            draw_filled_convex(incepconv.tab_convex[i], TAB_COLOR[i % TAB_COLOR_SIZE]);
         } else {
             break;
         }

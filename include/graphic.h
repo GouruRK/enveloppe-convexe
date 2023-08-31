@@ -22,16 +22,91 @@
     MLV_rgba(255, 255, 0, 100)                        \
 }
 
+/**
+ * @brief Function executed whenever the user close the window.
+ *        Set `data` to '1' in this case.
+ * 
+ * @param data set to '1' if the user close the window
+ */
 void exit_function(void* data);
+
+/**
+ * @brief Check mouse's buttons position.
+ * 
+ * @param button button to check
+ * @param expected expected position
+ * @return int '1' if the given button is at the given position
+ *             else '0'
+ */
 int check_mouse_position(MLV_Mouse_button button, MLV_Button_state expected);
+
+/**
+ * @brief Draw a point that is inside a convex hull.
+ * 
+ * @param point point to draw
+ */
 void draw_inside_point(Point point);
+
+/**
+ * @brief Draw a point that is on the convex hull's outline.
+ * 
+ * @param point point to draw
+ */
 void draw_online_point(Point point);
+
+/**
+ * @brief Draw a point of the given color
+ * 
+ * @param point point to draw
+ * @param color color to draw the point
+ */
 void draw_point(Point point, MLV_Color color);
+
+/**
+ * @brief Draw a line between two points.
+ * 
+ * @param a first point
+ * @param b second point
+ */
 void draw_line(Point a, Point b);
+
+/**
+ * @brief Draw a surface between three points of the given colors.
+ * 
+ * @param a first point
+ * @param b second point
+ * @param c third point
+ * @param color color to draw the surface
+ */
 void draw_surface(Point a, Point b, Point c, MLV_Color color);
-void draw_array(Array points);
-void draw_outline(Convex convex);
-void draw_filled_outline(Convex convex, MLV_Color color);
+
+/**
+ * @brief Draw a collection of points that are inside a convex hull.
+ * 
+ * @param points points to draw
+ */
+void draw_inside_points(Array points);
+
+/**
+ * @brief Draw a collection of points that are on a convex hull's outline.
+ * 
+ * @param points points to draw
+ */
+void draw_outline_points(Array points);
+
+/**
+ * @brief Draw a surface in the convex hull.
+ * 
+ * @param convex convex hull to draw the surface
+ * @param color color of the surface
+ */
+void draw_filled_convex(Convex convex, MLV_Color color);
+
+/**
+ * @brief Draw self-contained convex hulls.
+ * 
+ * @param incepconv collection of convex hulls
+ */
 void draw_inception_convex(InceptionConvex incepconv);
 
 #endif
