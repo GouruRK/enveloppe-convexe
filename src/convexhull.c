@@ -1,17 +1,19 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <MLV/MLV_all.h>
+
 
 #include "../include/convexhull.h"
 #include "../include/struct.h"
 #include "../include/list.h"
-#include "../include/math.h"
+#include "../include/triangle.h"
 #include "../include/graphic.h"
 
-void create_convexhull(int* stop, Window* win) {
+void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win) {
     draw_raw_convex_information(0, 0, win);
     MLV_update_window();
     Convex convexhull = create_convex();
-    int err = init_convexhull(&convexhull, stop, win);
+    int err = init_convexhull(&convexhull, stop, nb_points, get_point, win);
     if (!err) {
         return;
     }
@@ -19,8 +21,8 @@ void create_convexhull(int* stop, Window* win) {
     Point point;
     int res;
     while (!(*stop)) {
-        point = point_on_click(stop, win);
-        if (*stop) {
+        point = get_point(stop, nb_points, win);
+        if (*stop || (point.x < 0)) {
             break;
         }
         res = new_point(&convexhull, &points, point);
@@ -38,7 +40,7 @@ void create_convexhull(int* stop, Window* win) {
     free_convex(&convexhull);
 }
 
-void create_inception_convexhull(int* stop, Window* win) {
+void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win) {
     draw_raw_inception_convex_information(0, 0, win);
     MLV_update_window();
 
@@ -49,8 +51,8 @@ void create_inception_convexhull(int* stop, Window* win) {
     Point point;
     int res;
     while (!(*stop)) {
-        point = point_on_click(stop, win);
-        if (*stop) {
+        point = get_point(stop, nb_points, win);
+        if (*stop || point.x < 0) {
             break;
         }
         incepconv.total_points++;
@@ -67,16 +69,16 @@ void create_inception_convexhull(int* stop, Window* win) {
     free_inception_convex(&incepconv);
 }
 
-int init_convexhull(Convex* convex, int* stop, Window* win) {
+int init_convexhull(Convex* convex, int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win) {
     Point p0, p1;
-    p0 = point_on_click(stop, win);
-    if (*stop) {
+    p0 = get_point(stop, nb_points, win);
+    if (*stop || p0.x < 0) {
         return 0;
     }
     draw_outline_point(p0);
     MLV_update_window();
-    p1 = point_on_click(stop, win);
-    if (*stop) {
+    p1 = get_point(stop, nb_points, win);
+    if (*stop || p1.x < 0) {
         return 0;
     }
     if (p0.x == p1.x && p0.y == p1.y) {
@@ -157,7 +159,7 @@ int new_point(Convex* convex, Array* inside_points, Point point) {
 
 int new_point_rec(InceptionConvex* incepconv, int depth, Point point) {
     // if not enough space, resize incepconv to add more
-    if (incepconv->maxlen == depth) {
+    if (incepconv->maxlen == depth - 1) {
         resize_inception_convex(incepconv);
         if (!(incepconv->tab_convex)) {
             return 0;
@@ -234,3 +236,86 @@ int new_point_rec(InceptionConvex* incepconv, int depth, Point point) {
     }
     return 1;
 }
+
+// old implementation
+/*int new_point_rec(InceptionConvex* convexs, int depth, Point p) {
+    // si tableau trop petit
+    if (convexs->maxlen == depth) {
+        resize_inception_convex(convexs);
+        if (!(convexs->tab_convex)) {
+            return 0;
+        }
+    }
+
+    Convex* convex = &(convexs->tab_convex[depth]);
+
+    // si cas init
+    if (convexs->tab_convex[depth].curlen < 2) {
+        if (!add_point(&(convex->poly), p, add_vertex_tail)) {
+            return 0;
+        }
+        convexs->tab_convex[depth].curlen++;
+        return 1;
+    }
+
+    // On regarde si le point est a l'intérieur de l'enveloppe
+    Vertex* head = NULL;
+    Vertex* point;
+    int direct;
+    while (head != convex->poly) {
+        if (!head) {
+            head = convex->poly;
+        }
+        direct = is_direct(p, convex->poly->point, convex->poly->next->point);
+        convex->poly = convex->poly->next;
+        if (direct) {
+            continue;
+        } else {
+            // on insère p entre [Si, Si+1]
+            // on insère a (*poly)->next pcq sinon on insère avant Si
+            // *poly = (*poly)->next;
+            if (!add_point(&(convex->poly), p, add_vertex_head)) {
+                return 0;
+            }
+            // point devient l'endroit où on a insérer le point
+            point = convex->poly;
+            convexs->tab_convex[depth].curlen++;
+            break;
+        }
+    }
+    if (direct) {
+        new_point_rec(convexs, depth + 1, p);
+        return 1;
+    }
+    // On fixe le début de poly au nouveau point
+    convex->poly = point;
+
+    // nettoyage avant
+    while (1) {
+        direct = is_direct(convex->poly->point, convex->poly->next->point,
+                          convex->poly->next->next->point);
+        if (!direct) {
+            Vertex* v = extract_vertex_head(&(convex->poly->next));
+            new_point_rec(convexs, depth + 1, v->point);
+            convexs->tab_convex[depth].curlen--;
+        } else {
+            break;
+        }
+    }
+    // nettoyage arriere
+    while (1) {
+        direct = is_direct(convex->poly->point, convex->poly->prev->prev->point,
+                          convex->poly->prev->point);
+        if (!direct) {
+            Vertex* keep = convex->poly;
+            convex->poly = convex->poly->prev;
+            Vertex* v = extract_vertex_head(&(convex->poly));
+            new_point_rec(convexs, depth + 1, v->point);
+            convex->poly = keep;
+            convexs->tab_convex[depth].curlen--;
+        } else {
+            break;
+        }
+    }
+    return 1;
+}*/

@@ -9,7 +9,7 @@
  * 
  * @param stop set to '1' whenever the user close the window
  */
-void create_convexhull(int* stop, Window* win);
+void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win);
 
 /**
  * @brief Initiate graphically a simple convex hull by collecting 
@@ -20,7 +20,7 @@ void create_convexhull(int* stop, Window* win);
  * @return int '1' to continue the process
  *             else '0'
  */
-int init_convexhull(Convex* convex, int* stop, Window* win);
+int init_convexhull(Convex* convex, int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win);
 
 /**
  * @brief Create graphically a self-contained convex hull.
@@ -28,7 +28,7 @@ int init_convexhull(Convex* convex, int* stop, Window* win);
  * 
  * @param stop set to '1' whenever the user close the window
  */
-void create_inception_convexhull(int* stop, Window* win);
+void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win);
 
 /**
  * @brief Determine if a point is on the convex hull outline or inside the hull.
@@ -52,6 +52,6 @@ int new_point(Convex* convex, Array* inside_points, Point point);
  * @return int '1' to continue the process if no errors
  *             else '0', due to allocation error 
  */
-int new_point_rec(InceptionConvex* incepconv, int depth, Point point);
+int new_point_rec(InceptionConvex* convexs, int depth, Point p);
 
 #endif

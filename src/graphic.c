@@ -1,4 +1,6 @@
 #include <MLV/MLV_all.h>
+#include <stdlib.h>
+#include <math.h>
 
 #include "../include/graphic.h"
 #include "../include/struct.h"
@@ -91,7 +93,7 @@ void draw_inception_convex(InceptionConvex incepconv) {
     }
 }
 
-Point point_on_click(int* stop, Window* win) {
+Point point_on_click(int* stop, int nb_points, Window* win) {
     int x, y, mouse_pressed = 1;
     Point point;
 
@@ -108,6 +110,33 @@ Point point_on_click(int* stop, Window* win) {
     }
     fill_point(&point, -1, -1);
     return point;
+}
+
+Point rising_sphere(int* stop, int nb_points, Window* win) {
+    static int x, y, init = 0, generated_points = 0;
+    static double radius;
+
+    if (!init) {
+        if (nb_points < 0) {
+            return create_point(-1, -1);
+        }
+
+        // radius = radius_max / nb_points
+        radius = (win->clickable.width / 2 - 30) / ((float)nb_points);
+
+        x = win->clickable.width / 2;
+        y = win->clickable.height / 2;
+
+        init = 1;
+    }
+    if (generated_points == nb_points) {
+        return create_point(-1, -1);
+    }
+    MLV_wait_milliseconds(10);
+    generated_points++;
+    int random = rand();
+    return create_point(x + radius * generated_points * cos(random),
+                        y + radius * generated_points * sin(random));
 }
 
 void draw_outline_points_information(int value, Window* win) {

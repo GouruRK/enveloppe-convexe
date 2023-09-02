@@ -110,7 +110,9 @@ void draw_filled_convex(Convex convex, MLV_Color color);
  */
 void draw_inception_convex(InceptionConvex incepconv);
 
-Point point_on_click(int* stop, Window* win);
+Point point_on_click(int* stop, int nb_points, Window* win);
+
+Point rising_sphere(int* stop, int nb_points, Window* win);
 
 void draw_outline_points_information(int value, Window* win);
 

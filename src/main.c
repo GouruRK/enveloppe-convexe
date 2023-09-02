@@ -1,4 +1,6 @@
 #include <MLV/MLV_all.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "../include/graphic.h"
 #include "../include/list.h"
@@ -10,6 +12,7 @@
 #define HEIGHT 600
 
 int main(void) {
+    srand(time(NULL));
     Window win = create_window_data(WIDTH, HEIGHT);
     int stop = 0;
     MLV_execute_at_exit(exit_function, &stop);
@@ -17,7 +20,11 @@ int main(void) {
     MLV_clear_window(MLV_COLOR_WHITE);
     MLV_update_window();
 
-    create_inception_convexhull(&stop, &win);
+    create_convexhull(&stop, 500, rising_sphere, &win);
+
+    while (!(stop)) {
+        continue;
+    }
 
     MLV_free_window();
 }
