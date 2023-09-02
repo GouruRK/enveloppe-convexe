@@ -114,6 +114,8 @@ Point point_on_click(int* stop, int nb_points, Window* win);
 
 Point rising_sphere(int* stop, int nb_points, Window* win);
 
+Point rising_square(int* stop, int nb_points, Window* win);
+
 void draw_outline_points_information(int value, Window* win);
 
 void draw_inside_points_information(int value, Window* win);

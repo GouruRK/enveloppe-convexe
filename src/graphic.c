@@ -139,6 +139,32 @@ Point rising_sphere(int* stop, int nb_points, Window* win) {
                         y + radius * generated_points * sin(random));
 }
 
+Point rising_square(int* stop, int nb_points, Window* win) {
+    static int x, y, init = 0, generated_points = 0;
+    static double radius;
+
+    if (!init) {
+        if (nb_points < 0) {
+            return create_point(-1, -1);
+        }
+
+        // radius = radius_max / nb_points
+        radius = (win->clickable.width / 2 - 30) / ((float)nb_points);
+
+        x = win->clickable.width / 2;
+        y = win->clickable.height / 2;
+
+        init = 1;
+    }
+    if (generated_points == nb_points) {
+        return create_point(-1, -1);
+    }
+    MLV_wait_milliseconds(10);
+    generated_points++;
+    return create_point(x + radius * generated_points * cos(rand()),
+                        y + radius * generated_points * sin(rand()));
+}
+
 void draw_outline_points_information(int value, Window* win) {
     static int width, height, x, y, init = 0;
 
