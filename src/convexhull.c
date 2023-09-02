@@ -7,9 +7,11 @@
 #include "../include/math.h"
 #include "../include/graphic.h"
 
-void create_convexhull(int* stop) {
+void create_convexhull(int* stop, Window* win) {
+    draw_raw_convex_information(0, 0, win);
+    MLV_update_window();
     Convex convexhull = create_convex();
-    int err = init_convexhull(&convexhull, stop);
+    int err = init_convexhull(&convexhull, stop, win);
     if (!err) {
         return;
     }
@@ -17,7 +19,7 @@ void create_convexhull(int* stop) {
     Point point;
     int res;
     while (!(*stop)) {
-        point = point_on_click(stop);
+        point = point_on_click(stop, win);
         if (*stop) {
             break;
         }
@@ -29,13 +31,17 @@ void create_convexhull(int* stop) {
         MLV_clear_window(MLV_COLOR_WHITE);
         draw_outline_points(convexhull);
         draw_inside_points(points);
+        draw_convex_information(convexhull, points, win);
         MLV_update_window();
     }
     free_array(&points);
     free_convex(&convexhull);
 }
 
-void create_inception_convexhull(int* stop) {
+void create_inception_convexhull(int* stop, Window* win) {
+    draw_raw_inception_convex_information(0, 0, win);
+    MLV_update_window();
+
     InceptionConvex incepconv = create_inception_convex();
     if (!(incepconv.tab_convex)) {
         return;
@@ -43,10 +49,11 @@ void create_inception_convexhull(int* stop) {
     Point point;
     int res;
     while (!(*stop)) {
-        point = point_on_click(stop);
+        point = point_on_click(stop, win);
         if (*stop) {
             break;
         }
+        incepconv.total_points++;
         res = new_point_rec(&incepconv, 0, point);
         if (!res) {
             break;
@@ -54,20 +61,21 @@ void create_inception_convexhull(int* stop) {
 
         MLV_clear_window(MLV_COLOR_WHITE);
         draw_inception_convex(incepconv);
+        draw_inception_convex_information(incepconv, win);
         MLV_update_window();
     }
     free_inception_convex(&incepconv);
 }
 
-int init_convexhull(Convex* convex, int* stop) {
+int init_convexhull(Convex* convex, int* stop, Window* win) {
     Point p0, p1;
-    p0 = point_on_click(stop);
+    p0 = point_on_click(stop, win);
     if (*stop) {
         return 0;
     }
     draw_outline_point(p0);
     MLV_update_window();
-    p1 = point_on_click(stop);
+    p1 = point_on_click(stop, win);
     if (*stop) {
         return 0;
     }
@@ -80,7 +88,6 @@ int init_convexhull(Convex* convex, int* stop) {
     add_point(&(convex->poly), p0, add_vertex_tail);
     add_point(&(convex->poly), p1, add_vertex_tail);
     convex->curlen = 2;
-
     return 1;
 }
 
@@ -158,6 +165,10 @@ int new_point_rec(InceptionConvex* incepconv, int depth, Point point) {
     }
 
     Convex* convexhull = &(incepconv->tab_convex[depth]);
+
+    if (convexhull->curlen == 0) {
+        incepconv->curlen++;
+    }
 
     // initiate a polygon
     if (convexhull->curlen < 2) {

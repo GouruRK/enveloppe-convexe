@@ -2,6 +2,7 @@
 #define __INIT_STRUCT__
 
 #define ALLOCATION_PATERN 10
+#define INFORMATION_HEIGHT 50
 
 typedef struct {
     int x;
@@ -22,7 +23,23 @@ typedef struct {
 typedef struct {
     Convex* tab_convex;
     int maxlen;
+    int curlen;
+    int total_points;
 } InceptionConvex;
+
+typedef struct {
+    Point min;
+    Point max;
+    int width;
+    int height;
+} Section;
+
+typedef struct {
+    Section information;
+    Section clickable;
+    int width;
+    int height;
+} Window;
 
 /**
  * @brief Create a point object.
@@ -85,6 +102,12 @@ Convex create_convex(void);
  * @return Array object
  */
 Array create_array(void);
+
+Section create_section(int xmin, int ymin, int xmax, int ymax);
+
+Window create_window(Section information, Section clickable, int width, int height);
+
+Window create_window_data(int width, int height);
 
 /**
  * @brief Create a inception convex object for self-contained convex hulls.

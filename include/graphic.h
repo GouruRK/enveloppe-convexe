@@ -10,6 +10,7 @@
 #define INSIDE_POINT_COLOR MLV_COLOR_RED
 #define ONLINE_POINT_COLOR MLV_COLOR_BLUE
 #define LINE_COLOR MLV_COLOR_BLACK
+#define TEXT_COLOR MLV_COLOR_BLACK
 
 #define TAB_COLOR_SIZE 6
 
@@ -109,12 +110,22 @@ void draw_filled_convex(Convex convex, MLV_Color color);
  */
 void draw_inception_convex(InceptionConvex incepconv);
 
-/**
- * @brief Create a point when the user click on the window.
- * 
- * @param stop set to '1' if the user close the window
- * @return Point created point
- */
-Point point_on_click(int* stop);
+Point point_on_click(int* stop, Window* win);
+
+void draw_outline_points_information(int value, Window* win);
+
+void draw_inside_points_information(int value, Window* win);
+
+void draw_total_points_information(int value, Window* win);
+
+void draw_hulls_information(int value, Window* win);
+
+void draw_raw_convex_information(int outline, int inside, Window* win);
+
+void draw_convex_information(Convex convex, Array points , Window* win);
+
+void draw_raw_inception_convex_information(int hulls, int points, Window* win);
+
+void draw_inception_convex_information(InceptionConvex incepconv, Window* win);
 
 #endif

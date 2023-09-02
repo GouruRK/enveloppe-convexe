@@ -53,6 +53,8 @@ Array create_array(void) {
 
 InceptionConvex create_inception_convex(void) {
     InceptionConvex incepconv;
+    incepconv.curlen = 0;
+    incepconv.total_points = 0;
     incepconv.tab_convex = (Convex*)malloc(sizeof(Convex) * ALLOCATION_PATERN);
     
     if (!(incepconv.tab_convex)) {
@@ -83,6 +85,29 @@ void resize_inception_convex(InceptionConvex* incepconv) {
     incepconv->maxlen += ALLOCATION_PATERN;
 }
 
+Section create_section(int xmin, int ymin, int xmax, int ymax) {
+    Section section;
+    section.min = create_point(xmin, ymin);
+    section.max = create_point(xmax, ymax);
+    section.height = ymax - ymin;
+    section.width = xmax - xmin;
+    return section;
+}
+
+Window create_window(Section information, Section clickable, int width, int height) {
+    Window win;
+    win.information = information;
+    win.clickable = clickable;
+    win.width = width;
+    win.height = height;
+    return win;
+}
+
+Window create_window_data(int width, int height) {
+    Section information = create_section(0, height - INFORMATION_HEIGHT, width, height);
+    Section clickable = create_section(0, 0, width, height - INFORMATION_HEIGHT);
+    return create_window(information, clickable, width, height);
+}
 
 void free_vertex(Vertex* vrtx) {
     if (vrtx) {

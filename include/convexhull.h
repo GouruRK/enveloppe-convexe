@@ -9,7 +9,7 @@
  * 
  * @param stop set to '1' whenever the user close the window
  */
-void create_convexhull(int* stop);
+void create_convexhull(int* stop, Window* win);
 
 /**
  * @brief Initiate graphically a simple convex hull by collecting 
@@ -20,7 +20,7 @@ void create_convexhull(int* stop);
  * @return int '1' to continue the process
  *             else '0'
  */
-int init_convexhull(Convex* convex, int* stop);
+int init_convexhull(Convex* convex, int* stop, Window* win);
 
 /**
  * @brief Create graphically a self-contained convex hull.
@@ -28,7 +28,7 @@ int init_convexhull(Convex* convex, int* stop);
  * 
  * @param stop set to '1' whenever the user close the window
  */
-void create_inception_convexhull(int* stop);
+void create_inception_convexhull(int* stop, Window* win);
 
 /**
  * @brief Determine if a point is on the convex hull outline or inside the hull.

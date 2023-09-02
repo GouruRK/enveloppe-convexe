@@ -13,4 +13,6 @@
  */
 int equals_points(Point a, Point b);
 
+int point_in_section(Point point, Section section);
+
 #endif
