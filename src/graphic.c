@@ -111,55 +111,51 @@ Point point_on_click(int* stop, Window* win) {
 }
 
 void draw_outline_points_information(int value, Window* win) {
-    int width, height;
-    MLV_get_size_of_text("Outline points : %3d", &width, &height, 0);
+    static int width, height, x, y, init = 0;
 
-    MLV_draw_text(
-        win->information.width * 1/4 - width/2,
-        win->information.min.y + win->information.height/2 - height/2,
-        "Outline points : %3d",
-        TEXT_COLOR,
-        value
-    );
+    if (!init) {
+        MLV_get_size_of_text("Outline points : %3d", &width, &height, 0);
+        x = win->information.width * 1/4 - width/2;
+        y = win->information.min.y + win->information.height/2 - height/2;
+        init = 1;
+    }
+    MLV_draw_text(x, y, "Outline points : %3d", TEXT_COLOR, value);
 }
 
 void draw_inside_points_information(int value, Window* win) {
-    int width, height;
-    MLV_get_size_of_text("Inside points : %3d", &width, &height, 0);
+    static int width, height, x, y, init = 0;
 
-    MLV_draw_text(
-        win->information.width * 1/2 - width/2,
-        win->information.min.y + win->information.height/2 - height/2,
-        "Inside points : %3d",
-        TEXT_COLOR,
-        value
-    );
+    if (!init) {
+        MLV_get_size_of_text("Inside points : %3d", &width, &height, 0);
+        x = win->information.width * 1/2 - width/2;
+        y = win->information.min.y + win->information.height/2 - height/2;
+        init = 1;
+    }
+    MLV_draw_text(x, y, "Inside points : %3d", TEXT_COLOR, value);
 }
 
 void draw_total_points_information(int value, Window* win) {
-    int width, height;
-    MLV_get_size_of_text("Total points : %3d", &width, &height, 0);
+    static int width, height, x, y, init = 0;
 
-    MLV_draw_text(
-        win->information.width * 3/4 - width/2,
-        win->information.min.y + win->information.height/2 - height/2,
-        "Total points : %3d",
-        TEXT_COLOR,
-        value
-    );
+    if (!init) {
+        MLV_get_size_of_text("Total points : %3d", &width, &height, 0);
+        x = win->information.width * 3/4 - width/2;
+        y = win->information.min.y + win->information.height/2 - height/2;
+        init = 1;
+    }
+    MLV_draw_text(x, y, "Total points : %3d", TEXT_COLOR, value);
 }
 
 void draw_hulls_information(int value, Window* win) {
-    int width, height;
-    MLV_get_size_of_text("Number of hulls : %3d", &width, &height, 0);
+    static int width, height, x, y, init = 0;
 
-    MLV_draw_text(
-        win->information.width * 1/4 - width/2,
-        win->information.min.y + win->information.height/2 - height/2,
-        "Number of hulls : %3d",
-        TEXT_COLOR,
-        value
-    );
+    if (!init) {
+        MLV_get_size_of_text("Number of hulls : %3d", &width, &height, 0);
+        x = win->information.width * 1/4 - width/2;
+        y = win->information.min.y + win->information.height/2 - height/2;
+        init = 1;
+    }
+    MLV_draw_text(x, y, "Number of hulls : %3d", TEXT_COLOR, value);
 }
 
 void draw_raw_convex_information(int outline, int inside, Window* win) {
@@ -188,6 +184,6 @@ void draw_inception_convex_information(InceptionConvex incepconv, Window* win) {
     if (incepconv.tab_convex[incepconv.curlen - 1].curlen < 3) {
         hulls--;
     }
-    
+
     draw_raw_inception_convex_information(hulls, incepconv.total_points, win);
 }
