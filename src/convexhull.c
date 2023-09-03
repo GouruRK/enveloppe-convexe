@@ -44,7 +44,17 @@ void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(in
     draw_raw_inception_convex_information(0, 0, win);
     MLV_update_window();
 
-    InceptionConvex incepconv = create_inception_convex();
+    int nb_hulls;
+    if (nb_points < 0) {
+        nb_hulls = 30;
+    } else {
+        if (nb_points < 100) {
+            nb_hulls = nb_points / 2;    
+        } else {
+            nb_hulls = nb_points / 10;
+        }
+    }
+    InceptionConvex incepconv = create_inception_convex(nb_hulls);
     if (!(incepconv.tab_convex)) {
         return;
     }
@@ -92,7 +102,6 @@ int init_convexhull(Convex* convex, int* stop, int nb_points, Point (*get_point)
     convex->curlen = 2;
     return 1;
 }
-
 
 
 int new_point(Convex* convex, Array* inside_points, Point point) {
@@ -158,12 +167,11 @@ int new_point(Convex* convex, Array* inside_points, Point point) {
 }
 
 int new_point_rec(InceptionConvex* incepconv, int depth, Point point) {
-    // if not enough space, resize incepconv to add more
-    if (incepconv->maxlen == depth - 1) {
-        resize_inception_convex(incepconv);
-        if (!(incepconv->tab_convex)) {
+    if (depth == incepconv->maxlen - 1) {
+        if (!add_point(&(incepconv->tab_convex[depth].poly), point, add_vertex_tail)) {
             return 0;
         }
+        return 1;
     }
 
     Convex* convexhull = &(incepconv->tab_convex[depth]);
@@ -215,6 +223,7 @@ int new_point_rec(InceptionConvex* incepconv, int depth, Point point) {
             Vertex* v = extract_vertex_head(&(convexhull->poly->next));
             new_point_rec(incepconv, depth + 1, v->point);
             convexhull->curlen--;
+            free_vertex(v);
         } else {
             break;
         }
@@ -230,6 +239,7 @@ int new_point_rec(InceptionConvex* incepconv, int depth, Point point) {
             new_point_rec(incepconv, depth + 1, v->point);
             convexhull->poly = keep;
             convexhull->curlen--;
+            free_vertex(v);
         } else {
             break;
         }

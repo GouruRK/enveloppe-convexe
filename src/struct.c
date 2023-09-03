@@ -51,38 +51,21 @@ Array create_array(void) {
     return create_convex();
 }
 
-InceptionConvex create_inception_convex(void) {
+InceptionConvex create_inception_convex(int nb_hulls) {
     InceptionConvex incepconv;
     incepconv.curlen = 0;
     incepconv.total_points = 0;
-    incepconv.tab_convex = (Convex*)malloc(sizeof(Convex) * ALLOCATION_PATERN);
+    incepconv.tab_convex = (Convex*)malloc(sizeof(Convex) * nb_hulls);
     
     if (!(incepconv.tab_convex)) {
         incepconv.maxlen = 0;
     } else {
-        incepconv.maxlen = ALLOCATION_PATERN;
+        incepconv.maxlen = nb_hulls;
         for (int i = 0; i < incepconv.maxlen; i++) {
             incepconv.tab_convex[i] = create_convex();
         }
     }
     return incepconv;
-}
-
-void resize_inception_convex(InceptionConvex* incepconv) {
-    if (!incepconv) {
-        return;
-    }
-    Convex* tab_convex = incepconv->tab_convex;
-    tab_convex = (Convex*)realloc(tab_convex, (incepconv->maxlen + ALLOCATION_PATERN) * sizeof(Convex));
-    if (!tab_convex) {
-        free_inception_convex(incepconv);
-        return;
-    }
-    incepconv->tab_convex = tab_convex;
-    for (int i = incepconv->maxlen; i < incepconv->maxlen + ALLOCATION_PATERN; i++) {
-        incepconv->tab_convex[i] = create_convex();
-    }
-    incepconv->maxlen += ALLOCATION_PATERN;
 }
 
 Section create_section(int xmin, int ymin, int xmax, int ymax) {

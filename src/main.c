@@ -20,7 +20,7 @@ int main(void) {
     MLV_clear_window(MLV_COLOR_WHITE);
     MLV_update_window();
 
-    create_convexhull(&stop, 1000, rising_square, &win);
+    create_convexhull(&stop, 500, rising_sphere, &win);
 
     while (!(stop)) {
         continue;

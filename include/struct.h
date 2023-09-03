@@ -1,7 +1,7 @@
 #ifndef __INIT_STRUCT__
 #define __INIT_STRUCT__
 
-#define ALLOCATION_PATERN 10
+#define ALLOCATION_PATERN 100
 #define INFORMATION_HEIGHT 50
 
 typedef struct {
@@ -114,7 +114,7 @@ Window create_window_data(int width, int height);
  * 
  * @return InceptionConvex 
  */
-InceptionConvex create_inception_convex(void);
+InceptionConvex create_inception_convex(int nb_hulls);
 
 /**
  * @brief Resize the maximum length of an InceptionConvex object.

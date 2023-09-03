@@ -85,10 +85,10 @@ void draw_filled_convex(Convex convex, MLV_Color color) {
 
 void draw_inception_convex(InceptionConvex incepconv) {
     for (int i = 0; i < incepconv.maxlen; i++) {
-        if (incepconv.tab_convex[i].curlen) {
-            draw_filled_convex(incepconv.tab_convex[i], TAB_COLOR[i % TAB_COLOR_SIZE]);
+        if (i == incepconv.maxlen - 1) {
+            draw_inside_points(incepconv.tab_convex[i]);
         } else {
-            break;
+            draw_filled_convex(incepconv.tab_convex[i], TAB_COLOR[i % TAB_COLOR_SIZE]);
         }
     }
 }
@@ -159,7 +159,7 @@ Point rising_square(int* stop, int nb_points, Window* win) {
     if (generated_points == nb_points) {
         return create_point(-1, -1);
     }
-    MLV_wait_milliseconds(10);
+    // MLV_wait_milliseconds(10);
     generated_points++;
     return create_point(x + radius * generated_points * cos(rand()),
                         y + radius * generated_points * sin(rand()));
