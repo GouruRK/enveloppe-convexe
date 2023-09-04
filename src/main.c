@@ -2,14 +2,12 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "../include/convexhull.h"
 #include "../include/graphic.h"
 #include "../include/list.h"
+#include "../include/menu.h"
 #include "../include/struct.h"
 #include "../include/tools.h"
-#include "../include/convexhull.h"
-
-#define WIDTH 600
-#define HEIGHT 600
 
 int main(void) {
     srand(time(NULL));
@@ -18,9 +16,10 @@ int main(void) {
     MLV_execute_at_exit(exit_function, &stop);
     MLV_create_window("ConvexHull", "", WIDTH, HEIGHT);
     MLV_clear_window(MLV_COLOR_WHITE);
-    MLV_update_window();
+    // MLV_update_window();
 
-    create_convexhull(&stop, 500, rising_sphere, &win);
-
+    // create_convexhull(&stop, 500, rising_sphere, &win);
+    menu();
+    MLV_wait_seconds(5);
     MLV_free_window();
 }
