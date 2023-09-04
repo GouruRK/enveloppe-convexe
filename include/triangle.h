@@ -1,6 +1,8 @@
 #ifndef __INIT_MATH__
 #define __INIT_MATH__
 
+#include <stdbool.h>
+
 /**
  * @brief Return the cross product of three points.
  * 
@@ -21,6 +23,6 @@ int cross_product(Point A, Point B, Point C);
  * @return int '1' if the triangle is direct
  *             else '0'
  */
-int is_direct(Point A, Point B, Point C);
+bool is_direct(Point A, Point B, Point C);
 
 #endif

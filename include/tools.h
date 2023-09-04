@@ -1,6 +1,8 @@
 #ifndef __INIT_TOOLS__
 #define __INIT_TOOLS__
 
+#include <stdbool.h>
+
 #include "struct.h"
 
 /**
@@ -11,8 +13,8 @@
  * @return int '1' if their coordinates are equal
  *             else '0'
  */
-int equals_points(Point a, Point b);
+bool equals_points(Point a, Point b);
 
-int point_in_section(Point point, Section section);
+bool point_in_section(Point point, Section section);
 
 #endif

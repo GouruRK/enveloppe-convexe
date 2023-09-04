@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <MLV/MLV_all.h>
 
 
@@ -19,7 +17,8 @@ void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, W
     }
     Array points = create_array();
     Point point;
-    int res, h_pressed = 0, show_points = 1, next_point = 1;
+    bool h_pressed = false, show_points = true, next_point = true;
+    int res;
     while (!(*stop)) {
 
         if (next_point) {
@@ -29,7 +28,7 @@ void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, W
             break;
         }
         if (point.x < 0) {
-            next_point = 0;
+            next_point = false;
         } else {
             res = new_point(&convexhull, &points, point);
             if (!res) {
@@ -38,10 +37,10 @@ void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, W
         }
 
         if (check_key_position(MLV_KEYBOARD_h, MLV_PRESSED) && !h_pressed) {
-            h_pressed = 1;
+            h_pressed = true;
             show_points = !show_points;
         } else if (check_key_position(MLV_KEYBOARD_h, MLV_RELEASED) && h_pressed) {
-            h_pressed = 0;
+            h_pressed = false;
         }
 
         MLV_clear_window(MLV_COLOR_WHITE);
@@ -75,7 +74,8 @@ void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(in
         return;
     }
     Point point;
-    int res, h_pressed = 0, show_points = 1, next_point = 1;
+    bool h_pressed = false, show_points = true, next_point = true;
+    int res;
     while (!(*stop)) {
         if (next_point) {
             point = get_point(stop, nb_points, win);
@@ -84,7 +84,7 @@ void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(in
             break;
         }
         if (point.x < 0) {
-            next_point = 0;
+            next_point = false;
         } else {
             incepconv.total_points++;
             res = new_point_rec(&incepconv, 0, point);
@@ -94,10 +94,10 @@ void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(in
         }
 
         if (check_key_position(MLV_KEYBOARD_h, MLV_PRESSED) && !h_pressed) {
-            h_pressed = 1;
+            h_pressed = true;
             show_points = !show_points;
         } else if (check_key_position(MLV_KEYBOARD_h, MLV_RELEASED) && h_pressed) {
-            h_pressed = 0;
+            h_pressed = false;
         }
 
         MLV_clear_window(MLV_COLOR_WHITE);

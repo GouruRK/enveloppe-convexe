@@ -1,6 +1,7 @@
 #ifndef __INIT_GRAPHIC__
 #define __INIT_GRAPHIC__
 
+#include <stdbool.h>
 #include <MLV/MLV_all.h>
 
 #include "struct.h"
@@ -39,9 +40,9 @@ void exit_function(void* data);
  * @return int '1' if the given button is at the given position
  *             else '0'
  */
-int check_mouse_position(MLV_Mouse_button button, MLV_Button_state expected);
+bool check_mouse_position(MLV_Mouse_button button, MLV_Button_state expected);
 
-int check_key_position(MLV_Keyboard_button key, MLV_Button_state expected);
+bool check_key_position(MLV_Keyboard_button key, MLV_Button_state expected);
 
 /**
  * @brief Draw a point that is inside a convex hull.
@@ -95,7 +96,7 @@ void draw_inside_points(Array points);
  * 
  * @param points points to draw
  */
-void draw_outline_points(Array points, int show_points);
+void draw_outline_points(Array points, bool show_points);
 
 /**
  * @brief Draw a surface in the convex hull.
@@ -103,14 +104,14 @@ void draw_outline_points(Array points, int show_points);
  * @param convex convex hull to draw the surface
  * @param color color of the surface
  */
-void draw_filled_convex(Convex convex, MLV_Color color, int show_points);
+void draw_filled_convex(Convex convex, MLV_Color color, bool show_points);
 
 /**
  * @brief Draw self-contained convex hulls.
  * 
  * @param incepconv collection of convex hulls
  */
-void draw_inception_convex(InceptionConvex incepconv, int show_points);
+void draw_inception_convex(InceptionConvex incepconv, bool show_points);
 
 Point point_on_click(int* stop, int nb_points, Window* win);
 

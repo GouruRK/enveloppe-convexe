@@ -1,6 +1,7 @@
 #include <MLV/MLV_all.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
 
 #include "../include/graphic.h"
 #include "../include/struct.h"
@@ -11,11 +12,11 @@ void exit_function(void* data) {
     *stop = 1;
 }
 
-int check_mouse_position(MLV_Mouse_button button, MLV_Button_state expected) {
+bool check_mouse_position(MLV_Mouse_button button, MLV_Button_state expected) {
     return MLV_get_mouse_button_state(button) == expected;
 }
 
-int check_key_position(MLV_Keyboard_button key, MLV_Button_state expected) {
+bool check_key_position(MLV_Keyboard_button key, MLV_Button_state expected) {
     return MLV_get_keyboard_state(key) == expected;
 }
 
@@ -51,7 +52,7 @@ void draw_inside_points(Array points) {
     }
 }
 
-void draw_outline_points(Array points, int show_points) {
+void draw_outline_points(Array points, bool show_points) {
    Polygon polygon = points.poly;
     if (polygon) {
         Vertex* head = polygon;
@@ -72,7 +73,7 @@ void draw_outline_points(Array points, int show_points) {
     }
 }
 
-void draw_filled_convex(Convex convex, MLV_Color color, int show_points) {
+void draw_filled_convex(Convex convex, MLV_Color color, bool show_points) {
     Polygon polygon = convex.poly;
     if (polygon) {
         Vertex* head = polygon;
@@ -95,7 +96,7 @@ void draw_filled_convex(Convex convex, MLV_Color color, int show_points) {
     }
 }
 
-void draw_inception_convex(InceptionConvex incepconv, int show_points) {
+void draw_inception_convex(InceptionConvex incepconv, bool show_points) {
     for (int i = 0; i < incepconv.maxlen; i++) {
         if (i == incepconv.maxlen - 1 && show_points) {
             draw_inside_points(incepconv.tab_convex[i]);
@@ -125,7 +126,8 @@ Point point_on_click(int* stop, int nb_points, Window* win) {
 }
 
 Point rising_sphere(int* stop, int nb_points, Window* win) {
-    static int x, y, init = 0, generated_points = 0;
+    static bool init = false;
+    static int x, y, generated_points = 0;
     static double radius;
 
     if (!init) {
@@ -139,7 +141,7 @@ Point rising_sphere(int* stop, int nb_points, Window* win) {
         x = win->clickable.width / 2;
         y = win->clickable.height / 2;
 
-        init = 1;
+        init = true;
     }
     if (generated_points == nb_points) {
         return create_point(-1, -1);
@@ -152,7 +154,8 @@ Point rising_sphere(int* stop, int nb_points, Window* win) {
 }
 
 Point rising_square(int* stop, int nb_points, Window* win) {
-    static int x, y, init = 0, generated_points = 0;
+    static bool init = false;
+    static int x, y, generated_points = 0;
     static double radius;
 
     if (!init) {
@@ -166,7 +169,7 @@ Point rising_square(int* stop, int nb_points, Window* win) {
         x = win->clickable.width / 2;
         y = win->clickable.height / 2;
 
-        init = 1;
+        init = true;
     }
     if (generated_points == nb_points) {
         return create_point(-1, -1);
@@ -178,49 +181,53 @@ Point rising_square(int* stop, int nb_points, Window* win) {
 }
 
 void draw_outline_points_information(int value, Window* win) {
-    static int width, height, x, y, init = 0;
+    static bool init = false;
+    static int width, height, x, y;
 
     if (!init) {
         MLV_get_size_of_text("Outline points : %3d", &width, &height, 0);
         x = win->information.width * 1/4 - width/2;
         y = win->information.min.y + win->information.height/2 - height/2;
-        init = 1;
+        init = true;
     }
     MLV_draw_text(x, y, "Outline points : %3d", TEXT_COLOR, value);
 }
 
 void draw_inside_points_information(int value, Window* win) {
-    static int width, height, x, y, init = 0;
+    static bool init = false;
+    static int width, height, x, y;
 
     if (!init) {
         MLV_get_size_of_text("Inside points : %3d", &width, &height, 0);
         x = win->information.width * 1/2 - width/2;
         y = win->information.min.y + win->information.height/2 - height/2;
-        init = 1;
+        init = true;
     }
     MLV_draw_text(x, y, "Inside points : %3d", TEXT_COLOR, value);
 }
 
 void draw_total_points_information(int value, Window* win) {
-    static int width, height, x, y, init = 0;
+    static bool init = false;
+    static int width, height, x, y;
 
     if (!init) {
         MLV_get_size_of_text("Total points : %3d", &width, &height, 0);
         x = win->information.width * 3/4 - width/2;
         y = win->information.min.y + win->information.height/2 - height/2;
-        init = 1;
+        init = true;
     }
     MLV_draw_text(x, y, "Total points : %3d", TEXT_COLOR, value);
 }
 
 void draw_hulls_information(int value, Window* win) {
-    static int width, height, x, y, init = 0;
+    static bool init = false;
+    static int width, height, x, y;
 
     if (!init) {
         MLV_get_size_of_text("Number of hulls : %3d", &width, &height, 0);
         x = win->information.width * 1/4 - width/2;
         y = win->information.min.y + win->information.height/2 - height/2;
-        init = 1;
+        init = true;
     }
     MLV_draw_text(x, y, "Number of hulls : %3d", TEXT_COLOR, value);
 }
