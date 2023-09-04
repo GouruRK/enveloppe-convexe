@@ -103,11 +103,41 @@ Convex create_convex(void);
  */
 Array create_array(void);
 
+/**
+ * @brief Create a section object that represent a rectangle.
+ *        The rectangle is composed of two points : the top left corner (xmin, ymin)
+ *        and the bottom right corner (xmax, ymax).
+ * 
+ * @param xmin top left abscissa
+ * @param ymin top left ordinate
+ * @param xmax bottom right abscissa
+ * @param ymax bottom right ordinate
+ * @return Section created section
+ */
 Section create_section(int xmin, int ymin, int xmax, int ymax);
 
-Window create_window(Section information, Section clickable, int width, int height);
+/**
+ * @brief Create a window object that contains window's parameters.
+ *        A window is divided in two sections :
+ *         - the 'clickable' one (where the points are generated),
+ *         - the 'information' one (where information about convex hulls are drawn).
+ * 
+ * @param information section data to draw information
+ * @param clickable section data to generate points
+ * @param width width of the window
+ * @param height height of the window
+ * @return Window created window
+ */
+Window create_window_data(Section information, Section clickable, int width, int height);
 
-Window create_window_data(int width, int height);
+/**
+ * @brief Create a window object that contains window's paramters.
+ * 
+ * @param width with of the window
+ * @param height height of the window
+ * @return Window created window
+ */
+Window create_window(int width, int height);
 
 /**
  * @brief Create a inception convex object for self-contained convex hulls.

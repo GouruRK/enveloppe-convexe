@@ -1,3 +1,13 @@
+/**
+ * @file graphic.h
+ * @author Laborde Quentin & Kies Remy
+ * @brief Contains functions to draw anything on the current window
+ * @date 05-09-2023
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include <MLV/MLV_all.h>
 #include <stdlib.h>
 #include <math.h>
@@ -125,7 +135,7 @@ Point point_on_click(int* stop, int nb_points, Window* win) {
     return point;
 }
 
-Point rising_sphere(int* stop, int nb_points, Window* win) {
+Point rising_circle(int* stop, int nb_points, Window* win) {
     static bool init = false;
     static int x, y, generated_points = 0;
     static double radius;

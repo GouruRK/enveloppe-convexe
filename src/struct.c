@@ -77,7 +77,7 @@ Section create_section(int xmin, int ymin, int xmax, int ymax) {
     return section;
 }
 
-Window create_window(Section information, Section clickable, int width, int height) {
+Window create_window_data(Section information, Section clickable, int width, int height) {
     Window win;
     win.information = information;
     win.clickable = clickable;
@@ -86,10 +86,10 @@ Window create_window(Section information, Section clickable, int width, int heig
     return win;
 }
 
-Window create_window_data(int width, int height) {
+Window create_window(int width, int height) {
     Section information = create_section(0, height - INFORMATION_HEIGHT, width, height);
     Section clickable = create_section(0, 0, width, height - INFORMATION_HEIGHT);
-    return create_window(information, clickable, width, height);
+    return create_window_data(information, clickable, width, height);
 }
 
 void free_vertex(Vertex* vrtx) {

@@ -1,3 +1,13 @@
+/**
+ * @file convexhull.h
+ * @author Laborde Quentin & Kies Remy
+ * @brief Contains function declarations to graphically create convex hulls and self-contained convex hulls
+ * @date 05-09-2023
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef __INIT_CONVEXHULL__
 #define __INIT_CONVEXHULL__
 
@@ -5,9 +15,16 @@
 
 /**
  * @brief Create graphically a simple convex hull.
- *        Point selection is click-based.
+ *        Point selection is determined by the `get_point` function.
  * 
- * @param stop set to '1' whenever the user close the window
+ * @param stop set to '1' whenever the user close the window 
+ * @param nb_points number of points to generate
+ * @param get_point function that give the next point to be added
+ *                  It can be either :
+ *                   - 'point_on_click'
+ *                   - 'rising_circle'
+ *                   - 'rising_square'
+ * @param win window parameters
  */
 void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win);
 
@@ -16,9 +33,16 @@ void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, W
  *        with clicks the first two points.
  * 
  * @param convex point collection of the convex hull object
- * @param stop set to '1' whenvever the suer close the window
- * @return int '1' to continue the process
- *             else '0'
+ * @param stop set to '1' whenvever the suer close the window 
+ * @param nb_points total of points to be generated (not now, but it's used for the `get_point` function)
+ * @param get_point function that give the next point to be added
+ *                  It can be either :
+ *                   - 'point_on_click'
+ *                   - 'rising_circle'
+ *                   - 'rising_square'
+ * @param win window parameters
+ * @return int '0' to stop the processus    
+ *             '1' to continue
  */
 int init_convexhull(Convex* convex, int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win);
 
@@ -27,6 +51,13 @@ int init_convexhull(Convex* convex, int* stop, int nb_points, Point (*get_point)
  *        Point selection is click-based.
  * 
  * @param stop set to '1' whenever the user close the window
+ * @param nb_points number of points to generate
+ * @param get_point function that give the next point to be added
+ *                  It can be either :
+ *                   - 'point_on_click'
+ *                   - 'rising_circle'
+ *                   - 'rising_square'
+ * @param win window parameters
  */
 void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win);
 

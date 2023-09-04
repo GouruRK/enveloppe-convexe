@@ -13,14 +13,14 @@
 
 int main(void) {
     srand(time(NULL));
-    Window win = create_window_data(WIDTH, HEIGHT);
+    Window win = create_window(WIDTH, HEIGHT);
     int stop = 0;
     MLV_execute_at_exit(exit_function, &stop);
     MLV_create_window("ConvexHull", "", WIDTH, HEIGHT);
     MLV_clear_window(MLV_COLOR_WHITE);
     MLV_update_window();
 
-    create_convexhull(&stop, 500, rising_sphere, &win);
+    create_convexhull(&stop, 500, rising_circle, &win);
 
     MLV_free_window();
 }

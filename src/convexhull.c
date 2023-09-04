@@ -1,5 +1,14 @@
-#include <MLV/MLV_all.h>
+/**
+ * @file convexhull.c
+ * @author Laborde Quentin & Kies Remy
+ * @brief Contains functions to graphically create convex hulls and self-contained convex hulls
+ * @date 05-09-2023
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 
+#include <MLV/MLV_all.h>
 
 #include "../include/convexhull.h"
 #include "../include/struct.h"
