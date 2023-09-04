@@ -19,20 +19,36 @@ void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, W
     }
     Array points = create_array();
     Point point;
-    int res;
+    int res, h_pressed = 0, show_points = 1, next_point = 1;
     while (!(*stop)) {
-        point = get_point(stop, nb_points, win);
-        if (*stop || (point.x < 0)) {
+
+        if (next_point) {
+            point = get_point(stop, nb_points, win);
+        }
+        if (*stop) {
             break;
         }
-        res = new_point(&convexhull, &points, point);
-        if (!res) {
-            break;
+        if (point.x < 0) {
+            next_point = 0;
+        } else {
+            res = new_point(&convexhull, &points, point);
+            if (!res) {
+                break;
+            }
+        }
+
+        if (check_key_position(MLV_KEYBOARD_h, MLV_PRESSED) && !h_pressed) {
+            h_pressed = 1;
+            show_points = !show_points;
+        } else if (check_key_position(MLV_KEYBOARD_h, MLV_RELEASED) && h_pressed) {
+            h_pressed = 0;
         }
 
         MLV_clear_window(MLV_COLOR_WHITE);
-        draw_outline_points(convexhull);
-        draw_inside_points(points);
+        draw_outline_points(convexhull, show_points);
+        if (show_points) {
+            draw_inside_points(points);
+        }
         draw_convex_information(convexhull, points, win);
         MLV_update_window();
     }
@@ -59,20 +75,34 @@ void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(in
         return;
     }
     Point point;
-    int res;
+    int res, h_pressed = 0, show_points = 1, next_point = 1;
     while (!(*stop)) {
-        point = get_point(stop, nb_points, win);
-        if (*stop || point.x < 0) {
+        if (next_point) {
+            point = get_point(stop, nb_points, win);
+        }
+        if (*stop) {
             break;
         }
-        incepconv.total_points++;
-        res = new_point_rec(&incepconv, 0, point);
-        if (!res) {
-            break;
+        if (point.x < 0) {
+            next_point = 0;
+        } else {
+            incepconv.total_points++;
+            res = new_point_rec(&incepconv, 0, point);
+            if (!res) {
+                break;
+            }
+        }
+
+        if (check_key_position(MLV_KEYBOARD_h, MLV_PRESSED) && !h_pressed) {
+            h_pressed = 1;
+            show_points = !show_points;
+        } else if (check_key_position(MLV_KEYBOARD_h, MLV_RELEASED) && h_pressed) {
+            h_pressed = 0;
         }
 
         MLV_clear_window(MLV_COLOR_WHITE);
-        draw_inception_convex(incepconv);
+        
+        draw_inception_convex(incepconv, show_points);
         draw_inception_convex_information(incepconv, win);
         MLV_update_window();
     }

@@ -15,6 +15,10 @@ int check_mouse_position(MLV_Mouse_button button, MLV_Button_state expected) {
     return MLV_get_mouse_button_state(button) == expected;
 }
 
+int check_key_position(MLV_Keyboard_button key, MLV_Button_state expected) {
+    return MLV_get_keyboard_state(key) == expected;
+}
+
 void draw_inside_point(Point point) {
     draw_point(point, INSIDE_POINT_COLOR);
 }
@@ -47,24 +51,28 @@ void draw_inside_points(Array points) {
     }
 }
 
-void draw_outline_points(Array points) {
+void draw_outline_points(Array points, int show_points) {
    Polygon polygon = points.poly;
     if (polygon) {
         Vertex* head = polygon;
         Vertex* prev = polygon;
         polygon = polygon->next;
         while (head != polygon) {
-            draw_outline_point(polygon->point);
+            if (show_points) {
+                draw_outline_point(polygon->point);
+            }
             draw_line(prev->point, polygon->point);
             prev = polygon;
             polygon = polygon->next;
         }
-        draw_outline_point(polygon->point);
+        if (show_points) {
+            draw_outline_point(polygon->point);
+        }
         draw_line(prev->point, polygon->point);
     }
 }
 
-void draw_filled_convex(Convex convex, MLV_Color color) {
+void draw_filled_convex(Convex convex, MLV_Color color, int show_points) {
     Polygon polygon = convex.poly;
     if (polygon) {
         Vertex* head = polygon;
@@ -72,23 +80,27 @@ void draw_filled_convex(Convex convex, MLV_Color color) {
         polygon = polygon->next;
         while (head != polygon) {
             draw_surface(head->point, prev->point, polygon->point, color);
-            draw_outline_point(polygon->point);
+            if (show_points) {
+                draw_outline_point(polygon->point);
+            }
             draw_line(prev->point, polygon->point);
             prev = polygon;
             polygon = polygon->next;
         }
         draw_surface(head->point, prev->point, polygon->point, color);
-        draw_outline_point(polygon->point);
+        if (show_points) {
+            draw_outline_point(polygon->point);
+        }
         draw_line(prev->point, polygon->point);
     }
 }
 
-void draw_inception_convex(InceptionConvex incepconv) {
+void draw_inception_convex(InceptionConvex incepconv, int show_points) {
     for (int i = 0; i < incepconv.maxlen; i++) {
-        if (i == incepconv.maxlen - 1) {
+        if (i == incepconv.maxlen - 1 && show_points) {
             draw_inside_points(incepconv.tab_convex[i]);
         } else {
-            draw_filled_convex(incepconv.tab_convex[i], TAB_COLOR[i % TAB_COLOR_SIZE]);
+            draw_filled_convex(incepconv.tab_convex[i], TAB_COLOR[i % TAB_COLOR_SIZE], show_points);
         }
     }
 }

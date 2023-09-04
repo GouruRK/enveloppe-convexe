@@ -22,9 +22,5 @@ int main(void) {
 
     create_convexhull(&stop, 500, rising_sphere, &win);
 
-    while (!(stop)) {
-        continue;
-    }
-
     MLV_free_window();
 }
