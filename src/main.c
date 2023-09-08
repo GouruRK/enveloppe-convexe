@@ -15,11 +15,11 @@ int main(void) {
     int stop = 0;
     MLV_execute_at_exit(exit_function, &stop);
     MLV_create_window("ConvexHull", "", WIDTH, HEIGHT);
-    MLV_clear_window(MLV_COLOR_WHITE);
+    MLV_clear_window(MLV_COLOR_LIGHT_GRAY);
     // MLV_update_window();
 
     // create_convexhull(&stop, 500, rising_sphere, &win);
     menu();
-    MLV_wait_seconds(5);
+    // MLV_wait_seconds(5);
     MLV_free_window();
 }
