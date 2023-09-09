@@ -5,7 +5,7 @@
 
 /**
  * @brief Check if two points are equals based on their coordinates.
- * 
+ *
  * @param a first point
  * @param b second point
  * @return int '1' if their coordinates are equal
@@ -14,5 +14,7 @@
 int equals_points(Point a, Point b);
 
 int point_in_section(Point point, Section section);
+
+int true_modulo(int a, int b);
 
 #endif
