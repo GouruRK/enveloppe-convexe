@@ -10,9 +10,10 @@
 #define WIDTH 600
 #define HEIGHT 600
 #define TIME_INTERVAL 100
-#define SIZE_VALUE 3
+#define SIZE_GEN 2
+#define SIZE_VALUE 4
 #define SIZE_SHAPE 4
-#define SIZE_ARROW 14
+#define SIZE_ARROW 18
 
 typedef enum {
     SQUARE,
