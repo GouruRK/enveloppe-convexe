@@ -41,7 +41,13 @@ typedef struct {
     int height;
 } Window;
 
-typedef Point function(int* stop, int nb_points, Window* win);
+typedef struct {
+    int radius;
+    int nb_point;
+    int factor;
+} Parameters;
+
+typedef Point draw_function(int* stop, Parameters param, Window* win);
 
 /**
  * @brief Create a point object.

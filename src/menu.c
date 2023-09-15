@@ -108,21 +108,30 @@ char* max_len(char** tab, int length) {
     return result;
 }
 
-Args menu(void) {
+Args menu(int* stop) {
     int mid_x = WIDTH / 2;
-    int n1 = 70, n2 = 100, n3 = 130, n_4 = HEIGHT - 190, n_3 = HEIGHT - 160, n_2 = HEIGHT - 130, n_1 = HEIGHT - 100;
+    int n1 = 50,
+        n2 = 50 + BUT_MARGIN,
+        n_1 = HEIGHT - 50,
+        n_2 = n_1 - BUT_MARGIN,
+        n_3 = n_2 - BUT_MARGIN,
+        n_4 = n_3 - BUT_MARGIN,
+        n_5 = n_4 - 2 * BUT_MARGIN,
+        n_6 = n_5 - BUT_MARGIN;
+
     MLV_Color tab_color[2] = {MLV_COLOR_RED, MLV_COLOR_DARK_GREEN};
 
-    char *s1 = "Window width",
-         *s2 = "Window height",
-         *s3 = "Radius",
-         *s4 = "Factor",
-         *s5 = "Inception";
+    char *ww = "Window width",
+         *wh = "Window height",
 
-    char* tab_gen[SIZE_GEN] = {
-        "Shape",
-        "Click",
-    };
+         *inc = "Inception",
+         *gc = "Clicks",
+         *gs = "Shapes",
+
+         *sp = "Points",
+         *sr = "Radius",
+         *sf = "Factor";
+
     char* tab_shape[SIZE_SHAPE] = {
         "Circle",
         "Ellipse",
@@ -130,52 +139,62 @@ Args menu(void) {
         "Rectangle",
     };
 
-    int w_s1, w_s2, w_s3, w_s4, w_s5, w_shape, w_gen;
-    MLV_get_size_of_text(s1, &w_s1, NULL);
-    MLV_get_size_of_text(s2, &w_s2, NULL);
-    MLV_get_size_of_text(s3, &w_s3, NULL);
-    MLV_get_size_of_text(s4, &w_s4, NULL);
-    MLV_get_size_of_text(s5, &w_s5, NULL);
+    int w_ww, w_wh, w_inc, w_gc, w_grah, w_shape;
+    MLV_get_size_of_text(ww, &w_ww, NULL);
+    MLV_get_size_of_text(wh, &w_wh, NULL);
+
+    MLV_get_size_of_text(inc, &w_inc, NULL);
+    MLV_get_size_of_text(gc, &w_gc, NULL);
+    MLV_get_size_of_text(sr, &w_grah, NULL);
     MLV_get_size_of_text(max_len(tab_shape, SIZE_SHAPE), &w_shape, NULL);
-    MLV_get_size_of_text(max_len(tab_gen, SIZE_GEN), &w_gen, NULL);
 
     Button tab_but[SIZE_VALUE] = {
-        create_button(mid_x - w_s1 / 2, n_4, s1, WIDTH),
-        create_button(mid_x - w_s2 / 2, n_3, s2, HEIGHT),
-        create_button(mid_x - w_s3 / 2, n_2, s3, MIN(WIDTH, WIDTH) / 2),
-        create_button(mid_x - w_s4 / 2, n_1, s4, 1),
+        create_button(mid_x - w_ww / 2, n_6, ww, WIDTH),
+        create_button(mid_x - w_wh / 2, n_5, wh, HEIGHT),
+        create_button(mid_x - w_grah / 2, n_3, sp, 100),
+        create_button(mid_x - w_grah / 2, n_2, sr, MIN(WIDTH, WIDTH) / 2),
+        create_button(mid_x - w_grah / 2, n_1, sf, 1),
     };
 
-    Button gen = create_button(mid_x - w_gen / 2, n1, tab_gen[0], 0);
-    Button shape = create_button(mid_x - w_shape / 2, n2, tab_shape[3], 3);
-    Button incep = create_button(mid_x - w_s5 / 2, n3, s5, 0);
+    Button gen_c = create_button(mid_x - w_gc - MARGIN / 2, n1, gc, 0);
+    Button gen_s = create_button(mid_x + MARGIN / 2, n1, gs, 1);
+    Button shape = create_button(mid_x - w_grah / 2, n_4, tab_shape[3], 3);
+    Button incep = create_button(mid_x - w_inc / 2, n2, inc, 0);
 
     Button tab_but_arrow[SIZE_ARROW] = {
-        create_button(tab_but[0].x - 1.2 * MARGIN, n_4, "<", 10),
-        create_button(tab_but[0].x - 2.5 * MARGIN, n_4, "<<", 100),
-        create_button(tab_but[0].x + tab_but[0].width + 2 * MARGIN, n_4, ">", 10),
-        create_button(tab_but[0].x + tab_but[0].width + 3 * MARGIN, n_4, ">>", 100),
-        create_button(tab_but[1].x - 1.2 * MARGIN, n_3, "<", 10),
-        create_button(tab_but[1].x - 2.5 * MARGIN, n_3, "<<", 100),
-        create_button(tab_but[1].x + tab_but[1].width + 2 * MARGIN, n_3, ">", 10),
-        create_button(tab_but[1].x + tab_but[1].width + 3 * MARGIN, n_3, ">>", 100),
+        create_button(tab_but[0].x - 1.2 * MARGIN, n_6, "<", 10),
+        create_button(tab_but[0].x - 2.5 * MARGIN, n_6, "<<", 100),
+        create_button(tab_but[0].x + tab_but[0].width + 2 * MARGIN, n_6, ">", 10),
+        create_button(tab_but[0].x + tab_but[0].width + 3 * MARGIN, n_6, ">>", 100),
+        create_button(tab_but[1].x - 1.2 * MARGIN, n_5, "<", 10),
+        create_button(tab_but[1].x - 2.5 * MARGIN, n_5, "<<", 100),
+        create_button(tab_but[1].x + tab_but[1].width + 2 * MARGIN, n_5, ">", 10),
+        create_button(tab_but[1].x + tab_but[1].width + 3 * MARGIN, n_5, ">>", 100),
         create_button(tab_but[2].x - 1.2 * MARGIN, n_2, "<", 10),
         create_button(tab_but[2].x - 2.5 * MARGIN, n_2, "<<", 100),
         create_button(tab_but[2].x + tab_but[2].width + 2 * MARGIN, n_2, ">", 10),
         create_button(tab_but[2].x + tab_but[2].width + 3 * MARGIN, n_2, ">>", 100),
-        create_button(tab_but[3].x - 1.2 * MARGIN, n_1, "<", 1),
-        create_button(tab_but[3].x + tab_but[3].width + 2 * MARGIN, n_1, ">", 1),
 
-        create_button(gen.x - MARGIN, n1, "<", 10),
-        create_button(gen.x + w_gen + MARGIN / 2, n1, ">", 10),
-        create_button(shape.x - MARGIN, n2, "<", 10),
-        create_button(shape.x + w_shape + MARGIN / 2, n2, ">", 10),
+        create_button(tab_but[3].x - 1.2 * MARGIN, n_3, "<", 10),
+        create_button(tab_but[3].x - 2.5 * MARGIN, n_3, "<<", 100),
+        create_button(tab_but[3].x + tab_but[2].width + 2 * MARGIN, n_3, ">", 10),
+        create_button(tab_but[3].x + tab_but[2].width + 3 * MARGIN, n_3, ">>", 100),
+
+        create_button(tab_but[4].x - 1.2 * MARGIN, n_1, "<", 1),
+        create_button(tab_but[4].x + tab_but[3].width + 2 * MARGIN, n_1, ">", 1),
+
+        create_button(shape.x - 1.2 * MARGIN, n_4, "<", 10),
+        create_button(shape.x + w_shape + MARGIN, n_4, ">", 10),
     };
 
     Button next_phase = create_button(WIDTH - 150, HEIGHT - 30, "Launch ConvexHull", 0);
 
+    MLV_draw_text(MARGIN, n1, "Generation Parameters : ", BLACK);
+    MLV_draw_text(MARGIN, n_6, "Window Parameters : ", BLACK);
+    MLV_draw_text(MARGIN, n_4, "Shape Parameters : ", BLACK);
     draw_button(shape, BLACK, BLACK);
-    draw_button(gen, BLACK, BLACK);
+    draw_button(gen_c, tab_color[gen_c.value], tab_color[gen_c.value]);
+    draw_button(gen_s, tab_color[gen_s.value], tab_color[gen_s.value]);
     draw_button(incep, tab_color[incep.value], tab_color[incep.value]);
     draw_tab_button_value(tab_but, SIZE_VALUE, MLV_COLOR_DARK_BLUE, BLACK);
     draw_tab_button(tab_but_arrow, SIZE_ARROW, BLACK, BLACK);
@@ -187,7 +206,7 @@ Args menu(void) {
     MLV_Button_state state;
     int x, y;
 
-    while (true) {
+    while (!(*stop)) {
         ev = MLV_wait_event_or_milliseconds(&touche, NULL, NULL, NULL, NULL, &x, &y, &mouse, &state, TIME_INTERVAL);
         if (ev == MLV_MOUSE_BUTTON && state == MLV_PRESSED && onclick_button(x, y, next_phase)) {
             break;
@@ -197,11 +216,18 @@ Args menu(void) {
                 erase_button(incep, MLV_COLOR_LIGHT_GRAY);
                 incep.value = 1 - incep.value;
                 draw_button(incep, tab_color[incep.value], tab_color[incep.value]);
+            } else if ((onclick_button(x, y, gen_c) && !gen_c.value) ||
+                       (onclick_button(x, y, gen_s) && !gen_s.value)) {
+                erase_button(gen_c, MLV_COLOR_LIGHT_GRAY);
+                erase_button(gen_s, MLV_COLOR_LIGHT_GRAY);
+                gen_c.value = 1 - gen_c.value;
+                gen_s.value = 1 - gen_s.value;
+                draw_button(gen_c, tab_color[gen_c.value], tab_color[gen_c.value]);
+                draw_button(gen_s, tab_color[gen_s.value], tab_color[gen_s.value]);
             }
-
             Button* result = onclick_tab_button(x, y, tab_but_arrow, SIZE_ARROW);
             if (result) {
-                if (result->y == n2) {
+                if (result->y == n_3) {
                     erase_button(shape, MLV_COLOR_LIGHT_GRAY);
                     if (result->text[0] == '<') {
                         shape.value = true_modulo(shape.value - 1, SIZE_SHAPE);
@@ -211,13 +237,6 @@ Args menu(void) {
                         shape.text = tab_shape[shape.value];
                     }
                     draw_button(shape, BLACK, BLACK);
-
-                } else if (result->y == n1) {
-                    erase_button(gen, MLV_COLOR_LIGHT_GRAY);
-                    gen.value = 1 - gen.value;
-                    gen.text = tab_gen[gen.value];
-                    draw_button(gen, BLACK, BLACK);
-
                 } else {
                     for (int i = 0; i < SIZE_ARROW; i++) {
                         if ((tab_but_arrow[i].y == result->y)) {
@@ -240,7 +259,8 @@ Args menu(void) {
         .w_width = tab_but[0].value,
         .w_height = tab_but[1].value,
         .radius = tab_but[2].value,
-        .factor = tab_but[3].value,
+        .nb_point = tab_but[3].value,
+        .factor = tab_but[4].value,
     };
     return args;
 }

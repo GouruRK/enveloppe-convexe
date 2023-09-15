@@ -8,12 +8,12 @@
 #define BORDER 5
 #define MARGIN 25
 #define WIDTH 600
-#define HEIGHT 600
+#define HEIGHT 350
+#define BUT_MARGIN 30
 #define TIME_INTERVAL 100
-#define SIZE_GEN 2
-#define SIZE_VALUE 4
+#define SIZE_VALUE 5
 #define SIZE_SHAPE 4
-#define SIZE_ARROW 18
+#define SIZE_ARROW 20
 
 typedef enum {
     SQUARE,
@@ -34,6 +34,7 @@ typedef struct {
 typedef struct {
     int w_width;
     int w_height;
+    int nb_point;
     int radius;
     int factor;
 } Args;
@@ -46,6 +47,6 @@ void draw_tab_button(Button* tab, int length, MLV_Color text_color,
                      MLV_Color border_color);
 void draw_tab_button_value(Button* tab, int length, MLV_Color text_color,
                            MLV_Color border_color);
-Args menu(void);
+Args menu(int* stop);
 
 #endif

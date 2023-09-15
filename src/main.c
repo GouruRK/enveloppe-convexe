@@ -19,7 +19,7 @@ int main(void) {
     // MLV_update_window();
 
     // create_convexhull(&stop, 500, rising_sphere, &win);
-    menu();
+    menu(&stop);
     // MLV_wait_seconds(5);
     MLV_free_window();
 }
