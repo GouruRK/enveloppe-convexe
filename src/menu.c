@@ -21,6 +21,19 @@ Button create_button(int x, int y, char* text, int value) {
     return but;
 }
 
+void draw_button(Button but, MLV_Color text_color,
+                 MLV_Color border_color) {
+    MLV_draw_text(but.x, but.y,
+                  but.text,
+                  text_color);
+
+    MLV_draw_rectangle(but.x - BORDER, but.y - BORDER,
+                       but.width + 2 * BORDER, but.height + BORDER,
+                       border_color);
+
+    MLV_update_window();
+}
+
 void draw_button_value(Button but, MLV_Color text_color,
                        MLV_Color border_color) {
     int add_x;
@@ -38,6 +51,14 @@ void draw_button_value(Button but, MLV_Color text_color,
     MLV_update_window();
 }
 
+void erase_button(Button but, MLV_Color border_color) {
+    MLV_draw_filled_rectangle(but.x - BORDER, but.y - BORDER,
+                              but.width + 2 * BORDER, but.height + BORDER,
+                              border_color);
+
+    MLV_update_window();
+}
+
 void erase_button_value(Button but, MLV_Color border_color) {
     int add_x;
     MLV_get_size_of_text(" %d", &add_x, NULL, but.value);
@@ -49,38 +70,17 @@ void erase_button_value(Button but, MLV_Color border_color) {
     MLV_update_window();
 }
 
-void draw_button(Button but, MLV_Color text_color,
-                 MLV_Color border_color) {
-    MLV_draw_text(but.x, but.y,
-                  but.text,
-                  text_color);
-
-    MLV_draw_rectangle(but.x - BORDER, but.y - BORDER,
-                       but.width + 2 * BORDER, but.height + BORDER,
-                       border_color);
-
-    MLV_update_window();
-}
-
-void erase_button(Button but, MLV_Color border_color) {
-    MLV_draw_filled_rectangle(but.x - BORDER, but.y - BORDER,
-                              but.width + 2 * BORDER, but.height + BORDER,
-                              border_color);
-
-    MLV_update_window();
-}
-
-void draw_tab_button(Button* tab, int length, MLV_Color text_color,
-                     MLV_Color border_color) {
+void draw_array_button(Button* arr, int length, MLV_Color text_color,
+                       MLV_Color border_color) {
     for (int i = 0; i < length; i++) {
-        draw_button(tab[i], text_color, border_color);
+        draw_button(arr[i], text_color, border_color);
     }
 }
 
-void draw_tab_button_value(Button* tab, int length, MLV_Color text_color,
-                           MLV_Color border_color) {
+void draw_array_button_value(Button* arr, int length, MLV_Color text_color,
+                             MLV_Color border_color) {
     for (int i = 0; i < length; i++) {
-        draw_button_value(tab[i], text_color, border_color);
+        draw_button_value(arr[i], text_color, border_color);
     }
 }
 
@@ -89,20 +89,20 @@ bool onclick_button(int user_x, int user_y, Button but) {
             (user_y >= but.y - BORDER && user_y <= but.y + but.height + BORDER));
 }
 
-Button* onclick_tab_button(int user_x, int user_y, Button* tab_but, int length) {
+Button* onclick_array_button(int user_x, int user_y, Button* arr_but, int length) {
     for (int i = 0; i < length; i++) {
-        if (onclick_button(user_x, user_y, tab_but[i])) {
-            return &tab_but[i];
+        if (onclick_button(user_x, user_y, arr_but[i])) {
+            return &arr_but[i];
         }
     }
     return NULL;
 }
 
-char* max_len(char** tab, int length) {
-    char* result = tab[0];
+char* max_len(char** arr, int length) {
+    char* result = arr[0];
     for (int i = 1; i < length; i++) {
-        if (strlen(result) < strlen(tab[i])) {
-            result = tab[i];
+        if (strlen(result) < strlen(arr[i])) {
+            result = arr[i];
         }
     }
     return result;
@@ -170,15 +170,16 @@ Args menu(int* stop) {
         create_button(tab_but[1].x - 2.5 * MARGIN, n_5, "<<", 100),
         create_button(tab_but[1].x + tab_but[1].width + 2 * MARGIN, n_5, ">", 10),
         create_button(tab_but[1].x + tab_but[1].width + 3 * MARGIN, n_5, ">>", 100),
-        create_button(tab_but[2].x - 1.2 * MARGIN, n_2, "<", 10),
-        create_button(tab_but[2].x - 2.5 * MARGIN, n_2, "<<", 100),
-        create_button(tab_but[2].x + tab_but[2].width + 2 * MARGIN, n_2, ">", 10),
-        create_button(tab_but[2].x + tab_but[2].width + 3 * MARGIN, n_2, ">>", 100),
 
         create_button(tab_but[3].x - 1.2 * MARGIN, n_3, "<", 10),
         create_button(tab_but[3].x - 2.5 * MARGIN, n_3, "<<", 100),
         create_button(tab_but[3].x + tab_but[2].width + 2 * MARGIN, n_3, ">", 10),
         create_button(tab_but[3].x + tab_but[2].width + 3 * MARGIN, n_3, ">>", 100),
+
+        create_button(tab_but[2].x - 1.2 * MARGIN, n_2, "<", 10),
+        create_button(tab_but[2].x - 2.5 * MARGIN, n_2, "<<", 100),
+        create_button(tab_but[2].x + tab_but[2].width + 2 * MARGIN, n_2, ">", 10),
+        create_button(tab_but[2].x + tab_but[2].width + 3 * MARGIN, n_2, ">>", 100),
 
         create_button(tab_but[4].x - 1.2 * MARGIN, n_1, "<", 1),
         create_button(tab_but[4].x + tab_but[3].width + 2 * MARGIN, n_1, ">", 1),
@@ -196,8 +197,8 @@ Args menu(int* stop) {
     draw_button(gen_c, tab_color[gen_c.value], tab_color[gen_c.value]);
     draw_button(gen_s, tab_color[gen_s.value], tab_color[gen_s.value]);
     draw_button(incep, tab_color[incep.value], tab_color[incep.value]);
-    draw_tab_button_value(tab_but, SIZE_VALUE, MLV_COLOR_DARK_BLUE, BLACK);
-    draw_tab_button(tab_but_arrow, SIZE_ARROW, BLACK, BLACK);
+    draw_array_button_value(tab_but, SIZE_VALUE, MLV_COLOR_DARK_BLUE, BLACK);
+    draw_array_button(tab_but_arrow, SIZE_ARROW, BLACK, BLACK);
     draw_button(next_phase, MLV_COLOR_DARK_GREEN, MLV_COLOR_DARK_GREEN);
 
     MLV_Event ev = MLV_NONE;
@@ -225,9 +226,9 @@ Args menu(int* stop) {
                 draw_button(gen_c, tab_color[gen_c.value], tab_color[gen_c.value]);
                 draw_button(gen_s, tab_color[gen_s.value], tab_color[gen_s.value]);
             }
-            Button* result = onclick_tab_button(x, y, tab_but_arrow, SIZE_ARROW);
+            Button* result = onclick_array_button(x, y, tab_but_arrow, SIZE_ARROW);
             if (result) {
-                if (result->y == n_3) {
+                if (result->y == n_4) {
                     erase_button(shape, MLV_COLOR_LIGHT_GRAY);
                     if (result->text[0] == '<') {
                         shape.value = true_modulo(shape.value - 1, SIZE_SHAPE);
