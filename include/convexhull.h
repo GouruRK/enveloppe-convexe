@@ -26,7 +26,7 @@
  *                   - 'rising_square'
  * @param win window parameters
  */
-void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win);
+void create_convexhull(int* stop, Parameters param, Point (*get_point)(int*, Parameters, Window*), Window* win);
 
 /**
  * @brief Initiate graphically a simple convex hull by collecting 
@@ -44,7 +44,7 @@ void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, W
  * @return int '0' to stop the processus    
  *             '1' to continue
  */
-int init_convexhull(Convex* convex, int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win);
+int init_convexhull(Convex* convex, int* stop, Parameters param, Point (*get_point)(int*, Parameters, Window*), Window* win);
 
 /**
  * @brief Create graphically a self-contained convex hull.
@@ -59,7 +59,7 @@ int init_convexhull(Convex* convex, int* stop, int nb_points, Point (*get_point)
  *                   - 'rising_square'
  * @param win window parameters
  */
-void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win);
+void create_inception_convexhull(int* stop, Parameters param, Point (*get_point)(int*, Parameters, Window*), Window* win);
 
 /**
  * @brief Determine if a point is on the convex hull outline or inside the hull.

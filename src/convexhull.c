@@ -16,11 +16,12 @@
 #include "../include/triangle.h"
 #include "../include/graphic.h"
 
-void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win) {
+void create_convexhull(int* stop, Parameters param, Point (*get_point)(int*, Parameters, Window*), Window* win) {
+    MLV_clear_window(MLV_COLOR_WHITE);
     draw_raw_convex_information(0, 0, win);
     MLV_update_window();
     Convex convexhull = create_convex();
-    int err = init_convexhull(&convexhull, stop, nb_points, get_point, win);
+    int err = init_convexhull(&convexhull, stop, param, get_point, win);
     if (!err) {
         return;
     }
@@ -29,19 +30,21 @@ void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, W
     bool h_pressed = false, show_points = true, next_point = true;
     int res;
     while (!(*stop)) {
-
         if (next_point) {
-            point = get_point(stop, nb_points, win);
+            point = get_point(stop, param, win);
         }
         if (*stop) {
             break;
         }
-        if (point.x < 0) {
-            next_point = false;
-        } else {
-            res = new_point(&convexhull, &points, point);
-            if (!res) {
-                break;
+        
+        if (next_point) {
+            if (point.x < 0) {
+                next_point = 0;
+            } else {
+                res = new_point(&convexhull, &points, point);
+                if (!res) {
+                    break;
+                }
             }
         }
 
@@ -64,18 +67,19 @@ void create_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, W
     free_convex(&convexhull);
 }
 
-void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win) {
+void create_inception_convexhull(int* stop, Parameters param, Point (*get_point)(int*, Parameters, Window*), Window* win) {
+    MLV_clear_window(MLV_COLOR_WHITE);
     draw_raw_inception_convex_information(0, 0, win);
     MLV_update_window();
 
     int nb_hulls;
-    if (nb_points < 0) {
+    if (param.nb_point < 0) {
         nb_hulls = 30;
     } else {
-        if (nb_points < 100) {
-            nb_hulls = nb_points / 2;    
+        if (param.nb_point <= 100) {
+            nb_hulls = param.nb_point / 2;    
         } else {
-            nb_hulls = nb_points / 10;
+            nb_hulls = param.nb_point / 8;
         }
     }
     InceptionConvex incepconv = create_inception_convex(nb_hulls);
@@ -87,7 +91,7 @@ void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(in
     int res;
     while (!(*stop)) {
         if (next_point) {
-            point = get_point(stop, nb_points, win);
+            point = get_point(stop, param, win);
         }
         if (*stop) {
             break;
@@ -118,15 +122,15 @@ void create_inception_convexhull(int* stop, int nb_points, Point (*get_point)(in
     free_inception_convex(&incepconv);
 }
 
-int init_convexhull(Convex* convex, int* stop, int nb_points, Point (*get_point)(int*, int, Window*), Window* win) {
+int init_convexhull(Convex* convex, int* stop, Parameters param, Point (*get_point)(int*, Parameters, Window*), Window* win) {
     Point p0, p1;
-    p0 = get_point(stop, nb_points, win);
+    p0 = get_point(stop, param, win);
     if (*stop || p0.x < 0) {
         return 0;
     }
     draw_outline_point(p0);
     MLV_update_window();
-    p1 = get_point(stop, nb_points, win);
+    p1 = get_point(stop, param, win);
     if (*stop || p1.x < 0) {
         return 0;
     }

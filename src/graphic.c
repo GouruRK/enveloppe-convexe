@@ -116,7 +116,7 @@ void draw_inception_convex(InceptionConvex incepconv, bool show_points) {
     }
 }
 
-Point point_on_click(int* stop, int nb_points, Window* win) {
+Point point_on_click(int* stop, Parameters param, Window* win) {
     int x, y, mouse_pressed = 1;
     Point point;
 
@@ -135,59 +135,50 @@ Point point_on_click(int* stop, int nb_points, Window* win) {
     return point;
 }
 
-Point rising_circle(int* stop, int nb_points, Window* win) {
-    static bool init = false;
-    static int x, y, generated_points = 0;
-    static double radius;
+Point rising_circle(int* stop, Parameters param, Window* win) {
+    static int x, y, init = 0, generated_points = 0;
 
     if (!init) {
-        if (nb_points < 0) {
+        if (param.nb_point < 0) {
             return create_point(-1, -1);
         }
-
-        // radius = radius_max / nb_points
-        radius = (win->clickable.width / 2 - 30) / ((float)nb_points);
 
         x = win->clickable.width / 2;
         y = win->clickable.height / 2;
 
         init = true;
     }
-    if (generated_points == nb_points) {
+    if (generated_points == param.nb_point) {
         return create_point(-1, -1);
     }
     MLV_wait_milliseconds(10);
     generated_points++;
-    int random = rand();
-    return create_point(x + radius * generated_points * cos(random),
-                        y + radius * generated_points * sin(random));
+    double theta = uniform() * 2 * PI;
+    double radius = (param.radius / 2) * sqrt(uniform()); 
+    return create_point(x + radius * (generated_points / (double)param.nb_point) * cos(theta) * (1 / param.factor),
+                        y + radius * (generated_points / (double)param.nb_point) * sin(theta));
 }
 
-Point rising_square(int* stop, int nb_points, Window* win) {
-    static bool init = false;
-    static int x, y, generated_points = 0;
-    static double radius;
+Point rising_square(int* stop, Parameters param, Window* win) {
+    static int x, y, init = 0, generated_points = 0;
 
     if (!init) {
-        if (nb_points < 0) {
+        if (param.nb_point < 0) {
             return create_point(-1, -1);
         }
-
-        // radius = radius_max / nb_points
-        radius = (win->clickable.width / 2 - 30) / ((float)nb_points);
 
         x = win->clickable.width / 2;
         y = win->clickable.height / 2;
 
         init = true;
     }
-    if (generated_points == nb_points) {
+    if (generated_points == param.nb_point) {
         return create_point(-1, -1);
     }
     // MLV_wait_milliseconds(10);
-    generated_points++;
-    return create_point(x + radius * generated_points * cos(rand()),
-                        y + radius * generated_points * sin(rand()));
+    double distance = (((double)(param.radius) / (double)param.nb_point) * ++generated_points) / 2;
+    return create_point(x + (float)random_int(-distance, distance) * (1 / param.factor),
+                        y + random_int(-distance, distance));
 }
 
 void draw_outline_points_information(int value, Window* win) {

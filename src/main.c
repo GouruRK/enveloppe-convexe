@@ -1,26 +1,39 @@
 #include <MLV/MLV_all.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
+#include "../include/convexhull.h"
 #include "../include/graphic.h"
 #include "../include/list.h"
+#include "../include/menu.h"
 #include "../include/struct.h"
 #include "../include/tools.h"
-#include "../include/convexhull.h"
-
-#define WIDTH 600
-#define HEIGHT 600
 
 int main(void) {
     srand(time(NULL));
-    Window win = create_window(WIDTH, HEIGHT);
     int stop = 0;
     MLV_execute_at_exit(exit_function, &stop);
     MLV_create_window("ConvexHull", "", WIDTH, HEIGHT);
-    MLV_clear_window(MLV_COLOR_WHITE);
-    MLV_update_window();
+    MLV_clear_window(MLV_COLOR_LIGHT_GRAY);
+    
+    Args args = menu(&stop);
+    if (stop) {
+        MLV_free_window();
+        return 0;
+    }
 
-    create_convexhull(&stop, 500, rising_circle, &win);
+    MLV_change_window_size(args.w_width, args.w_height);
+    Window win = create_window(args.w_width, args.w_height);
+
+    Parameters param = {
+        .factor = args.factor,
+        .nb_point = args.nb_point,
+        .radius = args.radius
+    };
+
+    args.convex(&stop, param, args.get_point, &win);
 
     MLV_free_window();
+    return 0;
 }

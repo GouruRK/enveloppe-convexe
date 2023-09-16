@@ -16,7 +16,8 @@
 
 #include "struct.h"
 
-#define RADIUS 5 
+#define RADIUS 4
+#define PI 3.14159265359
 
 #define INSIDE_POINT_COLOR MLV_COLOR_RED
 #define ONLINE_POINT_COLOR MLV_COLOR_BLUE
@@ -146,7 +147,7 @@ void draw_inception_convex(InceptionConvex incepconv, bool show_points);
  * @param win window parameters
  * @return Point point that contains the mouse's coordinates when the user click on the window
  */
-Point point_on_click(int* stop, int nb_points, Window* win);
+Point point_on_click(int* stop, Parameters param, Window* win);
 
 /**
  * @brief Randomly generates points that form a rising circle.
@@ -159,7 +160,7 @@ Point point_on_click(int* stop, int nb_points, Window* win);
  * @param win window parameters
  * @return Point new point
  */
-Point rising_circle(int* stop, int nb_points, Window* win);
+Point rising_circle(int* stop, Parameters param, Window* win);
 
 /**
  * @brief Randomly generates points that form a rising square.
@@ -172,7 +173,7 @@ Point rising_circle(int* stop, int nb_points, Window* win);
  * @param win window parameters
  * @return Point new point
  */
-Point rising_square(int* stop, int nb_points, Window* win);
+Point rising_square(int* stop, Parameters param, Window* win);
 
 /**
  * @brief Draw on screen the number of outline points.
