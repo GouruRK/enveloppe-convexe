@@ -44,7 +44,7 @@ typedef struct {
 typedef struct {
     int radius;
     int nb_point;
-    int factor;
+    float factor;
 } Parameters;
 
 typedef Point draw_function(int* stop, Parameters param, Window* win);

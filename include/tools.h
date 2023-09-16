@@ -3,6 +3,8 @@
 
 #include "struct.h"
 
+int random_int(int min, int max);
+
 /**
  * @brief Check if two points are equals based on their coordinates.
  *

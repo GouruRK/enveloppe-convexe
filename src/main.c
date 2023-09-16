@@ -1,6 +1,7 @@
 #include <MLV/MLV_all.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
 #include "../include/convexhull.h"
 #include "../include/graphic.h"
@@ -11,15 +12,28 @@
 
 int main(void) {
     srand(time(NULL));
-    Window win = create_window_data(WIDTH, HEIGHT);
     int stop = 0;
     MLV_execute_at_exit(exit_function, &stop);
     MLV_create_window("ConvexHull", "", WIDTH, HEIGHT);
     MLV_clear_window(MLV_COLOR_LIGHT_GRAY);
-    // MLV_update_window();
+    
+    Args args = menu(&stop);
+    if (stop) {
+        MLV_free_window();
+        return 0;
+    }
 
-    // create_convexhull(&stop, 500, rising_sphere, &win);
-    menu(&stop);
-    // MLV_wait_seconds(5);
+    MLV_change_window_size(args.w_width, args.w_height);
+    Window win = create_window_data(args.w_width, args.w_height);
+
+    Parameters param = {
+        .factor = args.factor,
+        .nb_point = args.nb_point,
+        .radius = args.radius
+    };
+
+    args.convex(&stop, param, args.get_point, &win);
+
     MLV_free_window();
+    return 0;
 }

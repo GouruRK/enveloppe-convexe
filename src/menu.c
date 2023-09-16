@@ -3,6 +3,7 @@
 #include <MLV/MLV_all.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "../include/tools.h"
 
@@ -259,9 +260,31 @@ Args menu(int* stop) {
     Args args = {
         .w_width = tab_but[0].value,
         .w_height = tab_but[1].value,
-        .radius = tab_but[2].value,
-        .nb_point = tab_but[3].value,
+        .nb_point = tab_but[2].value,
+        .radius = tab_but[3].value,
         .factor = tab_but[4].value,
+        .convex = create_convexhull,
     };
+
+    if (incep.value) {
+        args.convex = create_inception_convexhull;
+    }
+
+    if (gen_c.value) {
+        args.get_point = point_on_click;
+    } else {
+        if (shape.value == 0) {
+            args.factor = 1;
+            args.get_point = rising_sphere;
+        } else if (shape.value == 1) {
+            args.get_point = rising_sphere;
+        } else if (shape.value == 2) {
+            args.factor = 1;
+            args.get_point = rising_square;
+        } else {
+            args.get_point = rising_square;
+        }
+    }
+
     return args;
 }

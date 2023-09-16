@@ -4,6 +4,10 @@
 #include <MLV/MLV_color.h>
 #include <stdbool.h>
 
+#include "../include/struct.h"
+#include "../include/graphic.h"
+#include "../include/convexhull.h"
+
 #define MIN(a, b) ((a < b) ? (a) : (b))
 #define BORDER 5
 #define MARGIN 25
@@ -37,6 +41,8 @@ typedef struct {
     int nb_point;
     int radius;
     int factor;
+    void (*convex)(int*, Parameters, Point (*)(int*, Parameters, Window*), Window*);
+    Point (*get_point)(int*, Parameters, Window*);
 } Args;
 
 /**

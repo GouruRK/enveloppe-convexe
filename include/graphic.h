@@ -5,7 +5,8 @@
 
 #include "struct.h"
 
-#define RADIUS 5 
+#define RADIUS 4
+#define PI 3.14159265359
 
 #define INSIDE_POINT_COLOR MLV_COLOR_RED
 #define ONLINE_POINT_COLOR MLV_COLOR_BLUE
@@ -112,11 +113,11 @@ void draw_filled_convex(Convex convex, MLV_Color color, int show_points);
  */
 void draw_inception_convex(InceptionConvex incepconv, int show_points);
 
-Point point_on_click(int* stop, int nb_points, Window* win);
+Point point_on_click(int* stop, Parameters param, Window* win);
 
-Point rising_sphere(int* stop, int nb_points, Window* win);
+Point rising_sphere(int* stop, Parameters param, Window* win);
 
-Point rising_square(int* stop, int nb_points, Window* win);
+Point rising_square(int* stop, Parameters param, Window* win);
 
 void draw_outline_points_information(int value, Window* win);
 
