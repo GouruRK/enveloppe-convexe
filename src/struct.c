@@ -92,6 +92,14 @@ Window create_window(int width, int height) {
     return create_window_data(information, clickable, width, height);
 }
 
+Settings set_settings(int radius, int nb_points, float factor) {
+    Settings set;
+    set.radius = radius;
+    set.nb_points = nb_points;
+    set.factor = factor ? factor: 1;
+    return set;
+}
+
 void free_vertex(Vertex* vrtx) {
     if (vrtx) {
         free(vrtx);

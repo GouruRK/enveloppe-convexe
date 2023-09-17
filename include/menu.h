@@ -41,8 +41,8 @@ typedef struct {
     int nb_point;
     int radius;
     int factor;
-    void (*convex)(int*, Parameters, Point (*)(int*, Parameters, Window*), Window*);
-    Point (*get_point)(int*, Parameters, Window*);
+    void (*convex)(bool*, Settings, Point (*)(bool*, Settings, Window*), Window*);
+    Point (*get_point)(bool*, Settings, Window*);
 } Args;
 
 /**
@@ -77,7 +77,7 @@ void draw_button_value(Button but, MLV_Color text_color,
                        MLV_Color border_color);
 
 /**
- * @brief Erases a button object.
+ * @brief Erases the given button object.
  *
  * @param but Button to erase
  * @param border_color Color draws
@@ -93,29 +93,29 @@ void erase_button(Button but, MLV_Color border_color);
 void erase_button_value(Button but, MLV_Color border_color);
 
 /**
- * @brief Tells if the button is clicked.
+ * @brief Tells if the given button is clicked.
  *
  * @param user_x User input x
  * @param user_y User input y
  * @param but Button to compare.
- * @return true : the button is clicked
- * @return false : the button is not clicked
+ * @return true if the button is clicked
+ *         false if the button is not clicked
  */
 bool onclick_button(int user_x, int user_y, Button but);
 
 /**
- * @brief Tells witch button is clicked in the array.
+ * @brief Tells which button is clicked in the array.
  *
  * @param user_x User input x
  * @param user_y User input y
  * @param arr_but Array of buttons
  * @param length Array length
- * @return Button* NULL if no button was clicked else button.
+ * @return NULL if no button was clicked else the clicked button
  */
 Button* onclick_array_button(int user_x, int user_y, Button* arr_but, int length);
 
 /**
- * @brief Draws a array of button object.
+ * @brief Draws an array of button object.
  *
  * @param arr Button array
  * @param length Array length
@@ -126,7 +126,7 @@ void draw_array_button(Button* arr, int length, MLV_Color text_color,
                        MLV_Color border_color);
 
 /**
- * @brief Draws a array of button object with its value.
+ * @brief Draws an array of button object with its value.
  *
  * @param arr Button array
  * @param length Array length
@@ -137,7 +137,7 @@ void draw_array_button_value(Button* arr, int length, MLV_Color text_color,
                              MLV_Color border_color);
 
 /**
- * @brief Return the char* with the max length
+ * @brief Returns the char* with the max length
  *
  * @param arr Array
  * @param length Array length
@@ -149,8 +149,8 @@ char* max_len(char** arr, int length);
  * @brief Overall function to interact with the menu.
  *
  * @param stop set to '1' whenever the user close the window
- * @return Args Button value to initialise the game.
+ * @return settings to initialise the game
  */
-Args menu(int* stop);
+Args menu(bool* stop);
 
 #endif

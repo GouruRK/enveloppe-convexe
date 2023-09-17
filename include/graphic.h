@@ -44,41 +44,41 @@
 void exit_function(void* data);
 
 /**
- * @brief Check a mouse's position.
+ * @brief Checks a mouse's position.
  * 
  * @param button button to check
  * @param expected expected position
- * @return bool 'true' if the given button is at the given position
- *             else 'false'
+ * @return 'true' if the given button is at the given position
+ *         else 'false'
  */
 bool check_mouse_position(MLV_Mouse_button button, MLV_Button_state expected);
 
 /**
- * @brief Check a key's position.
+ * @brief Checks a key's position.
  * 
  * @param key key to check
  * @param expected expected position
- * @return bool 'true' if the given key is at the given position
- *             else 'false'
+ * @return 'true' if the given key is at the given position
+ *         else 'false'
  */
 bool check_key_position(MLV_Keyboard_button key, MLV_Button_state expected);
 
 /**
- * @brief Draw a point that is inside a convex hull.
+ * @brief Draws a point that is inside a convex hull.
  * 
  * @param point point to draw
  */
 void draw_inside_point(Point point);
 
 /**
- * @brief Draw a point that is on the convex hull's outline.
+ * @brief Draws a point that is on the convex hull's outline.
  * 
  * @param point point to draw
  */
 void draw_outline_point(Point point);
 
 /**
- * @brief Draw a point of the given color
+ * @brief Draws a point of the given color
  * 
  * @param point point to draw
  * @param color color to draw the point
@@ -86,7 +86,7 @@ void draw_outline_point(Point point);
 void draw_point(Point point, MLV_Color color);
 
 /**
- * @brief Draw a line between two points.
+ * @brief Draws a line between two points.
  * 
  * @param a first point
  * @param b second point
@@ -94,7 +94,7 @@ void draw_point(Point point, MLV_Color color);
 void draw_line(Point a, Point b);
 
 /**
- * @brief Draw a surface between three points of the given colors.
+ * @brief Draws a surface between three points of the given colors.
  * 
  * @param a first point
  * @param b second point
@@ -104,14 +104,14 @@ void draw_line(Point a, Point b);
 void draw_surface(Point a, Point b, Point c, MLV_Color color);
 
 /**
- * @brief Draw a collection of points that are inside a convex hull.
+ * @brief Draws a collection of points that are inside a convex hull.
  * 
  * @param points points to draw
  */
 void draw_inside_points(Array points);
 
 /**
- * @brief Draw a collection of points that are on a convex hull's outline.
+ * @brief Draws a collection of points that are on a convex hull's outline.
  *        Connect a line between each point
  * 
  * @param points points to draw
@@ -121,7 +121,7 @@ void draw_inside_points(Array points);
 void draw_outline_points(Array points, bool show_points);
 
 /**
- * @brief Draw a surface in the convex hull.
+ * @brief Draws a surface in the convex hull.
  * 
  * @param convex convex hull to draw the surface
  * @param color color of the surface
@@ -130,7 +130,7 @@ void draw_outline_points(Array points, bool show_points);
 void draw_filled_convex(Convex convex, MLV_Color color, bool show_points);
 
 /**
- * @brief Draw self-contained convex hulls.
+ * @brief Draws self-contained convex hulls.
  * 
  * @param incepconv collection of convex hulls
  * @param show_points indicate to show or not the points
@@ -138,107 +138,108 @@ void draw_filled_convex(Convex convex, MLV_Color color, bool show_points);
 void draw_inception_convex(InceptionConvex incepconv, bool show_points);
 
 /**
- * @brief Wait for the user to click on the window. 
+ * @brief Waits for the user to click on the window. 
  *        When he does, return a point that contains the mouse's coordinates.
  *        If the user close the window, return a point with negatives coordinates.
  * 
  * @param stop set to '1' whenever the user close the window 
- * @param nb_points number of points to generate. This parameter is not take into account
- * @param win window parameters
- * @return Point point that contains the mouse's coordinates when the user click on the window
+ * @param set generation settings. Note that this is the only generation function
+ *            that deosnt take into account generation settings
+ * @param win window settings
+ * @return point that contains the mouse's coordinates when the user click on the window
  */
-Point point_on_click(int* stop, Parameters param, Window* win);
+Point point_on_click(bool* stop, Settings set, Window* win);
 
 /**
- * @brief Randomly generates points that form a rising circle.
+ * @brief Randomly generates points that form a circle with a rising radius.
  *        Each time this function is called, it will return further and further point from the origin.
  *        When the user close the window, it return a point with negatives coordinates.
  *        When all points have been generated, return a point with negatives coordinates.
  * 
  * @param stop set to '1' whenever the user close the window 
- * @param nb_points maximum number of points to generate
- * @param win window parameters
- * @return Point new point
+ * @param param generations settings
+ * @param win window settings
+ * @return new point
  */
-Point rising_circle(int* stop, Parameters param, Window* win);
+Point rising_circle(bool* stop, Settings set, Window* win);
 
 /**
- * @brief Randomly generates points that form a rising square.
+ * @brief Randomly generates points that form a square with a rising radius.
  *        Each time this function is called, it will return further and further point from the origin.
  *        When the user close the window, it return a point with negatives coordinates.
  *        When all points have been generated, return a point with negatives coordinates.
  * 
  * @param stop set to '1' whenever the user close the window 
- * @param nb_points maximum number of points to generate
- * @param win window parameters
- * @return Point new point
+ * @param set generation settings
+ * @param win window settings
+ * @return new point
  */
-Point rising_square(int* stop, Parameters param, Window* win);
+Point rising_square(bool* stop, Settings set, Window* win);
 
 /**
- * @brief Draw on screen the number of outline points.
+ * @brief Draws on screen the number of outline points.
  * 
  * @param value number of points
- * @param win window parameters
+ * @param win window settings
  */
 void draw_outline_points_information(int value, Window* win);
 
 /**
- * @brief Draw on screen the number of inside points.
+ * @brief Draws on screen the number of inside points.
  * 
  * @param value number of points
- * @param win window parameters
+ * @param win window settings
  */
 void draw_inside_points_information(int value, Window* win);
 
 /**
- * @brief Draw on screen the number of points.
+ * @brief Draws on screen the number of points.
  * 
  * @param value number of points
- * @param win window parameters
+ * @param win window settings
  */
 void draw_total_points_information(int value, Window* win);
 
 /**
- * Draw on screen the number of hulls.
+ * @brief Draws on screen the number of hulls.
  * 
  * @param value number of hulls
- * @param win window parameters
+ * @param win window settings
  */
 void draw_hulls_information(int value, Window* win);
 
 /**
- * @brief Draw on screen given information concerning the number of outline and inside points.
+ * @brief Draws on screen given information concerning the number of outline and inside points.
  * 
  * @param outline number of outline points
  * @param inside number of inside points
- * @param win window parameters
+ * @param win window settings
  */
 void draw_raw_convex_information(int outline, int inside, Window* win);
 
 /**
- * @brief Draw on screen information about a convex hull.
+ * @brief Draws on screen information about a convex hull.
  * 
  * @param convex collection of outline points
  * @param points collection of inside points
- * @param win window parameters
+ * @param win window settings
  */
 void draw_convex_information(Convex convex, Array points , Window* win);
 
 /**
- * @brief Draw on screen given information concerning self-contained convex hulls.
+ * @brief Draws on screen given information concerning self-contained convex hulls.
  * 
  * @param hulls number of hulls
  * @param points number of points
- * @param win window parameters
+ * @param win window settings
  */
 void draw_raw_inception_convex_information(int hulls, int points, Window* win);
 
 /**
- * @brief Draw on screen information concerning self-contained convex hulls.
+ * @brief Draws on screen information concerning self-contained convex hulls.
  * 
  * @param incepconv collection of hulls
- * @param win window parameters
+ * @param win window settings
  */
 void draw_inception_convex_information(InceptionConvex incepconv, Window* win);
 

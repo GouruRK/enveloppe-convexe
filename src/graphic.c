@@ -18,8 +18,8 @@
 #include "../include/tools.h"
 
 void exit_function(void* data) {
-    int* stop = (int*)data;
-    *stop = 1;
+    bool* stop = (bool*)data;
+    *stop = true;
 }
 
 bool check_mouse_position(MLV_Mouse_button button, MLV_Button_state expected) {
@@ -116,7 +116,7 @@ void draw_inception_convex(InceptionConvex incepconv, bool show_points) {
     }
 }
 
-Point point_on_click(int* stop, Parameters param, Window* win) {
+Point point_on_click(bool* stop, Settings set, Window* win) {
     int x, y, mouse_pressed = 1;
     Point point;
 
@@ -135,11 +135,11 @@ Point point_on_click(int* stop, Parameters param, Window* win) {
     return point;
 }
 
-Point rising_circle(int* stop, Parameters param, Window* win) {
+Point rising_circle(bool* stop, Settings set, Window* win) {
     static int x, y, init = 0, generated_points = 0;
 
     if (!init) {
-        if (param.nb_point < 0) {
+        if (set.nb_points < 0) {
             return create_point(-1, -1);
         }
 
@@ -148,22 +148,22 @@ Point rising_circle(int* stop, Parameters param, Window* win) {
 
         init = true;
     }
-    if (generated_points == param.nb_point) {
+    if (generated_points == set.nb_points) {
         return create_point(-1, -1);
     }
     MLV_wait_milliseconds(10);
     generated_points++;
     double theta = uniform() * 2 * PI;
-    double radius = (param.radius / 2) * sqrt(uniform()); 
-    return create_point(x + radius * (generated_points / (double)param.nb_point) * cos(theta) * (1 / param.factor),
-                        y + radius * (generated_points / (double)param.nb_point) * sin(theta));
+    double radius = (set.radius / 2) * sqrt(uniform()); 
+    return create_point(x + radius * (generated_points / (double)set.nb_points) * cos(theta) * (1 / set.factor),
+                        y + radius * (generated_points / (double)set.nb_points) * sin(theta));
 }
 
-Point rising_square(int* stop, Parameters param, Window* win) {
+Point rising_square(bool* stop, Settings set, Window* win) {
     static int x, y, init = 0, generated_points = 0;
 
     if (!init) {
-        if (param.nb_point < 0) {
+        if (set.nb_points < 0) {
             return create_point(-1, -1);
         }
 
@@ -172,12 +172,12 @@ Point rising_square(int* stop, Parameters param, Window* win) {
 
         init = true;
     }
-    if (generated_points == param.nb_point) {
+    if (generated_points == set.nb_points) {
         return create_point(-1, -1);
     }
     // MLV_wait_milliseconds(10);
-    double distance = (((double)(param.radius) / (double)param.nb_point) * ++generated_points) / 2;
-    return create_point(x + (float)random_int(-distance, distance) * (1 / param.factor),
+    double distance = (((double)(set.radius) / (double)set.nb_points) * ++generated_points) / 2;
+    return create_point(x + (float)random_int(-distance, distance) * (1 / set.factor),
                         y + random_int(-distance, distance));
 }
 

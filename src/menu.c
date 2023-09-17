@@ -109,7 +109,7 @@ char* max_len(char** arr, int length) {
     return result;
 }
 
-Args menu(int* stop) {
+Args menu(bool* stop) {
     int mid_x = WIDTH / 2;
     int n1 = 50,
         n2 = 50 + BUT_MARGIN,

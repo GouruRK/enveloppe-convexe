@@ -23,7 +23,7 @@ cd enveloppe-convexe
 make
 ```
 
-Once its compiled, run by typing `./convexhull`.
+Once compiled, run by typing `./convexhull`.
 
 **IMPORTANT :** This project require [libMLV](https://www-igm.univ-mlv.fr/~boussica/mlv/api/English/html/download.html) to run. You can installing by using `universe`, or by using [this link](https://www-igm.univ-mlv.fr/~boussica/mlv/api/English/html/download.html)
 
@@ -32,8 +32,6 @@ sudo apt update
 sudo add-apt-repository universe
 sudo apt install libmlv3-dev
 ```
-> Download libMLV using `universe`
-
 ## Cleaning
 
 To clean the project, use the `mrproper` command :
@@ -47,14 +45,14 @@ Once the progamm is running, you have access to the following menu.
 
 ![img](media/menu.png)
 
-It allows you to easily decide what to do. 
-* The first line let you choose if you want to randomly generate a shape (default), or using your mosue to creates points.
+It allows you to easily decide what render. 
+* The first line let you choose if you want to randomly generate a shape (default), or using your mouse to create points.
 * The second line let you decide if you want to create self-contained convex hull (Inception) or not.
 
-* The third and fourth line are for the window size.
-* The lasts lines are generation parameters, that are only applied if you choose the shape generation.
+* The third and fourth lines are for the window size.
+* The last lines are generation settings, which are only applied if you choose the shape generation.
 
 ## User commands
 
-* Use `left-click` to add points in the 'click generation'
-* Press 'H' to toggle the drawing of points, only in the 'shape generation'
+* Use `left-click` to add points in the 'click generation'.
+* Press `H` to toggle the drawing of points, only in the 'shape generation'.
